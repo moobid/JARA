@@ -22,6 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.eps_hioa_2013.JointAttentionResearchApp.ModuleActivity"
+            android:label="@string/title_activity_module"
+            android:parentActivityName="com.eps_hioa_2013.JointAttentionResearchApp" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.eps_hioa_2013.JointAttentionResearchApp" />
+        </activity>
     </application>
 
 </manifest>

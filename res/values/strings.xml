@@ -4,5 +4,16 @@
     <string name="app_name">JARA</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_module">ModuleActivity</string>
+    
+    <string name="button_start">Start</string>
+    
+    <string name="participant">Participant</string>
+	<string name="researcher">Researcher</string>
+    <string name="subject">Subject</string>
+    
+    <string name="participant_text">Participant</string>
+    <string name="researcher_text">Researcher</string>
+    <string name="subject_text">Subject</string>
 
 </resources>

@@ -2,9 +2,15 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
+	public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE"; //participant will put in here
+	public final static String EXTRA_MESSAGE2 = "com.example.myfirstapp.MESSAGE2"; //researcher will put in here
+	public final static String EXTRA_MESSAGE3 = "com.example.myfirstapp.MESSAGE3"; //subject will put in here
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,5 +24,27 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	public void startGame(View view) {
+        // Do something in response to button
+    	Intent intent = new Intent(this, ModuleActivity.class);
+    	
+    	EditText editText = (EditText) findViewById(R.id.participant);
+    	String string_participant = editText.getText().toString();
+    	intent.putExtra(EXTRA_MESSAGE, string_participant);
+    	
+    	EditText editText2 = (EditText) findViewById(R.id.researcher);
+    	String string_researcher = editText2.getText().toString();
+    	intent.putExtra(EXTRA_MESSAGE2, string_researcher);
+    	
+    	EditText editText3 = (EditText) findViewById(R.id.subject);
+    	String string_subject = editText3.getText().toString();
+    	intent.putExtra(EXTRA_MESSAGE3, string_subject);
+    	
+    	
+    	startActivity(intent);
+    }
+	
+	
 
 }
