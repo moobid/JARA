@@ -2,49 +2,51 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+    
+     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/password" />
+
+    <EditText
+        android:id="@+id/subject"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/password_text" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/participant_text" />
+        android:text="@string/participant" />
 
     <EditText
         android:id="@+id/participant"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/participant" >
-    </EditText>
+        android:hint="@string/participant_text" />
+
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_marginTop="8dp"
-        android:text="@string/researcher_text" />
+        android:text="@string/researcher" />
 
     <EditText
         android:id="@+id/researcher"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:hint="@string/researcher" />
+        android:hint="@string/researcher_text" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/subject_text" />
 
-    <EditText
-        android:id="@+id/subject"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/subject" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="startGame"
+        android:onClick="onclick_login"
         android:text="@string/button_start" />
 
 </LinearLayout>

@@ -6,14 +6,16 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_module">ModuleActivity</string>
     
+    <!--for activity_mail_xml-->
     <string name="button_start">Start</string>
     
+    <string name="password">Password</string>    
     <string name="participant">Participant</string>
 	<string name="researcher">Researcher</string>
-    <string name="subject">Subject</string>
-    
-    <string name="participant_text">Participant</string>
-    <string name="researcher_text">Researcher</string>
-    <string name="subject_text">Subject</string>
+
+    <string name="password_text">Type in Password</string>    
+    <string name="participant_text">Type in Participant</string>
+    <string name="researcher_text">Type in Researcher</string>
+
 
 </resources>

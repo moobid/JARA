@@ -25,21 +25,25 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	public void startGame(View view) {
+	public void onclick_login(View view) {
         // Do something in response to button
     	Intent intent = new Intent(this, ModuleActivity.class);
     	
+    	EditText editText3 = (EditText) findViewById(R.id.subject);
+    	String string_password = editText3.getText().toString();
+    	intent.putExtra(EXTRA_MESSAGE, string_password);
+    	
     	EditText editText = (EditText) findViewById(R.id.participant);
     	String string_participant = editText.getText().toString();
-    	intent.putExtra(EXTRA_MESSAGE, string_participant);
+    	intent.putExtra(EXTRA_MESSAGE2, string_participant);
     	
     	EditText editText2 = (EditText) findViewById(R.id.researcher);
     	String string_researcher = editText2.getText().toString();
-    	intent.putExtra(EXTRA_MESSAGE2, string_researcher);
+    	intent.putExtra(EXTRA_MESSAGE3, string_researcher);
     	
-    	EditText editText3 = (EditText) findViewById(R.id.subject);
-    	String string_subject = editText3.getText().toString();
-    	intent.putExtra(EXTRA_MESSAGE3, string_subject);
+    	Session session = new Session(string_password, string_participant, string_researcher);
+    	
+
     	
     	
     	startActivity(intent);
