@@ -1,12 +1,21 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
+import java.io.File;
+
+import android.util.Log;
+
 public class Session {
-	String password;
-	String participant;
-	String researcher;
+	private String password;
+	private String participant;
+	private String researcher;
 	
-	String date;
-	String time;
+	private String date;
+	private String time;
+	
+	private String sessionInfo; //Simon: not sure what this is for:(
+	
+	private File statisticsPath;
+	private File statisticsFile; 
 	
 
 
@@ -16,9 +25,22 @@ public class Session {
 		setResearcher(research);
 		
 		
+		
 		//get date from system and save it
 		//get time from system and save it
 	}
+	
+	public void updateStatistics(File statisticFile)
+	{
+		//todo: append new statistic data to the statisticFile while the participant is playing
+	}
+	
+	public void saveSessionInfo()
+	{
+		//Simon: not sure what this is doing:(
+	}
+	
+	///////////GET AND SET HERE:
 	public String getPassword() {
 		return password;
 	}
