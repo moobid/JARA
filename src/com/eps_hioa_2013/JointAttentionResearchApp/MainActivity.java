@@ -49,9 +49,9 @@ public class MainActivity extends Activity {
     	String string_researcher = editText2.getText().toString();
 
     	
-    	if(((string_password == null) && (string_password.equals("")))
-    	|| ((string_password == null) && (string_password.equals("")))
-    	|| ((string_password == null) && (string_password.equals(""))))
+    	if(((string_password == null) || (string_password.equals("")))
+    	|| ((string_password == null) || (string_password.equals("")))
+    	|| ((string_password == null) || (string_password.equals(""))))
     	{
     		//shows error if one field is empty
     		Toast.makeText(getApplicationContext(), "One of the fields is empty", Toast.LENGTH_SHORT).show();
