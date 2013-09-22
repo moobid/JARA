@@ -1,21 +1,24 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
-import android.os.Bundle;
+import java.io.Serializable;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	//following three Strings are temporary and will be replaced soon
-	public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE"; //participant will put in here
-	public final static String EXTRA_MESSAGE2 = "com.example.myfirstapp.MESSAGE2"; //researcher will put in here
-	public final static String EXTRA_MESSAGE3 = "com.example.myfirstapp.MESSAGE3"; //subject will put in here
+
+	public final static String EXTRA_SESSION = "com.example.myfirstapp.MESSAGE3";
 	
 	private Session mysession;
 	private Module modulelist[]; //all Modules are in here
 	private Element elementlist[]; //all Elements are in here
+	
+	Bundle bundle;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,21 +41,31 @@ public class MainActivity extends Activity {
     	
     	EditText editText3 = (EditText) findViewById(R.id.subject);
     	String string_password = editText3.getText().toString();
-    	intent.putExtra(EXTRA_MESSAGE, string_password);
     	
     	EditText editText = (EditText) findViewById(R.id.participant);
     	String string_participant = editText.getText().toString();
-    	intent.putExtra(EXTRA_MESSAGE2, string_participant);
     	
     	EditText editText2 = (EditText) findViewById(R.id.researcher);
     	String string_researcher = editText2.getText().toString();
-    	intent.putExtra(EXTRA_MESSAGE3, string_researcher);
-    	
-    	Session mysession = new Session(string_password, string_participant, string_researcher);
 
     	
+    	if(((string_password == null) && (string_password.equals("")))
+    	|| ((string_password == null) && (string_password.equals("")))
+    	|| ((string_password == null) && (string_password.equals(""))))
+    	{
+    		//shows error if one field is empty
+    		Toast.makeText(getApplicationContext(), "One of the fields is empty", Toast.LENGTH_SHORT).show();
+    	}
+    	else
+    	{
+    		//mysession gets created, serialized, packed in the bundle and then sent to the next activity
+    		Session mysession = new Session(string_password, string_participant, string_researcher);    		
+    		bundle = new Bundle();    		
+    		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
+        	intent.putExtras(bundle);
+        	startActivity(intent);
+    	}
     	
-    	startActivity(intent);
     }
 	
 	

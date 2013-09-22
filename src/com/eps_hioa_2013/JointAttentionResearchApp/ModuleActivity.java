@@ -2,15 +2,16 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 
 
 
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.support.v4.app.NavUtils;
 
 public class ModuleActivity extends Activity {
+	private Session session;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,25 +21,21 @@ public class ModuleActivity extends Activity {
 		setupActionBar();
 		
 		Intent intent = getIntent();
-		String string_password = intent
-				.getStringExtra(MainActivity.EXTRA_MESSAGE);
-		String string_participant = intent
-				.getStringExtra(MainActivity.EXTRA_MESSAGE2);
-		String string_researcher = intent
-				.getStringExtra(MainActivity.EXTRA_MESSAGE3);
+
+		session = (Session) intent.getSerializableExtra(MainActivity.EXTRA_SESSION);
 
 		// Create the text view
 		TextView textView = (TextView) findViewById(R.id.password_textview);
 		textView.setTextSize(20);
-		textView.setText(string_password);
+		textView.setText(session.getPassword());
 		
 		TextView textView2 = (TextView) findViewById(R.id.participant_textview);
 		textView2.setTextSize(20);
-		textView2.setText(string_participant);
+		textView2.setText(session.getParticipant());
 
 		TextView textView3 = (TextView) findViewById(R.id.researcher_textview);
 		textView3.setTextSize(20);
-		textView3.setText(string_researcher);
+		textView3.setText(session.getResearcher());
 	}
 	
 	public void onclick_add_module()

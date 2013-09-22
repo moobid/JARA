@@ -1,10 +1,12 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
 import java.io.File;
+import java.io.Serializable;
 
 import android.util.Log;
 
-public class Session {
+//must implement Serializable to be able to get passed from one activity to another
+public class Session implements Serializable {
 	private String password;
 	private String participant;
 	private String researcher;
