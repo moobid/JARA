@@ -30,6 +30,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.eps_hioa_2013.JointAttentionResearchApp" />
         </activity>
+        <activity
+            android:name="com.eps_hioa_2013.JointAttentionResearchApp.ModuleSettingsActivity"
+            android:label="@string/title_activity_module_settings"
+            android:parentActivityName="com.eps_hioa_2013.JointAttentionResearchApp.ModuleActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.eps_hioa_2013.JointAttentionResearchApp.ModuleActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -1,53 +1,19 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
-
-
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
-public class ModuleActivity extends Activity {
+public class ModuleSettingsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_module);
+		setContentView(R.layout.activity_module_settings);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
-		Intent intent = getIntent();
-		String string_password = intent
-				.getStringExtra(MainActivity.EXTRA_MESSAGE);
-		String string_participant = intent
-				.getStringExtra(MainActivity.EXTRA_MESSAGE2);
-		String string_researcher = intent
-				.getStringExtra(MainActivity.EXTRA_MESSAGE3);
-
-		// Create the text view
-		TextView textView = (TextView) findViewById(R.id.password_textview);
-		textView.setTextSize(20);
-		textView.setText(string_password);
-		
-		TextView textView2 = (TextView) findViewById(R.id.participant_textview);
-		textView2.setTextSize(20);
-		textView2.setText(string_participant);
-
-		TextView textView3 = (TextView) findViewById(R.id.researcher_textview);
-		textView3.setTextSize(20);
-		textView3.setText(string_researcher);
-	}
-	
-	public void onclick_add_module()
-	{
-		
-		Intent intent = new Intent(this, ModuleSettingsActivity.class);
-		//todo: create new module (start modulesettings with a new module
-		startActivity(intent);
-		
 	}
 
 	/**
@@ -62,7 +28,7 @@ public class ModuleActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.module, menu);
+		getMenuInflater().inflate(R.menu.module_settings, menu);
 		return true;
 	}
 
