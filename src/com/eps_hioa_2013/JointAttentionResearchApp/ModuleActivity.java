@@ -26,16 +26,16 @@ public class ModuleActivity extends Activity {
 
 		// Create the text view
 		TextView textView = (TextView) findViewById(R.id.password_textview);
-		textView.setTextSize(20);
 		textView.setText(session.getPassword());
 		
 		TextView textView2 = (TextView) findViewById(R.id.participant_textview);
-		textView2.setTextSize(20);
 		textView2.setText(session.getParticipant());
 
 		TextView textView3 = (TextView) findViewById(R.id.researcher_textview);
-		textView3.setTextSize(20);
 		textView3.setText(session.getResearcher());
+		
+		TextView textView4 = (TextView) findViewById(R.id.date_textview);
+		textView4.setText(session.getcurrentDate().toString());
 	}
 	
 	public void onclick_add_module()
