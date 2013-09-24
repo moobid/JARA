@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
 	
 	Bundle bundle;
 	
-	@Override
+	//Just activates the first View
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -28,18 +28,19 @@ public class MainActivity extends Activity {
 		//todo: look for existing Elements (saved in files on the device) and write them into 
 	}
 
-	@Override
+	//Dont know yet
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+	//creates new Intent and saves the Strings were typed in into a new Session-Object called mysession
+	//then passes mysession over to ModuleActivity
 	public void onclick_login(View view) {
         // Do something in response to button
     	Intent intent = new Intent(this, ModuleActivity.class);
     	
-    	EditText editText3 = (EditText) findViewById(R.id.subject);
+    	EditText editText3 = (EditText) findViewById(R.id.password);
     	String string_password = editText3.getText().toString();
     	
     	EditText editText = (EditText) findViewById(R.id.participant);
@@ -49,11 +50,9 @@ public class MainActivity extends Activity {
     	String string_researcher = editText2.getText().toString();
 
     	
-    	if(
-    	   ((string_password == null) || (string_password.equals("")))
+    	if(((string_password == null) || (string_password.equals("")))
     	|| ((string_participant == null) || (string_participant.equals("")))
-    	|| ((string_researcher == null) || (string_researcher.equals("")))
-    	  )
+    	|| ((string_researcher == null) || (string_researcher.equals(""))))
     	{
     		//shows error if one field is empty
     		Toast.makeText(getApplicationContext(), "One of the fields is empty", Toast.LENGTH_SHORT).show();

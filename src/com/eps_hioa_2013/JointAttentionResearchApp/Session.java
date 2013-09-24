@@ -25,7 +25,7 @@ public class Session implements Serializable {
 	private File statisticsFile;
 	
 
-
+	//sets Membervaribales (incl. current Date) + calls updateStatistics() the first time
 	public Session(String pass, String part, String research) {
 		setPassword(pass);
 		setParticipant(part);
@@ -40,12 +40,12 @@ public class Session implements Serializable {
 				      +"\nSessionDate: "+this.getcurrentDate().toString()); //will create a new file at the beginning and later(while playing) update this one
 		
 	}
-	
+	//updates (creates on 1. time) the statisticfile. The String newData gets appended to it
 	public void updateStatistics(String newData)
 	{
 		if(isExternalStorageWritable()) //checks if ExternalStorage is available
 		{	
-			if(/*file exists*/true) /*file exists*/
+			if(/*todo: file exists*/true) /*file exists*/
 			{
 				try
 				{
@@ -60,7 +60,7 @@ public class Session implements Serializable {
 					//todo: error
 				}
 			}
-			if(/*file does not exist*/true) /*file does not exist*/
+			if(/*todo: file does not exist*/true) /*file does not exist*/
 			{		
 				try {
 					statisticsFile = new File("/sdcard/"+filename+".txt");
@@ -81,10 +81,10 @@ public class Session implements Serializable {
 			//todo: show error
 		}
 	}
-	
+	//not sure what this is doing, but it was in the uml-diagram
 	public void saveSessionInfo()
 	{
-		//Simon: not sure what this is doing:(
+		//todo
 	}
 	
 	//checks if the external storage (sd-card) is available
@@ -96,15 +96,6 @@ public class Session implements Serializable {
 	    return false;
 	}
 	
-	public File getAlbumStorageDir(String albumName) {
-	    // Get the directory for the user's public pictures directory. 
-	    File file = new File(Environment.getExternalStoragePublicDirectory(
-	            Environment.DIRECTORY_DOWNLOADS), albumName);
-	    if (!file.mkdirs()) {
-	        Log.e("1", "Directory not created");
-	    }
-	    return file;
-	}
 	///////////GET AND SET HERE:
 	public String getPassword() {
 		return password;
@@ -137,7 +128,7 @@ public class Session implements Serializable {
 	public String getFilename() {
 		return filename;
 	}
-
+	//creates the filename with the input the user gave in the startscreen
 	public void setFilename() {
 		this.filename = "P="+this.getParticipant()
 				+"&R="+this.getResearcher()

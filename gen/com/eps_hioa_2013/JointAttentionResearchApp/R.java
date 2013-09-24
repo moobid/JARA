@@ -41,10 +41,10 @@ public final class R {
         public static final int date_textview=0x7f08000f;
         public static final int participant=0x7f080001;
         public static final int participant_textview=0x7f080009;
+        public static final int password=0x7f080000;
         public static final int password_textview=0x7f080006;
         public static final int researcher=0x7f080002;
         public static final int researcher_textview=0x7f08000c;
-        public static final int subject=0x7f080000;
         public static final int tableRow1=0x7f080004;
         public static final int tableRow2=0x7f080007;
         public static final int tableRow3=0x7f08000a;
