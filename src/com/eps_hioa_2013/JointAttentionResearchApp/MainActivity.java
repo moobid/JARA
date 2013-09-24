@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	public final static String EXTRA_SESSION = "com.example.myfirstapp.MESSAGE3";
+	public final static String EXTRA_SESSION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_SESSION";
 	
 	private Session mysession;
 	private Module modulelist[]; //all Modules are in here
@@ -49,9 +49,11 @@ public class MainActivity extends Activity {
     	String string_researcher = editText2.getText().toString();
 
     	
-    	if(((string_password == null) || (string_password.equals("")))
-    	|| ((string_password == null) || (string_password.equals("")))
-    	|| ((string_password == null) || (string_password.equals(""))))
+    	if(
+    	   ((string_password == null) || (string_password.equals("")))
+    	|| ((string_participant == null) || (string_participant.equals("")))
+    	|| ((string_researcher == null) || (string_researcher.equals("")))
+    	  )
     	{
     		//shows error if one field is empty
     		Toast.makeText(getApplicationContext(), "One of the fields is empty", Toast.LENGTH_SHORT).show();
@@ -59,7 +61,7 @@ public class MainActivity extends Activity {
     	else
     	{
     		//mysession gets created, serialized, packed in the bundle and then sent to the next activity
-    		Session mysession = new Session(string_password, string_participant, string_researcher);    		
+    		mysession = new Session(string_password, string_participant, string_researcher);    		
     		bundle = new Bundle();    		
     		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
         	intent.putExtras(bundle);

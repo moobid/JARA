@@ -23,7 +23,6 @@ public class ModuleActivity extends Activity {
 		Intent intent = getIntent();
 
 		session = (Session) intent.getSerializableExtra(MainActivity.EXTRA_SESSION);
-
 		// Create the text view
 		TextView textView = (TextView) findViewById(R.id.password_textview);
 		textView.setText(session.getPassword());

@@ -8,7 +8,6 @@ import java.util.Date;
 
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 //must implement Serializable to be able to get passed from one activity to another
 public class Session implements Serializable {
