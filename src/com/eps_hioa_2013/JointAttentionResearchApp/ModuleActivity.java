@@ -2,16 +2,17 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 
 
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ModuleActivity extends Activity {
+public class ModuleActivity extends ListActivity {
 	private Session mysession;
 
 	//receives the sessionobject and saves it into mysession
@@ -37,6 +38,8 @@ public class ModuleActivity extends Activity {
 		
 		TextView textView4 = (TextView) findViewById(R.id.date_textview);
 		textView4.setText(mysession.getcurrentDate().toString());
+		
+		setupModuleList();
 	}
 	//shows the Modulesettings-screen for setting up a new module
 	public void onclick_add_module(View view)
@@ -46,6 +49,17 @@ public class ModuleActivity extends Activity {
 		//todo: create new module (start modulesettings with a new module
 		startActivity(intent);
 		
+	}
+	
+	//creates the list
+	public void setupModuleList()
+	{
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				this,
+				android.R.layout.simple_list_item_1,
+				getResources().getStringArray(R.array.fruits));
+		
+		setListAdapter(adapter);
 	}
 
 	/**

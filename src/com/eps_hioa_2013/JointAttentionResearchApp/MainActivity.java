@@ -49,10 +49,11 @@ public class MainActivity extends Activity {
     	EditText editText2 = (EditText) findViewById(R.id.researcher);
     	String string_researcher = editText2.getText().toString();
 
-    	
-    	if(((string_password == null) || (string_password.equals("")))
+    	//this is here as a comment to deactivate the check if the fields are not empty
+    	//to not get annoyed everytime you start the programm to test it
+    	if(/*((string_password == null) || (string_password.equals("")))
     	|| ((string_participant == null) || (string_participant.equals("")))
-    	|| ((string_researcher == null) || (string_researcher.equals(""))))
+    	|| ((string_researcher == null) || (string_researcher.equals("")))*/false)
     	{
     		//shows error if one field is empty
     		Toast.makeText(getApplicationContext(), "One of the fields is empty", Toast.LENGTH_SHORT).show();

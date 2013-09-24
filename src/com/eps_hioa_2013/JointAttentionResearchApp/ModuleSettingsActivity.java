@@ -1,10 +1,10 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
 
 //ModuleSettingsActivity gets called, when you create a new Module or like to edit an existing one
 public class ModuleSettingsActivity extends Activity {
@@ -15,6 +15,8 @@ public class ModuleSettingsActivity extends Activity {
 		setContentView(R.layout.activity_module_settings);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+
 	}
 
 	/**
