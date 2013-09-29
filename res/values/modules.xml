@@ -11,7 +11,7 @@
 </resources>
 
 <!-- <module-list>
-	<module
+	<module>
 	    id="easy"
 	    name="easy">
 	    
@@ -23,7 +23,7 @@
 	    
 	</module>
 	
-	<module
+	<module>
 	    id="moderate"
 	    name="easy">
 	    

@@ -78,6 +78,10 @@ public final class R {
         public static final int button_start=0x7f070004;
         public static final int date=0x7f070009;
         public static final int hello_world=0x7f070002;
+        /**  for settings screen 
+         */
+        public static final int module_description=0x7f07000f;
+        public static final int module_description_key=0x7f070010;
         public static final int participant=0x7f070007;
         public static final int participant_text=0x7f07000b;
         public static final int password=0x7f070006;

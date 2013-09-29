@@ -130,8 +130,8 @@ public class Session implements Serializable {
 	}
 	//creates the filename with the input the user gave in the startscreen
 	public void setFilename() {
-		this.filename = "P="+this.getParticipant()
-				+"&R="+this.getResearcher()
-				+"&D="+this.getcurrentDate().toString();
+		this.filename = this.getParticipant()
+				+"&&"+this.getResearcher()
+				+"&&"+this.getcurrentDate().toString();
 	}
 }

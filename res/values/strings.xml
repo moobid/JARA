@@ -19,5 +19,9 @@
     <string name="researcher_text">Type in Researcher</string>
     <string name="select_module">Select module</string>
     <string name="title_activity_module_settings">ModuleSettingsActivity</string>
+    
+    <!-- for settings screen -->
+    <string name="module_description">Module Discripton</string>
+    <string name="module_description_key">Module_Discripton</string>
 
 </resources>
