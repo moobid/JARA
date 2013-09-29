@@ -1,24 +1,40 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
 //ModuleSettingsActivity gets called, when you create a new Module or like to edit an existing one
-public class ModuleSettingsActivity extends Activity {
+public class ModuleSettingsActivity extends PreferenceActivity {
 
-	//nothing special so far
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_module_settings);
+		addPreferencesFromResource(R.xml.settings);
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
-
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */

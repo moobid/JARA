@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory>
+        android:title="Overall settings"
+        <EditTextPreference 
+            android:title="testtitle"
+            android:key="testtitle"
+            android:defaultValue=""
+            />
+    </PreferenceCategory>
+     <PreferenceCategory>
+        <EditTextPreference 
+            android:title="testtitle2"
+            android:key="testtitle2"
+            android:defaultValue=""
+            />
+    </PreferenceCategory>
+    
+
+</PreferenceScreen>
