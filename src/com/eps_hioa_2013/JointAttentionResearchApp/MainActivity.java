@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -23,7 +25,14 @@ public class MainActivity extends Activity {
 	//Just activates the first View
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//set full screen
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+	    this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	    
+	    //connect the .java to the .xml make sure you set fullscreen first in code else it will crash
 		setContentView(R.layout.activity_main);
+		
 		//todo: look for existing Modules (saved in files on the device) and write them into 
 		//todo: look for existing Elements (saved in files on the device) and write them into 
 	}
