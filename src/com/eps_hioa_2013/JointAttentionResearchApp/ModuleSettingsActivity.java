@@ -1,23 +1,87 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 //ModuleSettingsActivity gets called, when you create a new Module or like to edit an existing one
-public class ModuleSettingsActivity extends PreferenceActivity {
-
+public class ModuleSettingsActivity extends Activity {
+//	public final static String EXTRA_STRING_NAME = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_STRING_NAME";
+//	public final static String EXTRA_STRING_DISCRIPTION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_STRING_DISCRIPTION";
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.settings);
-		// Show the Up button in the action bar.
-		setupActionBar();
+		//addPreferencesFromResource(R.xml.settings); deactivated for testing
+		setContentView(R.layout.activity_module_settings);
 		
+		// Show the Up button in the action bar.
+		setupActionBar();	
+	}
+	
+
+	protected void onResume() {
+		
+		super.onResume();
 	}
 
+	public void onclick_save(View view)
+	{	
+		//gets the infos out of the Layout in Variables. START
+		EditText editText2 = (EditText) findViewById(R.id.editText2);
+    	String module_name = editText2.getText().toString();
+    	
+    	EditText editText1 = (EditText) findViewById(R.id.editText1);
+    	String module_description = editText1.getText().toString();
+    	
+    	CheckBox checkbox1 = (CheckBox) findViewById(R.id.checkBox1);
+    	Boolean blue_circle = false;
+    	if(checkbox1.isChecked())
+    		{
+    			blue_circle = true;
+    		}
+    	
+    	CheckBox checkbox2 = (CheckBox) findViewById(R.id.checkBox2);
+    	Boolean yellow_square = false;
+    	if(checkbox2.isChecked())
+    		{
+    			yellow_square = true;
+    		}
+    	//gets the infos out of the Layout in Variables. END
+    	
+    	//puts the variables in a ShardPreference named MODULE1
+    	SharedPreferences pref_modulesettings = getSharedPreferences("MODULE1", 0);
+        SharedPreferences.Editor editor = pref_modulesettings.edit();       
+        editor.putString("module_name", module_name);
+        editor.putString("module_description", module_description);
+        editor.putBoolean("blue_circle", blue_circle);
+        editor.putBoolean("yellow_square", yellow_square);
+        editor.commit();
+        
+        String get_module_name = pref_modulesettings.getString("modulen_name", module_name);
+        String get_module_description = pref_modulesettings.getString("modulen_name", module_description);
+        
+//        Intent intent = new Intent();
+//        intent.putExtra(EXTRA_STRING_NAME, get_module_name);
+//        intent.putExtra(EXTRA_STRING_DISCRIPTION, get_module_description);
+//        startActivity(intent);
+        
+//		TextView textView = (TextView) findViewById(R.id.textView2);
+//		textView.setText(get_module_name);
+//		
+//		TextView textView2 = (TextView) findViewById(R.id.textView1);
+//		textView2.setText(get_module_description);
+        
+        Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+	}
 	
 	
 	

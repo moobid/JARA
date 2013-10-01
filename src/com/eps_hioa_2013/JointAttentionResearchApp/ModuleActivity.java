@@ -4,6 +4,7 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -24,7 +25,20 @@ public class ModuleActivity extends ListActivity {
 		setupActionBar();
 		
 		Intent intent = getIntent();
-
+		mysession = this.fillSession(intent);
+				
+		setupModuleList(); //for the list 
+	}
+	
+	protected void onResume() {
+		TextView textView10 = (TextView) findViewById(R.id.lastused_textview);
+		textView10.setText(this.getlast_edited_module());
+		super.onResume();
+	}
+	
+	//fills a Session-Object with the details delivered by the user in Activty_module screen
+	Session fillSession(Intent intent)
+	{
 		mysession = (Session) intent.getSerializableExtra(MainActivity.EXTRA_SESSION);
 		// Create the text view
 		TextView textView = (TextView) findViewById(R.id.password_textview);
@@ -39,17 +53,29 @@ public class ModuleActivity extends ListActivity {
 		TextView textView4 = (TextView) findViewById(R.id.date_textview);
 		textView4.setText(mysession.getcurrentDate().toString());
 		
-		setupModuleList();
+		return mysession;
 	}
+	
+	//gets String out of the last edited module
+	String getlast_edited_module()
+	{		
+    	SharedPreferences pref_modulesettings = getSharedPreferences("MODULE1", 0);  
+        String last_edited_module = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
+		return last_edited_module;
+	}
+	
+	
 	//shows the Modulesettings-screen for setting up a new module
 	public void onclick_add_module(View view)
 	{
 		
 		Intent intent = new Intent(this, ModuleSettingsActivity.class);
-		//todo: create new module (start modulesettings with a new module
 		startActivity(intent);
 		
 	}
+	
+	
+	//for testing
 	
 	//creates the list
 	public void setupModuleList()

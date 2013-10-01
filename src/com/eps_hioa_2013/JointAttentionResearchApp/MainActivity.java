@@ -13,7 +13,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
 	public final static String EXTRA_SESSION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_SESSION";
-	
+
 	private Session mysession;
 	private Module modulelist[]; //all Modules are in here
 	private Element elementlist[]; //all Elements are in here
@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
 		//todo: look for existing Modules (saved in files on the device) and write them into 
 		//todo: look for existing Elements (saved in files on the device) and write them into 
 	}
-
+	
 	//Dont know yet
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -60,6 +60,7 @@ public class MainActivity extends Activity {
     	}
     	else
     	{
+
     		//mysession gets created, serialized, packed in the bundle and then sent to the next activity
     		mysession = new Session(string_password, string_participant, string_researcher);    		
     		bundle = new Bundle();    		
