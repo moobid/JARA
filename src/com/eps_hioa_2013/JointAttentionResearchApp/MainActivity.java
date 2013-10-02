@@ -75,10 +75,21 @@ public class MainActivity extends Activity {
     		bundle = new Bundle();    		
     		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
         	intent.putExtras(bundle);
-        	startActivity(intent);
+        	
+        	
+        	//some code as comments due to testfriendlieness
+        	//following two lines: The password gets checked if it is correct        	
+        	/*if(checkpassword(string_password) == true)*/ startActivity(intent);
+        	//else Toast.makeText(getApplicationContext(), "Wrong password", Toast.LENGTH_SHORT).show();
     	}
     	
     }
+	
+	public Boolean checkpassword(String password)
+	{
+		if(password == "admin") return true;
+		else return false;
+	}
 	
 	
 
