@@ -67,8 +67,7 @@ public class ModuleActivity extends ListActivity {
 	//gets module_name out of the last edited module
 	String getNameOfLastEditedModule()
 	{	
-		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
-        int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
+        int modulecounter = getModulecounterOutOfPreferences();
         
 		String nameOfModulePref = "MODULE" + modulecounter;
     	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
@@ -82,8 +81,25 @@ public class ModuleActivity extends ListActivity {
 		String nameOfModulePref = "MODULE" + i;
     	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
         String nameOfModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
-		return nameOfModule;
-				
+		return nameOfModule;				
+	}
+	
+	//returns an Array with the name of all modules in it; not tested yet
+	String[] getAllModulenames()
+	{
+		String[] modulelist = null;
+		for(int i = 0; i <= getModulecounterOutOfPreferences(); i++)
+		{
+			modulelist[i] = getNameOfModule(Integer.toString(i));
+		}
+		return modulelist;
+	}
+	
+	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way
+	public int getModulecounterOutOfPreferences() {
+		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
+        int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
+		return modulecounter;
 	}
 	
 	//sets the modulecounter to -1. When a new module gets added, it has the number 0
@@ -124,7 +140,7 @@ public class ModuleActivity extends ListActivity {
 		
 		setListAdapter(adapter);
 	}
-
+/////////////////////////////////NOT IMPORTANT FOR NOW//////////////////////////////////
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */

@@ -69,7 +69,7 @@ public class ModuleSettingsActivity extends Activity {
         editor.commit();
        
         
-        Toast.makeText(getApplicationContext(), "Saved as Module number" + getModulecounterOutOfPreferences(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Saved as MODULE" + getModulecounterOutOfPreferences(), Toast.LENGTH_SHORT).show();
         super.onBackPressed(); //goes back to last Activity (ModuleActivity)
 	}
 	
@@ -108,6 +108,7 @@ public class ModuleSettingsActivity extends Activity {
 	}
 
 	//returns the counter for the modules
+	//this Method is also present in ModuleActivity.java; This should be solved in a better way
 	public int getModulecounterOutOfPreferences() {
 		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
         int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
