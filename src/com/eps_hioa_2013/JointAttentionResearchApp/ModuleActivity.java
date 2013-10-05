@@ -31,8 +31,16 @@ public class ModuleActivity extends ListActivity {
 	}
 	
 	protected void onResume() {
+		//getting last 4 saved modules
 		TextView textView10 = (TextView) findViewById(R.id.lastused_textview);
-		textView10.setText(this.getlast_edited_module());
+		textView10.setText(this.getNameOfModule("0"));
+		TextView textView11 = (TextView) findViewById(R.id.lastused_textview2);
+		textView11.setText(this.getNameOfModule("1"));
+		TextView textView12 = (TextView) findViewById(R.id.lastused_textview3);
+		textView12.setText(this.getNameOfModule("2"));		
+		TextView textView13 = (TextView) findViewById(R.id.lastused_textview4);
+		textView13.setText(this.getNameOfModule("3"));
+  
 		super.onResume();
 	}
 	
@@ -56,13 +64,41 @@ public class ModuleActivity extends ListActivity {
 		return mysession;
 	}
 	
-	//gets String out of the last edited module
-	String getlast_edited_module()
-	{		
-    	SharedPreferences pref_modulesettings = getSharedPreferences("MODULE1", 0);  
-        String last_edited_module = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
-		return last_edited_module;
+	//gets module_name out of the last edited module
+	String getNameOfLastEditedModule()
+	{	
+		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
+        int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
+        
+		String nameOfModulePref = "MODULE" + modulecounter;
+    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+        String lastEditedModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
+		return lastEditedModule;				
 	}
+	
+	//gets module_name out of the module i
+	String getNameOfModule(String i)
+	{	
+		String nameOfModulePref = "MODULE" + i;
+    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+        String nameOfModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
+		return nameOfModule;
+				
+	}
+	
+	//sets the modulecounter to -1. When a new module gets added, it has the number 0
+	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way
+	public void onclick_reset_modulecounter(View view)
+	{
+    	SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0);
+        SharedPreferences.Editor editor = pref_modulecounter.edit();
+        int count = -1;
+        editor.putInt("modulecounter", count);
+        editor.commit();
+	}
+	
+	
+	
 	
 	
 	//shows the Modulesettings-screen for setting up a new module
@@ -74,10 +110,11 @@ public class ModuleActivity extends ListActivity {
 		
 	}
 	
+
 	
-	//for testing
 	
-	//creates the list
+	//for testing	
+	//creates the list out of the modules.xml 05.10.13
 	public void setupModuleList()
 	{
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(

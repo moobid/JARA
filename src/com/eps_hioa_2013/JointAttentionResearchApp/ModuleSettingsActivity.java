@@ -1,7 +1,6 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -10,14 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 //ModuleSettingsActivity gets called, when you create a new Module or like to edit an existing one
 public class ModuleSettingsActivity extends Activity {
 //	public final static String EXTRA_STRING_NAME = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_STRING_NAME";
 //	public final static String EXTRA_STRING_DISCRIPTION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_STRING_DISCRIPTION";
-
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//addPreferencesFromResource(R.xml.settings); deactivated for testing
@@ -27,11 +25,6 @@ public class ModuleSettingsActivity extends Activity {
 		setupActionBar();	
 	}
 	
-
-	protected void onResume() {
-		
-		super.onResume();
-	}
 
 	public void onclick_save(View view)
 	{	
@@ -57,47 +50,28 @@ public class ModuleSettingsActivity extends Activity {
     		}
     	//gets the infos out of the Layout in Variables. END
     	
-    	//puts the variables in a ShardPreference named MODULE1
-    	SharedPreferences pref_modulesettings = getSharedPreferences("MODULE1", 0);
+    	//if the modulecounter is smaller than -1 it gets set to -1
+    	if(getModulecounterOutOfPreferences() < -1) resetModulecounterInPreferences();
+    	
+    	//modulecounter gets iterated
+    	incrementModulecounterInPreferences();
+    	
+    	//the Name for the new Module gets created. It is like MODULE0, MODULE1, MODULE2, ...
+    	String nameForNewModule = "MODULE"+getModulecounterOutOfPreferences();
+    	
+    	//puts the variables into the ShardPreferences for the current Module
+    	SharedPreferences pref_modulesettings = getSharedPreferences(nameForNewModule, 0);
         SharedPreferences.Editor editor = pref_modulesettings.edit();       
         editor.putString("module_name", module_name);
         editor.putString("module_description", module_description);
         editor.putBoolean("blue_circle", blue_circle);
         editor.putBoolean("yellow_square", yellow_square);
         editor.commit();
+       
         
-        String get_module_name = pref_modulesettings.getString("modulen_name", module_name);
-        String get_module_description = pref_modulesettings.getString("modulen_name", module_description);
-        
-//        Intent intent = new Intent();
-//        intent.putExtra(EXTRA_STRING_NAME, get_module_name);
-//        intent.putExtra(EXTRA_STRING_DISCRIPTION, get_module_description);
-//        startActivity(intent);
-        
-//		TextView textView = (TextView) findViewById(R.id.textView2);
-//		textView.setText(get_module_name);
-//		
-//		TextView textView2 = (TextView) findViewById(R.id.textView1);
-//		textView2.setText(get_module_description);
-        
-        Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Saved as Module number" + getModulecounterOutOfPreferences(), Toast.LENGTH_SHORT).show();
+        super.onBackPressed(); //goes back to last Activity (ModuleActivity)
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * Set up the {@link android.app.ActionBar}.
@@ -131,6 +105,41 @@ public class ModuleSettingsActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	//returns the counter for the modules
+	public int getModulecounterOutOfPreferences() {
+		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
+        int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
+		return modulecounter;
+	}
+	
+	//increments the modulecounter
+	public void incrementModulecounterInPreferences() {		
+    	SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0);
+        SharedPreferences.Editor editor = pref_modulecounter.edit();
+        int count = getModulecounterOutOfPreferences() + 1;
+        editor.putInt("modulecounter", count);
+        editor.commit();
+	}
+	
+	//decrements the modulecounter
+	public void decrementModulecounterInPreferences() {		
+    	SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0);
+        SharedPreferences.Editor editor = pref_modulecounter.edit();
+        int count = getModulecounterOutOfPreferences() - 1;
+        editor.putInt("modulecounter", count);
+        editor.commit();
+	}
+	
+	//sets the modulecounter to -1. When a new module gets added, it has the number 0
+	//this Method is also present in ModuleActivity.java; This should be solved in a better way
+	public void resetModulecounterInPreferences() {
+		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0);
+        SharedPreferences.Editor editor = pref_modulecounter.edit();
+        int count = -1;
+        editor.putInt("modulecounter", count);
+        editor.commit();
 	}
 
 }

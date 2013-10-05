@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import android.os.Environment;
-import android.util.Log;
 
 //must implement Serializable to be able to get passed from one activity to another
 public class Session implements Serializable {
@@ -21,6 +20,7 @@ public class Session implements Serializable {
 	private String sessionInfo; //Simon: not sure what this is for:(
 	
 	private String filename;
+	private String pathname ="/sdcard/";
 	private File statisticsPath;
 	private File statisticsFile;
 	
