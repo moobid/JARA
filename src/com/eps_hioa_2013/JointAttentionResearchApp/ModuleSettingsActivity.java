@@ -88,7 +88,7 @@ public class ModuleSettingsActivity extends Activity {
 	
 	public void showElementSettingsDiaglog() {
 	    DialogFragment newFragment = new DialogFragment();
-	    newFragment.show(getSettingsFragmentManager(), "diaglogsettings");
+	    newFragment.show(getFragmentManager(), "diaglogsettings");
 	}
 
 	public void onclick_save(View view)
