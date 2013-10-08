@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="@dimen/size4"
-            android:text="Last saved module" />
+            android:text="Last saved module0" />
 
         <TextView
             android:id="@+id/lastused_textview"
@@ -112,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="@dimen/size4"
-            android:text="Last saved module2" />
+            android:text="Last saved module1" />
 
         <TextView
             android:id="@+id/lastused_textview2"
@@ -130,7 +130,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="@dimen/size4"
-            android:text="Last saved module3" />
+            android:text="Last saved module2" />
 
         <TextView
             android:id="@+id/lastused_textview3"
@@ -147,7 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="@dimen/size4"
-            android:text="Last saved module4" />
+            android:text="Last saved module3" />
 
         <TextView
             android:id="@+id/lastused_textview4"

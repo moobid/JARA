@@ -1,20 +1,28 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 //ModuleSettingsActivity gets called, when you create a new Module or like to edit an existing one
 public class ModuleSettingsActivity extends Activity {
 //	public final static String EXTRA_STRING_NAME = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_STRING_NAME";
 //	public final static String EXTRA_STRING_DISCRIPTION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_STRING_DISCRIPTION";
+	private int counterPreactions = 0;
+	private int counterSignals = 0;
+	private int counterActions = 0;
+	private int counterRewards = 0;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,9 +30,66 @@ public class ModuleSettingsActivity extends Activity {
 		setContentView(R.layout.activity_module_settings);
 		
 		// Show the Up button in the action bar.
-		setupActionBar();	
+		setupActionBar();
+		addElementToList("asdf", "Preactions");
+		addElementToList("asdf", "Actions");
+		addElementToList("asdf", "Signals");
+		addElementToList("asdfasdf", "Signals");
+
+	}
+	//adds a Checkbox for an Element to the Settingsscreen
+	//WARNING: elementType must be either "Preactions", "Signals", "Actions" or "Rewards"
+	public void addElementToList(String elementName, String elementType)
+	{
+		
+		TableLayout table = null;
+		if(elementType == "Preactions"){
+			table = (TableLayout) findViewById(R.id.Preactions);
+			counterPreactions++;
+		}
+		if(elementType == "Signals"){
+			table = (TableLayout) findViewById(R.id.Signals);
+			counterSignals++;
+		}
+		if(elementType == "Actions"){
+			table = (TableLayout) findViewById(R.id.Actions);
+			counterActions++;
+		}
+		if(elementType == "Rewards"){
+			table = (TableLayout) findViewById(R.id.Rewards);
+			counterRewards++;
+		}
+		if(table == null){ //error
+			Toast.makeText(getApplicationContext(),		
+				"Error in: public void addElementToList(String elementName, String elementType); WRONG elementType",
+				Toast.LENGTH_LONG).show();
+		}
+		//creates new Tablerow and sets it into the new Tablelayout
+		TableRow newTablerow = new TableRow(this);
+		table.addView(newTablerow);
+		
+		//creates new Checkbox with the name of the element and sets it into the Tablerow
+		CheckBox newCheckbox = new CheckBox(this);
+		newCheckbox.setText(elementName);
+		newTablerow.addView(newCheckbox);
+		
+		//creates new Button and sets it also into the Tablerow
+		Button newButton = new Button(this);
+		newButton.setText("E");
+
+		newButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	showElementSettingsDiaglog();
+            }
+        });
+		
+		newTablerow.addView(newButton);        
 	}
 	
+	public void showElementSettingsDiaglog() {
+	    DialogFragment newFragment = new DialogFragment();
+	    newFragment.show(getSettingsFragmentManager(), "diaglogsettings");
+	}
 
 	public void onclick_save(View view)
 	{	
@@ -35,19 +100,19 @@ public class ModuleSettingsActivity extends Activity {
     	EditText editText1 = (EditText) findViewById(R.id.editText1);
     	String module_description = editText1.getText().toString();
     	
-    	CheckBox checkbox1 = (CheckBox) findViewById(R.id.checkBox1);
-    	Boolean blue_circle = false;
-    	if(checkbox1.isChecked())
-    		{
-    			blue_circle = true;
-    		}
-    	
-    	CheckBox checkbox2 = (CheckBox) findViewById(R.id.checkBox2);
-    	Boolean yellow_square = false;
-    	if(checkbox2.isChecked())
-    		{
-    			yellow_square = true;
-    		}
+//    	CheckBox checkbox1 = (CheckBox) findViewById(R.id.checkBox1);
+//    	Boolean blue_circle = false;
+//    	if(checkbox1.isChecked())
+//    		{
+//    			blue_circle = true;
+//    		}
+//    	
+//    	CheckBox checkbox2 = (CheckBox) findViewById(R.id.checkBox2);
+//    	Boolean yellow_square = false;
+//    	if(checkbox2.isChecked())
+//    		{
+//    			yellow_square = true;
+//    		}
     	//gets the infos out of the Layout in Variables. END
     	
     	//if the modulecounter is smaller than -1 it gets set to -1
@@ -64,8 +129,8 @@ public class ModuleSettingsActivity extends Activity {
         SharedPreferences.Editor editor = pref_modulesettings.edit();       
         editor.putString("module_name", module_name);
         editor.putString("module_description", module_description);
-        editor.putBoolean("blue_circle", blue_circle);
-        editor.putBoolean("yellow_square", yellow_square);
+//        editor.putBoolean("blue_circle", blue_circle);
+//        editor.putBoolean("yellow_square", yellow_square);
         editor.commit();
        
         

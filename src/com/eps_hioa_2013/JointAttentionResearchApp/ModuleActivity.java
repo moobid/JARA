@@ -39,7 +39,7 @@ public class ModuleActivity extends ListActivity {
 		TextView textView12 = (TextView) findViewById(R.id.lastused_textview3);
 		textView12.setText(this.getNameOfModule("2"));		
 		TextView textView13 = (TextView) findViewById(R.id.lastused_textview4);
-		textView13.setText(this.getNameOfModule("3"));
+		textView13.setText(this.getNameOfModule("55"));
   
 		super.onResume();
 	}
@@ -87,7 +87,7 @@ public class ModuleActivity extends ListActivity {
 	//returns an Array with the name of all modules in it; not tested yet
 	String[] getAllModulenames()
 	{
-		String[] modulelist = null;
+		String[] modulelist = new String[99];
 		for(int i = 0; i <= getModulecounterOutOfPreferences(); i++)
 		{
 			modulelist[i] = getNameOfModule(Integer.toString(i));

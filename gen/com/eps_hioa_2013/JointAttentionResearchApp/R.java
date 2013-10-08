@@ -36,15 +36,21 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
+        public static final int Actions=0x7f0a0025;
+        public static final int Actionstext=0x7f0a0024;
+        public static final int Preactions=0x7f0a0021;
+        public static final int Preactionstext=0x7f0a0020;
+        public static final int Rewards=0x7f0a0027;
+        public static final int Rewardstext=0x7f0a0026;
+        public static final int Signals=0x7f0a0023;
+        public static final int Signalstext=0x7f0a0022;
         public static final int TableLayout1=0x7f0a0003;
         public static final int TableRow4=0x7f0a000d;
         public static final int TextView10=0x7f0a0011;
         public static final int TextView4=0x7f0a000e;
-        public static final int action_settings=0x7f0a0023;
+        public static final int action_settings=0x7f0a0028;
         public static final int button1=0x7f0a001c;
         public static final int button2=0x7f0a001d;
-        public static final int checkBox1=0x7f0a0020;
-        public static final int checkBox2=0x7f0a0022;
         public static final int date_textview=0x7f0a000f;
         public static final int editText1=0x7f0a001f;
         public static final int editText2=0x7f0a001e;
@@ -62,7 +68,6 @@ public final class R {
         public static final int tableRow10=0x7f0a0015;
         public static final int tableRow2=0x7f0a0007;
         public static final int tableRow3=0x7f0a000a;
-        public static final int tableRow4=0x7f0a0021;
         public static final int tableRow5=0x7f0a0018;
         public static final int tableRow6=0x7f0a001a;
         public static final int tableRow7=0x7f0a001b;

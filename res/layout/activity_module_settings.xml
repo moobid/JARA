@@ -52,33 +52,84 @@
             android:inputType="textMultiLine" />
     </TableRow>
 
+
+    <!-- dynamic -->
     <TableRow
-        android:id="@+id/tableRow3"
+        android:id="@+id/Preactionstext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
-
-        <CheckBox
-            android:id="@+id/checkBox1"
+		<TextView
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="blue cricle" />
+            android:text="Preaction"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow4"
+    
+    <TableLayout
+        android:id="@+id/Preactions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
-
-        <CheckBox
-            android:id="@+id/checkBox2"
+        
+    </TableLayout>
+    
+    <TableRow
+        android:id="@+id/Signalstext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+		<TextView
+            android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="yellow square" />
+            android:text="Signals"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+	</TableRow>    
+    <TableLayout
+        android:id="@+id/Signals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >       
+    </TableLayout>
 
-    </TableRow>
-
+    
     <TableRow
-        android:id="@+id/tableRow5"
+        android:id="@+id/Actionstext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+		<TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Actions"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </TableRow>
+    <TableLayout
+        android:id="@+id/Actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >       
+    </TableLayout>
+ 
+    
+    <TableRow
+        android:id="@+id/Rewardstext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+		<TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rewards"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </TableRow>
+	<TableLayout
+        android:id="@+id/Rewards"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >        
+    </TableLayout>
+
+	
+	<!-- dynamic end-->
+    <TableRow
+        android:id="@+id/tableRow6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
