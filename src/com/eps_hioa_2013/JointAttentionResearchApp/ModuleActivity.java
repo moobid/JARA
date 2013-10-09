@@ -2,6 +2,9 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 
 public class ModuleActivity extends ListActivity {
 	private Session mysession;
+	private List<Module> myModules;
 
 	//receives the sessionobject and saves it into mysession
 	//+ sets the input in the overview of the top of the screen
@@ -25,8 +29,9 @@ public class ModuleActivity extends ListActivity {
 		setupActionBar();
 		
 		Intent intent = getIntent();
-		mysession = this.fillSession(intent);
-				
+		mysession = this.fillSession(intent);		
+		myModules = createModules();
+		
 		setupModuleList(); //for the list 
 	}
 	
@@ -40,12 +45,14 @@ public class ModuleActivity extends ListActivity {
 		textView12.setText(this.getNameOfModule("2"));		
 		TextView textView13 = (TextView) findViewById(R.id.lastused_textview4);
 		textView13.setText(this.getNameOfModule("55"));
-  
+		
+		myModules = createModules();
+		setupModuleList();
 		super.onResume();
 	}
 	
 	//fills a Session-Object with the details delivered by the user in Activty_module screen
-	Session fillSession(Intent intent)
+	public Session fillSession(Intent intent)
 	{
 		mysession = (Session) intent.getSerializableExtra(MainActivity.EXTRA_SESSION);
 		// Create the text view
@@ -65,7 +72,7 @@ public class ModuleActivity extends ListActivity {
 	}
 	
 	//gets module_name out of the last edited module
-	String getNameOfLastEditedModule()
+	public String getNameOfLastEditedModule()
 	{	
         int modulecounter = getModulecounterOutOfPreferences();
         
@@ -76,7 +83,7 @@ public class ModuleActivity extends ListActivity {
 	}
 	
 	//gets module_name out of the module i
-	String getNameOfModule(String i)
+	public String getNameOfModule(String i)
 	{	
 		String nameOfModulePref = "MODULE" + i;
     	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
@@ -85,13 +92,18 @@ public class ModuleActivity extends ListActivity {
 	}
 	
 	//returns an Array with the name of all modules in it; not tested yet
-	String[] getAllModulenames()
+	public String[] getAllModulenames()
 	{
-		String[] modulelist = new String[99];
+
+		String[] modulelist = null;
+		List<String> names = new ArrayList<String>();
+
+
 		for(int i = 0; i <= getModulecounterOutOfPreferences(); i++)
 		{
-			modulelist[i] = getNameOfModule(Integer.toString(i));
+			names.add(myModules.get(i).getName()) ;
 		}
+		modulelist = names.toArray(new String[names.size()]);
 		return modulelist;
 	}
 	
@@ -114,7 +126,36 @@ public class ModuleActivity extends ListActivity {
 	}
 	
 	
-	
+	private List<Module> createModules() {
+		// create container for new modules
+		List<Module> moduleContainer = new ArrayList<Module>();
+		
+		// loop through preference file for all module names
+		for(int i = 0; i <= getModulecounterOutOfPreferences(); i++)
+		{
+			//start values for error checking
+			Module currentModule = null;
+			String name = "";
+			String description = "";
+			int number = -1;
+			
+			//get the preference with currentModule information
+			String nameOfModulePref = "MODULE" + i;
+	    	SharedPreferences pref_currentModule = getSharedPreferences(nameOfModulePref, 0);  
+	        
+			// for each name found create new Module object with preference name and description name and number
+			name = pref_currentModule.getString("module_name", ACCESSIBILITY_SERVICE);
+			description = pref_currentModule.getString("module_description", ACCESSIBILITY_SERVICE);
+			number = i;
+			currentModule = new Module(number, name, description);
+			
+			// add new Module object to container
+			moduleContainer.add(currentModule);
+		}
+
+		// Return Container
+		return moduleContainer;		
+	}
 	
 	
 	//shows the Modulesettings-screen for setting up a new module
@@ -133,11 +174,12 @@ public class ModuleActivity extends ListActivity {
 	//creates the list out of the modules.xml 05.10.13
 	public void setupModuleList()
 	{
+		getAllModulenames();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 				this,
 				android.R.layout.simple_list_item_1,
-				getResources().getStringArray(R.array.fruits));
-		
+				getAllModulenames()
+				);		
 		setListAdapter(adapter);
 	}
 /////////////////////////////////NOT IMPORTANT FOR NOW//////////////////////////////////
