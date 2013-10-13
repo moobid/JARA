@@ -13,12 +13,18 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ModuleActivity extends ListActivity {
 	private Session mysession;
 	private List<Module> myModules;
+	public final static String MODULENUMBER = "com.eps_hioa_2013.JointAttentionResearchApp.MODULENUMBER";
+	
 
 	//receives the sessionobject and saves it into mysession
 	//+ sets the input in the overview of the top of the screen
@@ -33,6 +39,8 @@ public class ModuleActivity extends ListActivity {
 		myModules = createModules();
 		
 		setupModuleList(); //for the list 
+		setupOnItemClick();
+		
 	}
 	
 	protected void onResume() {
@@ -44,12 +52,60 @@ public class ModuleActivity extends ListActivity {
 		TextView textView12 = (TextView) findViewById(R.id.lastused_textview3);
 		textView12.setText(this.getNameOfModule("2"));		
 		TextView textView13 = (TextView) findViewById(R.id.lastused_textview4);
-		textView13.setText(this.getNameOfModule("55"));
+		textView13.setText(this.getNameOfModule("3"));
 		
 		myModules = createModules();
 		setupModuleList();
 		super.onResume();
 	}
+	
+	//shows the Modulesettings-screen for setting up a new module
+	public void onclick_add_module(View view)
+	{		
+		Intent intent = new Intent(this, ModuleSettingsActivity.class);
+		intent.putExtra(MODULENUMBER, Integer.toString(-1)); //-1 for new module
+		startActivity(intent);		
+	}
+	
+	//makes the items in the list clickable and sends the user to the settings of each module
+	private void setupOnItemClick() {
+		ListView listView1 = (ListView) findViewById(android.R.id.list);
+		listView1.setOnItemClickListener(new OnItemClickListener() {
+	        @Override
+	        public void onItemClick(AdapterView<?> parent, View view, int position,
+	                long id) {
+	            
+	            String modulename = ((TextView)view).getText().toString();
+	            
+	            
+	            for(int i = 0; i <= getModulecounterOutOfPreferences(); i++)
+	    		{
+//	            	String nameOfModulePref = "MODULE"+Integer.toString(i);
+//	            	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);
+//	            	String modulenames = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
+	            	
+	            	Module currentmodule = myModules.get(i);
+		            String name = currentmodule.getName();
+
+		            
+	            	if(name.equals(modulename))
+	            	{
+	            		loadSettingsOfModule(i);
+	            	}
+	    		}           	            
+	        }
+	    });		
+	}
+	
+	//sends the user to the settings of each module (to ModuleSettingsActivity)
+	public void loadSettingsOfModule(int moduleNumber)
+	{
+		Intent intent = new Intent(this, ModuleSettingsActivity.class);
+		intent.putExtra(MODULENUMBER, Integer.toString(moduleNumber));
+		startActivity(intent);
+	}
+
+
 	
 	//fills a Session-Object with the details delivered by the user in Activty_module screen
 	public Session fillSession(Intent intent)
@@ -71,26 +127,6 @@ public class ModuleActivity extends ListActivity {
 		return mysession;
 	}
 	
-	//gets module_name out of the last edited module
-	public String getNameOfLastEditedModule()
-	{	
-        int modulecounter = getModulecounterOutOfPreferences();
-        
-		String nameOfModulePref = "MODULE" + modulecounter;
-    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-        String lastEditedModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
-		return lastEditedModule;				
-	}
-	
-	//gets module_name out of the module i
-	public String getNameOfModule(String i)
-	{	
-		String nameOfModulePref = "MODULE" + i;
-    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-        String nameOfModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
-		return nameOfModule;				
-	}
-	
 	//returns an Array with the name of all modules in it; not tested yet
 	public String[] getAllModulenames()
 	{
@@ -106,25 +142,6 @@ public class ModuleActivity extends ListActivity {
 		modulelist = names.toArray(new String[names.size()]);
 		return modulelist;
 	}
-	
-	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way
-	public int getModulecounterOutOfPreferences() {
-		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
-        int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
-		return modulecounter;
-	}
-	
-	//sets the modulecounter to -1. When a new module gets added, it has the number 0
-	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way
-	public void onclick_reset_modulecounter(View view)
-	{
-    	SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0);
-        SharedPreferences.Editor editor = pref_modulecounter.edit();
-        int count = -1;
-        editor.putInt("modulecounter", count);
-        editor.commit();
-	}
-	
 	
 	private List<Module> createModules() {
 		// create container for new modules
@@ -157,21 +174,6 @@ public class ModuleActivity extends ListActivity {
 		return moduleContainer;		
 	}
 	
-	
-	//shows the Modulesettings-screen for setting up a new module
-	public void onclick_add_module(View view)
-	{
-		
-		Intent intent = new Intent(this, ModuleSettingsActivity.class);
-		startActivity(intent);
-		
-	}
-	
-
-	
-	
-	//for testing	
-	//creates the list out of the modules.xml 05.10.13
 	public void setupModuleList()
 	{
 		getAllModulenames();
@@ -182,6 +184,67 @@ public class ModuleActivity extends ListActivity {
 				);		
 		setListAdapter(adapter);
 	}
+	
+	//gets module_name out of the last edited module
+	public String getNameOfLastEditedModule()
+	{	
+        int modulecounter = getModulecounterOutOfPreferences();
+        
+		String nameOfModulePref = "MODULE" + modulecounter;
+    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+        String lastEditedModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
+		return lastEditedModule;				
+	}
+	
+	//gets module_name out of the module i
+	public String getNameOfModule(String i)
+	{	
+		String nameOfModulePref = "MODULE" + i;
+    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+        String nameOfModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
+		return nameOfModule;				
+	}
+	
+	public String getDescriptionOfModule(String i)
+	{	
+		String nameOfModulePref = "MODULE" + i;
+    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+        String nameOfDescrition = pref_modulesettings.getString("descrition", ACCESSIBILITY_SERVICE);
+		return nameOfDescrition;		
+	}
+	
+	
+	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way
+	public int getModulecounterOutOfPreferences() {
+		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
+        int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
+		return modulecounter;
+	}
+	
+	//sets the modulecounter to -1. When a new module gets added, it has the number 0
+	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way
+	public void onclick_reset_modulecounter(View view)
+	{
+    	SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0);
+        SharedPreferences.Editor editor = pref_modulecounter.edit();
+        int count = -1;
+        editor.putInt("modulecounter", count);
+        editor.commit();
+	}
+	
+	
+
+	
+	
+
+	
+
+	
+	
+
+
+
+	
 /////////////////////////////////NOT IMPORTANT FOR NOW//////////////////////////////////
 	/**
 	 * Set up the {@link android.app.ActionBar}.
