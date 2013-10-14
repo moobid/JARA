@@ -43,9 +43,7 @@
         <activity
             android:name="com.eps_hioa_2013.JointAttentionResearchApp.GameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_game"
-            android:parentActivityName="com.eps_hioa_2013.JointAttentionResearchApp.ModuleActivity"
-            android:theme="@style/FullscreenTheme" >
+            android:parentActivityName="com.eps_hioa_2013.JointAttentionResearchApp.ModuleActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.eps_hioa_2013.JointAttentionResearchApp.ModuleActivity" />
