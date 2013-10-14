@@ -2,6 +2,7 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +19,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ModuleActivity extends ListActivity {
 	private Session mysession;
 	private List<Module> myModules;
 	public final static String MODULENUMBER = "com.eps_hioa_2013.JointAttentionResearchApp.MODULENUMBER";
-	
+	Bundle bundle;
+	public final static String EXTRA_SESSION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_SESSION";
 
 	//receives the sessionobject and saves it into mysession
 	//+ sets the input in the overview of the top of the screen
@@ -65,6 +66,16 @@ public class ModuleActivity extends ListActivity {
 		Intent intent = new Intent(this, ModuleSettingsActivity.class);
 		intent.putExtra(MODULENUMBER, Integer.toString(-1)); //-1 for new module
 		startActivity(intent);		
+	}
+	
+	public void onclick_start_game(View view)
+	{		
+		Intent intent = new Intent(this, GameActivity.class);
+		intent.putExtra(MODULENUMBER, Integer.toString(0)); //to start MODULE0 as a test	
+		bundle = new Bundle();    		
+		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
+    	intent.putExtras(bundle);
+		startActivity(intent);
 	}
 	
 	//makes the items in the list clickable and sends the user to the settings of each module
@@ -173,6 +184,8 @@ public class ModuleActivity extends ListActivity {
 		// Return Container
 		return moduleContainer;		
 	}
+	
+
 	
 	public void setupModuleList()
 	{

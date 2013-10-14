@@ -11,7 +11,10 @@ public class Module{
 	private static int number; //number of the module
 	private String name;
 	private String description;
-	private Element elements[];
+	private Element preactionelements[]; //Pictures in it
+	private Element signalelements[]; //Pictures in it
+	private Element actionelements[]; //Pictures in it
+	private Element rewardelements[]; //Pictures, Sounds, Videos in it
 	
 	public Module(int myNumber, String myName, String myDescription)
 	{

@@ -16,6 +16,7 @@ public class Session implements Serializable {
 	private String researcher;
 	
 	private Date currentDate;
+	private Date deadlineDate = null;
 	
 	private String sessionInfo; //Simon: not sure what this is for:(
 	
@@ -125,6 +126,13 @@ public class Session implements Serializable {
 		return currentDate;
 	}
 
+	public Date getDeadlineDate() {
+		return deadlineDate;
+	}
+
+	public void setDeadlineDate(Date deadlineDate) {
+		this.deadlineDate = deadlineDate;
+	}
 	public String getFilename() {
 		return filename;
 	}
@@ -134,4 +142,5 @@ public class Session implements Serializable {
 				+"&&"+this.getResearcher()
 				+"&&"+this.getcurrentDate().toString();
 	}
+
 }
