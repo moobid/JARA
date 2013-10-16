@@ -221,21 +221,4 @@
             android:text="reset_Modulecounter" />
 
     </TableRow>
-    
-   
-    <TableRow
-        android:id="@+id/tableRow20"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onclick_start_game"
-            android:text="start MODULE0" />
-
-    </TableRow>
-
-
 </TableLayout>

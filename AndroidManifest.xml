@@ -42,11 +42,11 @@
         </activity>
         <activity
             android:name="com.eps_hioa_2013.JointAttentionResearchApp.GameActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName="com.eps_hioa_2013.JointAttentionResearchApp.ModuleActivity" >
+            android:label="@string/title_activity_module_settings"
+            android:parentActivityName="com.eps_hioa_2013.JointAttentionResearchApp.ModuleSettingsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.eps_hioa_2013.JointAttentionResearchApp.ModuleActivity" />
+                android:value="com.eps_hioa_2013.JointAttentionResearchApp.ModuleSettingsActivity" />
         </activity>
 
     </application>

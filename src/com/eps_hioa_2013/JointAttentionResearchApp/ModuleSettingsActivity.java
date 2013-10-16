@@ -1,5 +1,7 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
+import java.io.Serializable;
+
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -12,14 +14,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
 
 //ModuleSettingsActivity gets called, when you create a new Module or like to edit an existing one
 public class ModuleSettingsActivity extends Activity {
-//	public final static String EXTRA_STRING_NAME = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_STRING_NAME";
-//	public final static String EXTRA_STRING_DISCRIPTION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_STRING_DISCRIPTION";
+	public final static String MODULENUMBER = "com.eps_hioa_2013.JointAttentionResearchApp.MODULENUMBER";	
+	public final static String EXTRA_SESSION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_SESSION";
+	public final static String EXTRA_ROUNDSTOPLAY = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_ROUNDSTOPLAY";
+	public final static String EXTRA_TIME = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_TIME";
+	
+	Bundle bundle;
+	Session mysession;
+	
+	NumberPicker npMinutes;
+	NumberPicker npSeconds;
+	NumberPicker npRoundsToPlay;
 	private int counterPreactions = 0;
 	private int counterSignals = 0;
 	private int counterActions = 0;
@@ -28,6 +40,7 @@ public class ModuleSettingsActivity extends Activity {
 	private int currentModuleNumber = -1;
 	
 	protected void onCreate(Bundle savedInstanceState) {
+		System.out.println("ModuleSettingsActivity started");
 		super.onCreate(savedInstanceState);
 		//addPreferencesFromResource(R.xml.settings); deactivated for testing
 		setContentView(R.layout.activity_module_settings);
@@ -38,12 +51,37 @@ public class ModuleSettingsActivity extends Activity {
 		addElementToList("asdf", "Actions");
 		addElementToList("asdf", "Signals");
 		addElementToList("asdfasdf", "Signals");
-		
 		Intent intent = getIntent();
+		String mode = (intent.getStringExtra(ModuleActivity.MODE));
+		if(mode.equals("0"))
+		{
+			Button start_module = (Button) findViewById(R.id.start_module);
+			start_module.setVisibility(View.GONE);
+		}
+		mysession = (Session) intent.getSerializableExtra(ModuleActivity.EXTRA_SESSION);
+		
+		
+		
 		String modulenumber = (intent.getStringExtra(ModuleActivity.MODULENUMBER));
 		this.currentModuleNumber = Integer.parseInt(modulenumber);
+		configureNumberPickers();
+		System.out.println("ModuleSettingsActivity started3");
 		loadModuleSettings(modulenumber);
+		
 
+	}
+	private void configureNumberPickers() {
+		npMinutes = (NumberPicker) findViewById(R.id.npMinutes);
+		npMinutes.setMaxValue(999);
+		npMinutes.setMinValue(0);
+		
+		npSeconds = (NumberPicker) findViewById(R.id.npSeconds);
+		npSeconds.setMaxValue(59);
+		npSeconds.setMinValue(0);
+				
+		npRoundsToPlay = (NumberPicker) findViewById(R.id.npRoundsToPlay);
+		npRoundsToPlay.setMaxValue(999);
+		npRoundsToPlay.setMinValue(0);		
 	}
 	public void loadModuleSettings(String modulenumber) {
 		
@@ -58,8 +96,27 @@ public class ModuleSettingsActivity extends Activity {
 		}
 		else {/*nothing to do here*/}
 	}
+	
+	public void onclick_start_game(View view)
+	{	
+		mysession.updateStatistics("onclic_start 1");
+		
+		Intent intent = new Intent(this, GameActivity.class);
+		intent.putExtra(MODULENUMBER, Integer.toString(currentModuleNumber));
+		intent.putExtra(EXTRA_ROUNDSTOPLAY, npRoundsToPlay.getValue());		
+		intent.putExtra(EXTRA_TIME, calculateTimeToPlayInSeconds());
+		bundle = new Bundle();
+		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
+    	intent.putExtras(bundle);
+    	mysession.updateStatistics("onclic_start 2");
+		startActivity(intent);
+	}
 
-
+	private int calculateTimeToPlayInSeconds() {
+		int minutes = npMinutes.getValue();
+		int seconds = npSeconds.getValue();		
+		return ((minutes*60)+seconds);
+	}
 	public void onclick_save(View view)
 	{	
 		//gets the infos out of the Layout in Variables. START

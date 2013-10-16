@@ -1,5 +1,7 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,10 +26,14 @@ public class GameActivity extends Activity {
 	private int roundcounter = 0;
 	private int roundcounterlimit;
 	
-	private int timelimit;
+	private Date DateStartedPlaying = null;
+	private int timeToPlayInSeconds;
 	//private Timecounter timecounter;
 	
+	private boolean PreactionPresent = true;
+	
 	private Module mymodule;
+	private String modulenumber;
 	private Session mysession;
 
 	
@@ -37,19 +43,34 @@ public class GameActivity extends Activity {
 		//set full screen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 	    this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
+	    System.out.println("GameActivity started");
 		setContentView(R.layout.activity_game);
-		
+	    mysession.updateStatistics("gameactivity started");
 		Intent intent = getIntent();
-		mysession = (Session) intent.getSerializableExtra(ModuleActivity.EXTRA_SESSION);
+		mysession = (Session) intent.getSerializableExtra(ModuleSettingsActivity.EXTRA_SESSION);		
+		modulenumber = (intent.getStringExtra(ModuleSettingsActivity.MODULENUMBER));
+		roundcounterlimit = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_ROUNDSTOPLAY, 0);
+		timeToPlayInSeconds = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_TIME, 0);
+		//todo: check if roundcounterlimit != 0
+		//todo: check if roundcounterlimit != 0
+		DateStartedPlaying = new Date();
 		
-		String modulenumber = (intent.getStringExtra(ModuleActivity.MODULENUMBER));
-
+		mysession.updateStatistics("\n\n" +
+			"Started Playing a module\n" +
+			"Started playing: " + DateStartedPlaying + "\n" +
+			"Modulename: " + getNameOfModule(modulenumber) + "\n" +
+			"Preferencename: " + "MODULE" + modulenumber + "\n" +
+			"Moduledescription: " + getDescriptionOfModule(modulenumber) + "\n" +
+			"Time to play in s: " + timeToPlayInSeconds + "\n" +	
+			"Rounds to play: " + roundcounterlimit + "\n"			
+				);
 		//todo: if there's no preaction in module, then the stagecounter has to be 1 in beginning
 		
 		//starts the time and makes sure to end it, if the time is over
 
 		//timecounter = new Timecounter(mysession.getDeadlineDate());
-		
+
 	}
 
 	
@@ -59,7 +80,7 @@ public class GameActivity extends Activity {
 		switch(stagecounter)
 		{
 		case 0: //0 = Preaction;
-			//todo: if( id of clicked ImageButton == id of a Preactionimage)
+			//todo: if(view.getId() == id of indeed a Preactionimage)
 			{
 				//todo: showAllActions()
 				//.....
@@ -93,6 +114,8 @@ public class GameActivity extends Activity {
 		}
 		
 	}
+	
+	
 
 	
 	

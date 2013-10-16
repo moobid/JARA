@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
 	//Just activates the first View
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		System.out.println("MainActivity started");
 	    
 	    //connect the .java to the .xml make sure you set fullscreen first in code else it will crash
 		setContentView(R.layout.activity_main);

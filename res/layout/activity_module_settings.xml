@@ -10,6 +10,135 @@
     tools:context=".ModuleSettingsActivity" >
 
     <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/start_module"
+            android:layout_width="190dp"
+            android:layout_height="80dp"
+            android:onClick="onclick_start_game"            
+            android:text="Start Module" />
+
+    </TableRow>
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >    
+    		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="8dp"
+		    android:background="@android:color/darker_gray"/>
+    		
+    		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="8dp"
+		    android:background="@android:color/darker_gray"/>
+    </TableRow>
+    
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textSize="30dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </TableRow>
+    
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >    
+    		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="8dp"
+		    android:background="@android:color/darker_gray"/>
+    		
+    		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="8dp"
+		    android:background="@android:color/darker_gray"/>
+    </TableRow>    
+    
+    <TableRow
+        android:id="@+id/tableRow22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time to play min / s"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="max Rounds to play"
+            android:layout_marginLeft="50dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	</TableRow>	
+	
+	<TableRow
+        android:id="@+id/tableRow22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" >        
+	    	<NumberPicker
+		        android:id="@+id/npMinutes"
+		        android:layout_width="100dp"
+		        android:layout_height="wrap_content"/>
+	            
+	    	<NumberPicker
+		        android:id="@+id/npSeconds"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="25dp"
+		        android:layout_width="70dp"/>
+	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" >        
+	    	<NumberPicker
+		        android:id="@+id/npRoundsToPlay"
+		        android:layout_marginLeft="50dp"
+		        android:layout_height="wrap_content"
+		        android:layout_width="100dp"/>
+	
+	    </LinearLayout>
+	</TableRow>
+		 
+
+    
+    <TableRow
+        android:id="@+id/tableRow23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="10dp"
+		    android:background="@android:color/background_light"/>
+		
+		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="10dp"
+		    android:background="@android:color/background_light"/>
+    </TableRow>
+
+	
+    <TableRow
         android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
@@ -18,16 +147,15 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:text="Modulename"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            />
 
         <EditText
             android:id="@+id/editText2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10" >
-
-            <requestFocus />
+            android:ems="10">
         </EditText>
 
     </TableRow>
@@ -41,7 +169,7 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description"
+            android:text="Moduledescription"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
@@ -52,6 +180,20 @@
             android:inputType="textMultiLine" />
     </TableRow>
 
+    <TableRow
+        android:id="@+id/tableRow23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="10dp"
+		    android:background="@android:color/background_light"/>
+		
+		<View
+		    android:layout_width="fill_parent"
+		    android:layout_height="10dp"
+		    android:background="@android:color/background_light"/>
+    </TableRow>
 
     <!-- dynamic -->
     <TableRow
@@ -139,7 +281,7 @@
             android:layout_height="wrap_content"
             android:text="Save"
             android:onClick="onclick_save" />
-
+        
     </TableRow>
 
 </TableLayout>

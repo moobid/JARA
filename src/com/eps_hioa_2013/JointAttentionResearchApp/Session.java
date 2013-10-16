@@ -1,8 +1,8 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,6 +25,11 @@ public class Session implements Serializable {
 	private File statisticsPath;
 	private File statisticsFile;
 	
+	PrintWriter pw = null;
+	
+    private int mData;
+
+
 
 	//sets Membervaribales (incl. current Date) + calls updateStatistics() the first time
 	public Session(String pass, String part, String research) {
@@ -33,8 +38,7 @@ public class Session implements Serializable {
 		setResearcher(research);
 		currentDate = new Date();
 		setFilename();
-		
-		
+
 		updateStatistics("Filename:    "+this.getFilename()
 					  +"\nParticipant: "+this.getParticipant()
 					  +"\nResearcher:  "+this.getResearcher()
@@ -46,46 +50,25 @@ public class Session implements Serializable {
 	{
 		if(isExternalStorageWritable()) //checks if ExternalStorage is available
 		{	
-			if(/*todo: file exists*/true) /*file exists*/
-			{
-				try
-				{
-					FileOutputStream fOut = new FileOutputStream(statisticsFile);
-					OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-					
-					myOutWriter.append(newData); //new data gets appended
-					
-					myOutWriter.close();
-					fOut.close();
-				} catch (Exception e) {
-					//todo: error
-				}
-			}
-			if(/*todo: file does not exist*/true) /*file does not exist*/
-			{		
-				try {
-					statisticsFile = new File("/sdcard/"+filename+".txt");
-					statisticsFile.createNewFile();
-					FileOutputStream fOut = new FileOutputStream(statisticsFile);
-					OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-					myOutWriter.append(newData); //the header of the file gets created
-					myOutWriter.close();
-					fOut.close();
-					
-				} catch (Exception e) {
-					//todo: error
-				}
-			}
+				PrintWriter pw = null;
+		        try{
+		        	pw = new PrintWriter(new FileWriter("/sdcard/"+filename+".txt", true));
+	            	pw.write(newData);
+	                pw.println();
+		        }
+		        catch(Exception e) {
+		            System.out.println(e);
+		        }
+		        finally {
+		            if (pw != null) {
+		                pw.close();
+		            }
+		        }		
 		}
 		else
 		{
 			//todo: show error
 		}
-	}
-	//not sure what this is doing, but it was in the uml-diagram
-	public void saveSessionInfo()
-	{
-		//todo
 	}
 	
 	//checks if the external storage (sd-card) is available
