@@ -1,15 +1,22 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Date;
+
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.VideoView;
 
 public class GameActivity extends Activity {
 	private ImageButton topleft = (ImageButton) findViewById(R.id.topleft);
@@ -99,6 +106,19 @@ public class GameActivity extends Activity {
 			stagecounter++;
 				break;
 		case 3: //3 = Reward
+		Element myReward = mymodule.getRandomRewardElement();
+		if (myReward instanceof ElementVideo)
+		{
+			playMyVideo((ElementVideo)myReward);
+		}
+		if (myReward instanceof ElementSound)
+		{
+			playMySound((ElementSound)myReward);
+		}
+		else
+		{
+			
+		}
 		
 			
 			if(/*no preaction*/false) stagecounter = 1;
@@ -115,7 +135,39 @@ public class GameActivity extends Activity {
 		
 	}
 	
+	public void playMyVideo(ElementVideo myVideo)
+	{
+		VideoView video = ((VideoView)findViewById(R.id.videoView1));
+		video.setVisibility(View.VISIBLE);
+		video.setVideoURI(Uri.parse(myVideo.getSrcPath()));
+		video.requestFocus();
+		video.start();
+		while(video.isPlaying())
+		{
+			//Thread.sleep(1000);
+		}
+		video.setVisibility(View.GONE);
+	}
 	
+	public void playMySound(ElementSound mySound)
+	{
+		MediaPlayer mediaPlayer = new MediaPlayer();
+		File file = new File(mySound.getSrcPath());
+		
+        try{
+            synchronized(this){
+            	FileInputStream inputStream = new FileInputStream(file);
+        		mediaPlayer.setDataSource(inputStream.getFD());
+        		inputStream.close();
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            }
+        } catch(IllegalStateException ex){
+            ex.printStackTrace();
+        } catch(IOException ex){
+            ex.printStackTrace();
+        }
+	}
 
 	
 	

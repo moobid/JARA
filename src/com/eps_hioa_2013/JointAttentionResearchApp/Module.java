@@ -14,15 +14,26 @@ public class Module{
 	private Element preactionelements[]; //Pictures in it
 	private Element signalelements[]; //Pictures in it
 	private Element actionelements[]; //Pictures in it
-	private Element rewardelements[]; //Pictures, Sounds, Videos in it
+	private Element rewardelements[];
+	
+	
 	
 	public Module(int myNumber, String myName, String myDescription)
 	{
 		number = myNumber;
 		name = myName;
 		description = myDescription;
+		//Edition Theophile
+		rewardelements = new Element[1];
+		rewardelements[0]= new ElementVideo("/mnt/sdcard/Download/youShallNotPass.wmv", "youShallNotPass");
+		//Edition Theophile END
 	}
 
+	public Element getRandomRewardElement()
+	{
+		return rewardelements[(int)(Math.random() * (rewardelements.length-1))];
+	}
+	
 	public String getName()
 	{
 		return name;
