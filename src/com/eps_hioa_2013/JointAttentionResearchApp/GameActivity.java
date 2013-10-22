@@ -19,17 +19,15 @@ import android.widget.ImageButton;
 import android.widget.VideoView;
 
 public class GameActivity extends Activity {
-	/* Causes Error either because of the casting or you need to do this in a method.
-	private ImageButton topleft = (ImageButton) findViewById(R.id.topleft);
-	private ImageButton topmid = (ImageButton) findViewById(R.id.topmid);
-	private ImageButton topright = (ImageButton) findViewById(R.id.topright);
-	private ImageButton midleft = (ImageButton) findViewById(R.id.midleft);
-	private ImageButton midmid = (ImageButton) findViewById(R.id.midmid);
-	private ImageButton midright = (ImageButton) findViewById(R.id.midright);
-	private ImageButton bottomleft = (ImageButton) findViewById(R.id.bottomleft);
-	private ImageButton bottommid = (ImageButton) findViewById(R.id.bottommid);
-	private ImageButton bottomright = (ImageButton) findViewById(R.id.bottomright);
-	*/
+	private ImageButton topleft;
+	private ImageButton topmid;
+	private ImageButton topright;
+	private ImageButton midleft;
+	private ImageButton midmid;
+	private ImageButton midright;
+	private ImageButton bottomleft;
+	private ImageButton bottommid;
+	private ImageButton bottomright;
 	
 	private int stagecounter = 0; //0 = Preaction; 1 = Action; 2 = Signal; 3 = Reward
 	private int roundcounter = 0;
@@ -56,14 +54,16 @@ public class GameActivity extends Activity {
 	    
 	    setContentView(R.layout.activity_game);
 	    
-	    /* Something goes wrong here! casts?
+	   
 	    System.out.println("GameActivity started");
 		
-	    mysession.updateStatistics("gameactivity started");
+	    
 		Intent intent = getIntent();
+		
 		mysession = (Session) intent.getSerializableExtra(ModuleSettingsActivity.EXTRA_SESSION);		
 		modulenumber = (intent.getStringExtra(ModuleSettingsActivity.MODULENUMBER));
 		roundcounterlimit = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_ROUNDSTOPLAY, 0);
+		
 		timeToPlayInSeconds = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_TIME, 0);
 		//todo: check if roundcounterlimit != 0
 		//todo: check if roundcounterlimit != 0
@@ -83,13 +83,23 @@ public class GameActivity extends Activity {
 		//starts the time and makes sure to end it, if the time is over
 
 		//timecounter = new Timecounter(mysession.getDeadlineDate());
-		*/
+		
 	}
 
 	
 
 	public void onclick_touched(View view)
 	{
+		topleft = (ImageButton) findViewById(R.id.topleft);
+		topmid = (ImageButton) findViewById(R.id.topmid);
+		topright = (ImageButton) findViewById(R.id.topright);
+		midleft = (ImageButton) findViewById(R.id.midleft);
+		midmid = (ImageButton) findViewById(R.id.midmid);
+		midright = (ImageButton) findViewById(R.id.midright);
+		bottomleft = (ImageButton) findViewById(R.id.bottomleft);
+		bottommid = (ImageButton) findViewById(R.id.bottommid);
+		bottomright = (ImageButton) findViewById(R.id.bottomright);
+		
 		switch(stagecounter)
 		{
 		case 0: //0 = Preaction;
