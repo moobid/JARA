@@ -155,7 +155,7 @@ public class GameActivity extends Activity {
 	{
 		VideoView video = ((VideoView)findViewById(R.id.videoView1));
 		video.setVisibility(View.VISIBLE);
-		video.setVideoURI(Uri.parse(myVideo.getSrcPath()));
+		video.setVideoURI(Uri.parse(myVideo.getPath()));
 		video.requestFocus();
 		video.start();
 		while(video.isPlaying())
@@ -168,7 +168,7 @@ public class GameActivity extends Activity {
 	public void playMySound(ElementSound mySound)
 	{
 		MediaPlayer mediaPlayer = new MediaPlayer();
-		File file = new File(mySound.getSrcPath());
+		File file = new File(mySound.getPath());
 		
         try{
             synchronized(this){

@@ -25,7 +25,7 @@ public class Module{
 		description = myDescription;
 		//Edition Theophile
 		rewardelements = new Element[1];
-		rewardelements[0]= new ElementVideo("/mnt/sdcard/Download/youShallNotPass.wmv", "youShallNotPass");
+		rewardelements[0]= new ElementVideo("/mnt/sdcard/Download/youShallNotPass.wmv", 1);
 		//Edition Theophile END
 	}
 

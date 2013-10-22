@@ -5,10 +5,16 @@ import java.io.File;
 public class Element {
 	private String name;
 	
-	private File path;
+	private String path;
 	private File file;
 	
 	private int type;
+	
+	public Element(String myPath, int myType)
+	{
+		setType(myType);
+		setPath(myPath);
+	}
 	
 	public void showElement()
 	{
@@ -23,11 +29,11 @@ public class Element {
 		this.name = name;
 	}
 
-	public File getPath() {
+	public String getPath() {
 		return path;
 	}
 
-	public void setPath(File path) {
+	public void setPath(String path) {
 		this.path = path;
 	}
 

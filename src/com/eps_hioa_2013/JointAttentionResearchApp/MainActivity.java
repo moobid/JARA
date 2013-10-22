@@ -1,10 +1,15 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -18,7 +23,11 @@ public class MainActivity extends Activity {
 
 	private Session mysession;
 	private Module modulelist[]; //all Modules are in here
-	private Element elementlist[]; //all Elements are in here
+	private List<Element> elementlist; //all Elements are in here
+	//valid extensions
+	private String[] videoExtensions  = {"wav", "vlc"};
+	private String[] soundExtensions  = {"mp3"};
+	private String[] pictureExtensions  = {"jpg"};
 	
 	Bundle bundle;
 	
@@ -26,12 +35,12 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		System.out.println("MainActivity started");
-	    
+		
 	    //connect the .java to the .xml make sure you set fullscreen first in code else it will crash
 		setContentView(R.layout.activity_main);
 		
-		//todo: look for existing Modules (saved in files on the device) and write them into 
-		//todo: look for existing Elements (saved in files on the device) and write them into 
+		//load all elements
+		elementlist = LoadElements();
 	}
 	
 	//Dont know yet
@@ -74,6 +83,7 @@ public class MainActivity extends Activity {
         	intent.putExtras(bundle);
         	
         	
+        	
         	//some code as comments due to testfriendlieness
         	//following two lines: The password gets checked if it is correct        	
         	/*if(checkpassword(string_password) == true)*/ startActivity(intent);
@@ -87,6 +97,81 @@ public class MainActivity extends Activity {
 		if(password == "admin") return true;
 		else return false;
 	}
+	
+	public List<Element> LoadElements()
+	{
+		//Start values
+		ArrayList<Element> elementList = new ArrayList<Element>();		
+		int size = 0;
+		String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+		
+		//Search for all files in dirPath and add their paths to a String array.
+		List<String> paths = new ArrayList<String>();
+		File directory = new File(dirPath);
+		File[] files = directory.listFiles();		
+		size = files.length;
+		for (int i = 0; i < size; ++i) {
+		    paths.add(files[i].getAbsolutePath());		    
+		}
+		
+		//Create elements and put hem into the arraylist
+		for (int i = 0; i < paths.size(); ++i)
+		{
+			Element element = createElement(paths.get(i));
+			if(element!=null)
+			{
+				elementList.add(element);
+			}
+		}
+		
+		return elementList;
+	}
+	
+	
+	private Element createElement(String elementPath) {
+		int type = checkFileType(elementPath);
+		Element createdElement = null;
+		 switch (type) 
+		{
+			case 0:  //nothing happens file type is 'unknown'/unsupported
+			break;
+			case 1:  
+				createdElement = new ElementPicture(elementPath, type);
+			break;
+			case 2:  
+				createdElement = new ElementPicture(elementPath, type);
+			break;				
+			case 3:
+				createdElement = new ElementVideo(elementPath, type);
+			break;
+		}
+		return createdElement;
+	}
+
+	//returns number based on the file type.
+	// 0 = unknown, 1 = picture, 2 = sound, 3 = video;
+	//wanted to use a switch but not all java versions support switches with strings
+	private int checkFileType(String path)
+	{		
+		int type = 0;
+		String extension = path.substring(path.lastIndexOf(".")+1);
+		if(Arrays.asList(videoExtensions).contains(extension))
+		{
+			type = 3;
+		}
+		else if (Arrays.asList(soundExtensions).contains(extension))
+		{
+			type = 2;
+		}
+		else if (Arrays.asList(pictureExtensions).contains(extension))
+		{
+			type = 1;
+		}				
+		return type;
+	}
+	
+	
+
 	
 	
 
