@@ -27,15 +27,33 @@ public class ModuleSettingsActivity extends Activity {
 	public final static String EXTRA_TIME = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_TIME";
 	
 	Bundle bundle;
-	Session mysession;
+	Session mysession;	
 	
 	NumberPicker npMinutes;
 	NumberPicker npSeconds;
 	NumberPicker npRoundsToPlay;
-	private int counterPreactions = 0;
-	private int counterSignals = 0;
-	private int counterActions = 0;
-	private int counterRewards = 0;
+	
+	private Element[] allElements;
+	
+	private CheckBox[] checkboxPreactions = new CheckBox[1000];
+	private Button[] buttonPreactions = new Button[1000];
+	private Element[] preactions = new Element[1000];
+	private int preactionsCounter = 0;
+	
+	private CheckBox[] checkboxSignals = new CheckBox[1000];
+	private Button[] buttonSignals = new Button[1000];
+	private Element[] signals = new Element[1000];
+	private int signalsCounter = 0;
+	
+	private CheckBox[] checkboxActions = new CheckBox[1000];
+	private Button[] buttonActions = new Button[1000];
+	private Element[] actions = new Element[1000];
+	private int actionsCounter = 0;
+	
+	private CheckBox[] checkboxRewards = new CheckBox[1000];
+	private Button[] buttonRewards = new Button[1000];
+	private Element[] rewards = new Element[1000];
+	private int rewardsCounter = 0;
 	
 	private int currentModuleNumber = -1;
 	
@@ -47,6 +65,9 @@ public class ModuleSettingsActivity extends Activity {
 		
 		// Show the Up button in the action bar.
 		setupActionBar();
+		//todo: allElements = Session.getAllElements();
+		//todo: setupDynamicElementList(allElements); //shows the Elements at the right place and saves them in the members
+		
 		addElementToList("asdf", "Preactions");
 		addElementToList("asdf", "Actions");
 		addElementToList("asdf", "Signals");
@@ -55,6 +76,7 @@ public class ModuleSettingsActivity extends Activity {
 		String mode = (intent.getStringExtra(ModuleActivity.MODE));
 		if(mode.equals("0"))
 		{
+			//makes Start module button disapear
 			Button start_module = (Button) findViewById(R.id.start_module);
 			start_module.setVisibility(View.GONE);
 		}
@@ -65,11 +87,40 @@ public class ModuleSettingsActivity extends Activity {
 		String modulenumber = (intent.getStringExtra(ModuleActivity.MODULENUMBER));
 		this.currentModuleNumber = Integer.parseInt(modulenumber);
 		configureNumberPickers();
-		System.out.println("ModuleSettingsActivity started3");
+		System.out.println("ModuleSettingsActivity started");
 		loadModuleSettings(modulenumber);
 		
 
 	}
+	
+	private void setupDynamicElementList(Element elements[])
+	{
+		for(int i = 0; i <= elements.length; i++)
+		{
+			if(elements[i] instanceof ElementPicture)
+			{
+				addElementToList(elements[i].getName(), "Preactions"); //creates CheckBox and shows it in the right place
+				preactions[preactionsCounter] = elements[i]; //adds the element there
+				preactionsCounter++; //counter how many elements are in this array
+				addElementToList(elements[i].getName(), "Actions");
+				actions[actionsCounter] = elements[i];
+				actionsCounter++;
+				addElementToList(elements[i].getName(), "Signals");
+				signals[signalsCounter] = elements[i];
+				signalsCounter++;
+				addElementToList(elements[i].getName(), "Rewards");
+				rewards[rewardsCounter] = elements[i];
+				rewardsCounter++;
+			}
+			if((elements[i] instanceof ElementVideo) || (elements[i] instanceof ElementSound))
+			{
+				addElementToList(elements[i].getName(), "Rewards");
+				rewards[rewardsCounter] = elements[i];
+				rewardsCounter++;
+			}
+		}
+	}
+	
 	private void configureNumberPickers() {
 		npMinutes = (NumberPicker) findViewById(R.id.npMinutes);
 		npMinutes.setMaxValue(999);
@@ -93,14 +144,39 @@ public class ModuleSettingsActivity extends Activity {
 	    	EditText editText1 = (EditText) findViewById(R.id.editText1); //descrition gets loaded
 	    	editText1.setText(getDescriptionOfModule(modulenumber));
 	    	Toast.makeText(getApplicationContext(), "MODULE" + this.currentModuleNumber + " loaded", Toast.LENGTH_SHORT).show();
+	    	
+//	    	for(int i = 0; i <= preactionsCounter; i++)
+//	    	{	    		
+//	    		Boolean b = getBooleanOfModule(modulenumber, preactions[i].getName());
+//	    		checkboxPreactions[i].setChecked(b);
+//	    	}
+//	    	
+//	    	for(int i = 0; i <= signalsCounter; i++)
+//	    	{	    		
+//	    		Boolean b = getBooleanOfModule(modulenumber, signals[i].getName());
+//	    		checkboxSignals[i].setChecked(b);
+//	    	}
+//	    	
+//	    	for(int i = 0; i <= actionsCounter; i++)
+//	    	{	    		
+//	    		Boolean b = getBooleanOfModule(modulenumber, actions[i].getName());
+//	    		checkboxActions[i].setChecked(b);
+//	    	}
+//	    	
+//	    	for(int i = 0; i <= rewardsCounter; i++)
+//	    	{	    		
+//	    		Boolean b = getBooleanOfModule(modulenumber, rewards[i].getName());
+//	    		checkboxRewards[i].setChecked(b);
+//	    	}
+	    	
+	    	
 		}
 		else {/*nothing to do here*/}
 	}
 	
 	public void onclick_start_game(View view)
 	{	
-		mysession.updateStatistics("onclic_start 1");
-		
+		mysession.updateStatistics("Clicked on Start Module");		
 		Intent intent = new Intent(this, GameActivity.class);
 		intent.putExtra(MODULENUMBER, Integer.toString(currentModuleNumber));
 		intent.putExtra(EXTRA_ROUNDSTOPLAY, npRoundsToPlay.getValue());		
@@ -108,7 +184,6 @@ public class ModuleSettingsActivity extends Activity {
 		bundle = new Bundle();
 		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
     	intent.putExtras(bundle);
-    	mysession.updateStatistics("onclic_start 2");
 		startActivity(intent);
 	}
 
@@ -122,16 +197,10 @@ public class ModuleSettingsActivity extends Activity {
 		//gets the infos out of the Layout in Variables. START
 		EditText editText2 = (EditText) findViewById(R.id.editText2);
     	String module_name = editText2.getText().toString();
+
     	
     	EditText editText1 = (EditText) findViewById(R.id.editText1);
     	String module_description = editText1.getText().toString();
-    	
-//    	CheckBox checkbox1 = (CheckBox) findViewById(R.id.checkBox1);
-//    	Boolean blue_circle = false;
-//    	if(checkbox1.isChecked())
-//    		{
-//    			blue_circle = true;
-//    		}
     	   	
     	//gets the infos out of the Layout in Variables. END
     	
@@ -139,82 +208,181 @@ public class ModuleSettingsActivity extends Activity {
     	if(getModulecounterOutOfPreferences() < -1) resetModulecounterInPreferences();
     	
     	
-    	String nameForNewModule = null;
+    	String nameForModule = null;
     	if(this.currentModuleNumber == -1) //jumps in here if new modules gets added
     	{
     		//modulecounter gets iterated
     		incrementModulecounterInPreferences();     	
 	    	//the Name for the new Module gets created. It is like MODULE0, MODULE1, MODULE2, ...
-	    	nameForNewModule = "MODULE"+getModulecounterOutOfPreferences();
+	    	nameForModule = "MODULE"+getModulecounterOutOfPreferences();
 	    	this.currentModuleNumber = getModulecounterOutOfPreferences();
     	}
     	else //jumps in here if existing module gets saved
     	{
-    		nameForNewModule = "MODULE"+this.currentModuleNumber;
+    		nameForModule = "MODULE"+this.currentModuleNumber;
     	}
     	
     	
     	//puts the variables into the ShardPreferences for the current Module
-    	SharedPreferences pref_modulesettings = getSharedPreferences(nameForNewModule, 0);
+    	SharedPreferences pref_modulesettings = getSharedPreferences(nameForModule, 0);
         SharedPreferences.Editor editor = pref_modulesettings.edit();       
         editor.putString("module_name", module_name);
         editor.putString("module_description", module_description);
-//        editor.putBoolean("blue_circle", blue_circle);
-//        editor.putBoolean("yellow_square", yellow_square);
-        editor.commit();
-       
         
-        Toast.makeText(getApplicationContext(), "Saved as MODULE" + this.currentModuleNumber, Toast.LENGTH_SHORT).show();
-        super.onBackPressed(); //goes back to last Activity (ModuleActivity)
+//    	//ask all Preaction TextBoxes if checked or unchecked
+//    	for(int i = 0; i <= preactionsCounter; i++)
+//    	{
+//	    	Boolean checked = false;
+//	    	if(checkboxPreactions[i].isChecked())
+//	    	{
+//	    		checked = true;
+//	    		editor.putBoolean(preactions[i].getName(), checked);
+//	    	}
+//    	}
+//    	//ask all Signals TextBoxes if checked or unchecked
+//    	for(int i = 0; i <= signalsCounter; i++)
+//    	{
+//	    	Boolean checked = false;
+//	    	if(checkboxSignals[i].isChecked())
+//	    	{
+//	    		checked = true;
+//	    		editor.putBoolean(signals[i].getName(), checked);
+//	    	}
+//    	}
+//    	//ask all Action TextBoxes if checked or unchecked
+//    	for(int i = 0; i <= actionsCounter; i++)
+//    	{
+//	    	Boolean checked = false;
+//	    	if(checkboxActions[i].isChecked())
+//	    	{
+//	    		checked = true;
+//	    		editor.putBoolean(actions[i].getName(), checked);
+//	    	}
+//    	}
+//    	//ask all Rewards TextBoxes if checked or unchecked
+//    	for(int i = 0; i <= preactionsCounter; i++)
+//    	{
+//	    	Boolean checked = false;
+//	    	if(checkboxRewards[i].isChecked())
+//	    	{
+//	    		checked = true;
+//	    		editor.putBoolean(rewards[i].getName(), checked);
+//	    	}
+//    	}
+        
+        
+    	if((module_name == null) || (module_name.equals("")))
+    	{
+    		Toast.makeText(getApplicationContext(), "Modulename empty", Toast.LENGTH_SHORT).show();
+    	}
+    	else
+    	{
+            editor.commit();        
+            Toast.makeText(getApplicationContext(), "Saved as MODULE" + this.currentModuleNumber, Toast.LENGTH_SHORT).show();
+            super.onBackPressed(); //goes back to last Activity (ModuleActivity)
+    	}
+
 	}
 	
 	//adds a Checkbox for an Element to the Settingsscreen
 	//WARNING: elementType must be either "Preactions", "Signals", "Actions" or "Rewards"
 	public void addElementToList(String elementName, String elementType)
-	{
-		
+	{		
 		TableLayout table = null;
+		
 		if(elementType == "Preactions"){
 			table = (TableLayout) findViewById(R.id.Preactions);
-			counterPreactions++;
+			//creates new Tablerow and sets it into the new Tablelayout
+			TableRow newTablerow = new TableRow(this);
+			table.addView(newTablerow);
+			
+			//creates new Checkbox with the name of the element and sets it into the Tablerow
+			checkboxPreactions[preactionsCounter] = new CheckBox(this);
+			checkboxPreactions[preactionsCounter].setText(elementName);			
+			newTablerow.addView(checkboxPreactions[preactionsCounter]);
+			
+			//creates new Button and sets it also into the Tablerow
+			buttonPreactions[preactionsCounter] = new Button(this);
+			buttonPreactions[preactionsCounter].setText("E");
+			buttonPreactions[preactionsCounter].setOnClickListener(new View.OnClickListener() {
+	            public void onClick(View v) {
+	            	showElementSettingsDiaglog();
+	            }
+	        });			
+			newTablerow.addView(buttonPreactions[preactionsCounter]); 
 		}
+		
 		if(elementType == "Signals"){
 			table = (TableLayout) findViewById(R.id.Signals);
-			counterSignals++;
+			//creates new Tablerow and sets it into the new Tablelayout
+			TableRow newTablerow = new TableRow(this);
+			table.addView(newTablerow);
+			
+			//creates new Checkbox with the name of the element and sets it into the Tablerow
+			checkboxSignals[signalsCounter] = new CheckBox(this);
+			checkboxSignals[signalsCounter].setText(elementName);			
+			newTablerow.addView(checkboxSignals[signalsCounter]);
+			
+			//creates new Button and sets it also into the Tablerow
+			buttonSignals[signalsCounter] = new Button(this);
+			buttonSignals[signalsCounter].setText("E");
+			buttonSignals[signalsCounter].setOnClickListener(new View.OnClickListener() {
+	            public void onClick(View v) {
+	            	showElementSettingsDiaglog();
+	            }
+	        });			
+			newTablerow.addView(buttonSignals[signalsCounter]); 			
 		}
+		
 		if(elementType == "Actions"){
 			table = (TableLayout) findViewById(R.id.Actions);
-			counterActions++;
+			//creates new Tablerow and sets it into the new Tablelayout
+			TableRow newTablerow = new TableRow(this);
+			table.addView(newTablerow);
+			
+			//creates new Checkbox with the name of the element and sets it into the Tablerow
+			checkboxActions[actionsCounter] = new CheckBox(this);
+			checkboxActions[actionsCounter].setText(elementName);			
+			newTablerow.addView(checkboxActions[actionsCounter]);
+			
+			//creates new Button and sets it also into the Tablerow
+			buttonActions[actionsCounter] = new Button(this);
+			buttonActions[actionsCounter].setText("E");
+			buttonActions[actionsCounter].setOnClickListener(new View.OnClickListener() {
+	            public void onClick(View v) {
+	            	showElementSettingsDiaglog();
+	            }
+	        });			
+			newTablerow.addView(buttonActions[actionsCounter]); 			
 		}
+		
 		if(elementType == "Rewards"){
 			table = (TableLayout) findViewById(R.id.Rewards);
-			counterRewards++;
+			//creates new Tablerow and sets it into the new Tablelayout
+			TableRow newTablerow = new TableRow(this);
+			table.addView(newTablerow);
+			
+			//creates new Checkbox with the name of the element and sets it into the Tablerow
+			checkboxRewards[rewardsCounter] = new CheckBox(this);
+			checkboxRewards[rewardsCounter].setText(elementName);			
+			newTablerow.addView(checkboxRewards[rewardsCounter]);
+			
+			//creates new Button and sets it also into the Tablerow
+			buttonRewards[rewardsCounter] = new Button(this);
+			buttonRewards[rewardsCounter].setText("E");
+			buttonRewards[rewardsCounter].setOnClickListener(new View.OnClickListener() {
+	            public void onClick(View v) {
+	            	showElementSettingsDiaglog();
+	            }
+	        });			
+			newTablerow.addView(buttonRewards[rewardsCounter]); 			
 		}
+		
 		if(table == null){ //error
 			Toast.makeText(getApplicationContext(),		
 				"Error in: public void addElementToList(String elementName, String elementType); WRONG elementType",
 				Toast.LENGTH_LONG).show();
-		}
-		//creates new Tablerow and sets it into the new Tablelayout
-		TableRow newTablerow = new TableRow(this);
-		table.addView(newTablerow);
-		
-		//creates new Checkbox with the name of the element and sets it into the Tablerow
-		CheckBox newCheckbox = new CheckBox(this);
-		newCheckbox.setText(elementName);
-		newTablerow.addView(newCheckbox);
-		
-		//creates new Button and sets it also into the Tablerow
-		Button newButton = new Button(this);
-		newButton.setText("E");
-
-		newButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	showElementSettingsDiaglog();
-            }
-        });
-		
-		newTablerow.addView(newButton);        
+		}       
 	}
 	
 	//shows the popup when you click on the Edit-button
@@ -273,7 +441,15 @@ public class ModuleSettingsActivity extends Activity {
     	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
         String nameOfDescrition = pref_modulesettings.getString("module_description", ACCESSIBILITY_SERVICE);
 		return nameOfDescrition;		
-	}	
+	}
+	
+	public Boolean getBooleanOfModule(String i, String elementName)
+	{	
+		String nameOfModulePref = "MODULE" + i;
+    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+        Boolean nameOfDescrition = pref_modulesettings.getBoolean(elementName, false);
+		return nameOfDescrition;
+	}
 	
 
 	
