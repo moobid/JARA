@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.VideoView;
 
 public class GameActivity extends Activity {
+	/* Causes Error either because of the casting or you need to do this in a method.
 	private ImageButton topleft = (ImageButton) findViewById(R.id.topleft);
 	private ImageButton topmid = (ImageButton) findViewById(R.id.topmid);
 	private ImageButton topright = (ImageButton) findViewById(R.id.topright);
@@ -28,7 +29,8 @@ public class GameActivity extends Activity {
 	private ImageButton bottomleft = (ImageButton) findViewById(R.id.bottomleft);
 	private ImageButton bottommid = (ImageButton) findViewById(R.id.bottommid);
 	private ImageButton bottomright = (ImageButton) findViewById(R.id.bottomright);
-
+	*/
+	
 	private int stagecounter = 0; //0 = Preaction; 1 = Action; 2 = Signal; 3 = Reward
 	private int roundcounter = 0;
 	private int roundcounterlimit;
@@ -46,13 +48,17 @@ public class GameActivity extends Activity {
 	
 
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);		
+		
 		//set full screen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 	    this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
+	    
+	    setContentView(R.layout.activity_game);
+	    
+	    /* Something goes wrong here! casts?
 	    System.out.println("GameActivity started");
-		setContentView(R.layout.activity_game);
+		
 	    mysession.updateStatistics("gameactivity started");
 		Intent intent = getIntent();
 		mysession = (Session) intent.getSerializableExtra(ModuleSettingsActivity.EXTRA_SESSION);		
@@ -77,7 +83,7 @@ public class GameActivity extends Activity {
 		//starts the time and makes sure to end it, if the time is over
 
 		//timecounter = new Timecounter(mysession.getDeadlineDate());
-
+		*/
 	}
 
 	
