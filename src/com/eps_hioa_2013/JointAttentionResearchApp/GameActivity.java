@@ -54,7 +54,7 @@ public class GameActivity extends Activity {
 	    
 	    setContentView(R.layout.activity_game);
 	    
-	   
+	    
 	    System.out.println("GameActivity started");
 		
 	    

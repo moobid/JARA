@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import android.os.Environment;
 
@@ -29,7 +30,7 @@ public class Session implements Serializable {
 	
     private int mData;
 
-
+    private List<Element> elementlist;
 
 	//sets Membervaribales (incl. current Date) + calls updateStatistics() the first time
 	public Session(String pass, String part, String research) {
@@ -80,6 +81,12 @@ public class Session implements Serializable {
 	    return false;
 	}
 	
+	public List<Element> getElementlist() {
+		return elementlist;
+	}
+	public void setElementlist(List<Element> elementlist) {
+		this.elementlist = elementlist;
+	}
 	///////////GET AND SET HERE:
 	public String getPassword() {
 		return password;

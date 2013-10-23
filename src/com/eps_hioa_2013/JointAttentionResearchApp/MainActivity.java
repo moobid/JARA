@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		//load all elements
-		elementlist = LoadElements();
+		
 	}
 	
 	//Dont know yet
@@ -77,7 +77,9 @@ public class MainActivity extends Activity {
     	{
 
     		//mysession gets created, serialized, packed in the bundle and then sent to the next activity
-    		mysession = new Session(string_password, string_participant, string_researcher);    		
+    		mysession = new Session(string_password, string_participant, string_researcher);
+    		elementlist = LoadElements();
+    		mysession.setElementlist(elementlist);
     		bundle = new Bundle();    		
     		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
         	intent.putExtras(bundle);
