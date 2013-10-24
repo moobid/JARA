@@ -35,6 +35,8 @@ public class Element {
 
 	public void setPath(String path) {
 		this.path = path;
+		String name = path.substring(path.lastIndexOf("/")+1);
+		setName(name.substring(0, name.lastIndexOf(".")));
 	}
 
 	public File getFile() {
