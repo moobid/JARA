@@ -35,25 +35,30 @@ public class ModuleSettingsActivity extends Activity {
 	NumberPicker npSeconds;
 	NumberPicker npRoundsToPlay;
 
-	
+	//Example to explain the oncoming 4 lines: When you have an donald.jpg in the Elementsfolder on your tablet:
+	//	There will be an Element on position 0 with the name donald in preactions
+	//	The appropriate Button is in buttonPreactions on position 0
+	//	The appropriate Checkbox is in checkboxPreactions also on position 0
+	//In that way, the Element, Button and the CheckBox can be connected to each other.
+	//The donald Element will of course also be in Signals and Actions because its a picture
 	private List<CheckBox> checkboxPreactions = new ArrayList<CheckBox>();
 	private List<Button> buttonPreactions = new ArrayList<Button>();
 	private List<Element> preactions = new ArrayList<Element>();
 	private int preactionsCounter = 0;
 	
 	private List<CheckBox> checkboxSignals = new ArrayList<CheckBox>();
-	private List<Button> buttonSignals;
-	private List<Element> signals;
+	private List<Button> buttonSignals = new ArrayList<Button>();
+	private List<Element> signals = new ArrayList<Element>();
 	private int signalsCounter = 0;
 	
 	private List<CheckBox> checkboxActions = new ArrayList<CheckBox>();
-	private List<Button> buttonActions;
-	private List<Element> actions;
+	private List<Button> buttonActions = new ArrayList<Button>();
+	private List<Element> actions = new ArrayList<Element>();
 	private int actionsCounter = 0;
 	
 	private List<CheckBox> checkboxRewards = new ArrayList<CheckBox>();
-	private List<Button> buttonRewards;
-	private List<Element> rewards;
+	private List<Button> buttonRewards = new ArrayList<Button>();
+	private List<Element> rewards = new ArrayList<Element>();
 	private int rewardsCounter = 0;
 	
 	private int currentModuleNumber = -1;
@@ -77,10 +82,13 @@ public class ModuleSettingsActivity extends Activity {
 		mysession = (Session) intent.getSerializableExtra(ModuleActivity.EXTRA_SESSION);
 		String modulenumber = (intent.getStringExtra(ModuleActivity.MODULENUMBER));
 		this.currentModuleNumber = Integer.parseInt(modulenumber);
-		setupDynamicElementList(mysession.getElementlist()); //shows the Elements at the right place and saves them in the members
-		configureNumberPickers();
 		
-		loadModuleSettings(modulenumber);
+		 //shows the Elements at the right place and saves them in the Membervariables
+		setupDynamicElementList(mysession.getElementlist());
+		
+		configureNumberPickers(); //just some settings for the NumberPickers; nothing special
+		
+		loadModuleSettings(modulenumber); //loads and shows all the saved Settings of a module
 	}
 	
 
@@ -95,25 +103,25 @@ public class ModuleSettingsActivity extends Activity {
 	    	editText1.setText(getDescriptionOfModule(modulenumber));
 	    	Toast.makeText(getApplicationContext(), "MODULE" + this.currentModuleNumber + " loaded", Toast.LENGTH_SHORT).show();
 	    	
-	    	for(int i = 0; i <= preactionsCounter; i++)
+	    	for(int i = 0; i <= preactionsCounter; i++) //the states of all checkboxes get loaded
 	    	{	    		
 	    		Boolean b = getBooleanOfModule(modulenumber, preactions.get(i).getName());
 	    		checkboxPreactions.get(i).setChecked(b);
 	    	}
 	    	
-	    	for(int i = 0; i <= signalsCounter; i++)
+	    	for(int i = 0; i <= signalsCounter; i++) //the states of all checkboxes get loaded
 	    	{	    		
 	    		Boolean b = getBooleanOfModule(modulenumber, signals.get(i).getName());
 	    		checkboxSignals.get(i).setChecked(b);
 	    	}
 	    	
-	    	for(int i = 0; i <= actionsCounter; i++)
+	    	for(int i = 0; i <= actionsCounter; i++) //the states of all checkboxes get loaded
 	    	{	    		
 	    		Boolean b = getBooleanOfModule(modulenumber, actions.get(i).getName());
 	    		checkboxActions.get(i).setChecked(b);
 	    	}
 	    	
-	    	for(int i = 0; i <= rewardsCounter; i++)
+	    	for(int i = 0; i <= rewardsCounter; i++) //the states of all checkboxes get loaded
 	    	{	    		
 	    		Boolean b = getBooleanOfModule(modulenumber, rewards.get(i).getName());
 	    		checkboxRewards.get(i).setChecked(b);
@@ -126,11 +134,13 @@ public class ModuleSettingsActivity extends Activity {
 	
 	public void onclick_start_game(View view)
 	{	
+		//todo: check if roundcounterlimit and timetoplay != 0
+		//todo: save made changes by the user before starting the game!
 		mysession.updateStatistics("Clicked on Start Module");		
 		Intent intent = new Intent(this, GameActivity.class);
 		intent.putExtra(MODULENUMBER, Integer.toString(currentModuleNumber));
-		intent.putExtra(EXTRA_ROUNDSTOPLAY, npRoundsToPlay.getValue());		
-		intent.putExtra(EXTRA_TIME, calculateTimeToPlayInSeconds());
+		intent.putExtra(EXTRA_ROUNDSTOPLAY, npRoundsToPlay.getValue()); //Rounds to Play (doesnt get saved in module)
+		intent.putExtra(EXTRA_TIME, calculateTimeToPlayInSeconds()); //Time to Play (doesnt get saved in module)
 		bundle = new Bundle();
 		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
     	intent.putExtras(bundle);
@@ -139,15 +149,11 @@ public class ModuleSettingsActivity extends Activity {
 
 	public void onclick_save(View view)
 	{	
-		//gets the infos out of the Layout in Variables. START
 		EditText editText2 = (EditText) findViewById(R.id.editText2);
     	String module_name = editText2.getText().toString();
 
-    	
-    	EditText editText1 = (EditText) findViewById(R.id.editText1);
+       	EditText editText1 = (EditText) findViewById(R.id.editText1);
     	String module_description = editText1.getText().toString();
-    	   	
-    	//gets the infos out of the Layout in Variables. END
     	
     	//if the modulecounter is smaller than -1 it gets set to -1
     	if(getModulecounterOutOfPreferences() < -1) resetModulecounterInPreferences();
@@ -168,7 +174,7 @@ public class ModuleSettingsActivity extends Activity {
     	}
     	
     	
-    	//puts the variables into the ShardPreferences for the current Module
+    	//saves the variables into the ShardPreferences for the current Module START START START START
     	SharedPreferences pref_modulesettings = getSharedPreferences(nameForModule, 0);
         SharedPreferences.Editor editor = pref_modulesettings.edit();       
         editor.putString("module_name", module_name);
@@ -182,6 +188,7 @@ public class ModuleSettingsActivity extends Activity {
 	    	{
 	    		checked = true;
 	    		editor.putBoolean(preactions.get(i).getName(), checked);
+	    		//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
 	    	}
     	}
     	//ask all Signals TextBoxes if checked or unchecked
@@ -192,6 +199,7 @@ public class ModuleSettingsActivity extends Activity {
 	    	{
 	    		checked = true;
 	    		editor.putBoolean(signals.get(i).getName(), checked);
+	    		//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
 	    	}
     	}
     	//ask all Action TextBoxes if checked or unchecked
@@ -202,6 +210,7 @@ public class ModuleSettingsActivity extends Activity {
 	    	{
 	    		checked = true;
 	    		editor.putBoolean(actions.get(i).getName(), checked);
+	    		//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
 	    	}
     	}
     	//ask all Rewards TextBoxes if checked or unchecked
@@ -212,6 +221,7 @@ public class ModuleSettingsActivity extends Activity {
 	    	{
 	    		checked = true;
 	    		editor.putBoolean(rewards.get(i).getName(), checked);
+	    		//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
 	    	}
     	}
         
@@ -235,8 +245,9 @@ public class ModuleSettingsActivity extends Activity {
 		{
 			if(elements.get(i) instanceof ElementPicture)
 			{
-				addElementToList(elements.get(i).getName(), "Preactions"); //creates CheckBox and shows it in the right place
-				preactions.add(preactionsCounter, elements.get(i)); //adds the element there
+				//creates CheckBox and Button and shows it in the right place and adds both in the Membervariables
+				addElementToList(elements.get(i).getName(), "Preactions");
+				preactions.add(preactionsCounter, elements.get(i)); //adds the Element in the Membervariables
 				preactionsCounter++; //counter how many elements are in this array
 				addElementToList(elements.get(i).getName(), "Actions");
 				actions.add(actionsCounter, elements.get(i));

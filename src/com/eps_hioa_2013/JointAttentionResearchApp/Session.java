@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import android.os.Environment;
+import android.widget.CheckBox;
 
 //must implement Serializable to be able to get passed from one activity to another
 public class Session implements Serializable {
@@ -30,7 +32,7 @@ public class Session implements Serializable {
 	
     private int mData;
 
-    private List<Element> elementlist;
+    private List<Element> elementlist = new ArrayList<Element>();;
 
 	//sets Membervaribales (incl. current Date) + calls updateStatistics() the first time
 	public Session(String pass, String part, String research) {

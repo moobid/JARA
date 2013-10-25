@@ -29,7 +29,7 @@ public class GameActivity extends Activity {
 	private ImageButton bottommid;
 	private ImageButton bottomright;
 	
-	private int stagecounter = 0; //0 = Preaction; 1 = Action; 2 = Signal; 3 = Reward
+	private int stagecounter = 0; //0 = Preaction; 1 = Action; 2 = Signal
 	private int roundcounter = 0;
 	private int roundcounterlimit;
 	
@@ -54,20 +54,18 @@ public class GameActivity extends Activity {
 	    
 	    setContentView(R.layout.activity_game);
 	    
-	    
 	    System.out.println("GameActivity started");
 		
-	    
-		Intent intent = getIntent();
-		
+	    Intent intent = getIntent();		
 		mysession = (Session) intent.getSerializableExtra(ModuleSettingsActivity.EXTRA_SESSION);		
 		modulenumber = (intent.getStringExtra(ModuleSettingsActivity.MODULENUMBER));
-		roundcounterlimit = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_ROUNDSTOPLAY, 0);
-		
+		roundcounterlimit = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_ROUNDSTOPLAY, 0);		
 		timeToPlayInSeconds = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_TIME, 0);
-		//todo: check if roundcounterlimit != 0
-		//todo: check if roundcounterlimit != 0
 		DateStartedPlaying = new Date();
+		
+		initializeViews(); //initializes the views (Imagebuttons)
+		
+		//todo: if there's no preaction in module, then the stagecounter has to be 1 in beginning (just in the beginning!)
 		
 		mysession.updateStatistics("\n\n" +
 			"Started Playing a module\n" +
@@ -78,28 +76,15 @@ public class GameActivity extends Activity {
 			"Time to play in s: " + timeToPlayInSeconds + "\n" +	
 			"Rounds to play: " + roundcounterlimit + "\n"			
 				);
-		//todo: if there's no preaction in module, then the stagecounter has to be 1 in beginning
 		
-		//starts the time and makes sure to end it, if the time is over
-
+		//starts the time and makes sure to end it, if the time is over; not working; dont know how to do
 		//timecounter = new Timecounter(mysession.getDeadlineDate());
 		
 	}
 
 	
-
 	public void onclick_touched(View view)
-	{
-		topleft = (ImageButton) findViewById(R.id.topleft);
-		topmid = (ImageButton) findViewById(R.id.topmid);
-		topright = (ImageButton) findViewById(R.id.topright);
-		midleft = (ImageButton) findViewById(R.id.midleft);
-		midmid = (ImageButton) findViewById(R.id.midmid);
-		midright = (ImageButton) findViewById(R.id.midright);
-		bottomleft = (ImageButton) findViewById(R.id.bottomleft);
-		bottommid = (ImageButton) findViewById(R.id.bottommid);
-		bottomright = (ImageButton) findViewById(R.id.bottomright);
-		
+	{		
 		switch(stagecounter)
 		{
 		case 0: //0 = Preaction;
@@ -113,39 +98,39 @@ public class GameActivity extends Activity {
 				break;
 		case 1: //1 = Action
 		
-			
+			//after certain amount of time:
+			//todo: showAllSignals()
 			stagecounter++;
 				break;
 		case 2: //2 = Signal
-		
-			
-			stagecounter++;
+			//todo: if(view.getId() == id of indeed a Actionimage)
+			{
+				//show reward:
+				Element myReward = mymodule.getRandomRewardElement();
+				if (myReward instanceof ElementVideo)
+				{
+					playMyVideo((ElementVideo)myReward);
+				}
+				if (myReward instanceof ElementSound)
+				{
+					playMySound((ElementSound)myReward);
+				}
+				if (myReward instanceof ElementPicture)
+				{
+					//todo: show picture over whole screen
+				}
+				
+				if(/*todo: if no preaction*/false) stagecounter = 1; //if no Preaction selected
+				else stagecounter = 0;
+				
+				roundcounter++;
+				stagecounter++;
+			}
 				break;
-		case 3: //3 = Reward
-		Element myReward = mymodule.getRandomRewardElement();
-		if (myReward instanceof ElementVideo)
-		{
-			playMyVideo((ElementVideo)myReward);
-		}
-		if (myReward instanceof ElementSound)
-		{
-			playMySound((ElementSound)myReward);
-		}
-		else
-		{
-			
 		}
 		
-			
-			if(/*no preaction*/false) stagecounter = 1;
-			else stagecounter = 0;
-			roundcounter++;
-				break;
-		}
-		
-		if(roundcounter >= roundcounterlimit) //limit of rounds reached
-		{
-			
+		if(roundcounter >= roundcounterlimit) //check if limit of rounds reached
+		{			
 			//end game
 		}
 		
@@ -193,7 +178,17 @@ public class GameActivity extends Activity {
 	
 	
 	
-	
+	private void initializeViews() {
+		topleft = (ImageButton) findViewById(R.id.topleft);
+		topmid = (ImageButton) findViewById(R.id.topmid);
+		topright = (ImageButton) findViewById(R.id.topright);
+		midleft = (ImageButton) findViewById(R.id.midleft);
+		midmid = (ImageButton) findViewById(R.id.midmid);
+		midright = (ImageButton) findViewById(R.id.midright);
+		bottomleft = (ImageButton) findViewById(R.id.bottomleft);
+		bottommid = (ImageButton) findViewById(R.id.bottommid);
+		bottomright = (ImageButton) findViewById(R.id.bottomright);		
+	}
 
 	public String getNameOfLastEditedModule()
 	{	
