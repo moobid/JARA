@@ -4,12 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
-
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -138,16 +137,21 @@ public class GameActivity extends Activity {
 	
 	public void playMyVideo(ElementVideo myVideo)
 	{
-		VideoView video = ((VideoView)findViewById(R.id.videoView1));
+		final VideoView video = ((VideoView)findViewById(R.id.videoView1));
+		//video.se
+		video.setOnCompletionListener(new OnCompletionListener() {
+			@Override
+			public void onCompletion(MediaPlayer v) {
+				// TODO Auto-generated method stub
+				video.setVisibility(View.GONE);
+			}
+		});
+		
+		
 		video.setVisibility(View.VISIBLE);
 		video.setVideoURI(Uri.parse(myVideo.getPath()));
 		video.requestFocus();
 		video.start();
-		while(video.isPlaying())
-		{
-			//Thread.sleep(1000);
-		}
-		video.setVisibility(View.GONE);
 	}
 	
 	public void playMySound(ElementSound mySound)
