@@ -3,7 +3,10 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,7 +31,7 @@ public class GameActivity extends Activity {
 	private ImageButton bottommid;
 	private ImageButton bottomright;
 	
-	private int stagecounter = 0; //0 = Preaction; 1 = Action; 2 = Signal
+	private int stagecounter = 0; //0 = Preaction; 1 = Action; 2 = Signal; 3 = reward
 	private int roundcounter = 0;
 	private int roundcounterlimit;
 	
@@ -40,9 +43,8 @@ public class GameActivity extends Activity {
 	
 	private Module mymodule;
 	private String modulenumber;
-	private Session mysession;
-
-	
+	private Session mysession;	
+	private String[] stages = {"preaction", "signal", "action", "reward"};
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -78,10 +80,36 @@ public class GameActivity extends Activity {
 		
 		//starts the time and makes sure to end it, if the time is over; not working; dont know how to do
 		//timecounter = new Timecounter(mysession.getDeadlineDate());
+		mymodule = new Module();
+		loadGameInfo(mysession, modulenumber);
+		nextStage();
+	}
+
+	private void nextStage() {
+		// TODO Auto-generated method stub
 		
 	}
 
-	
+	//Load elements belonging to this module and put them in the appropriate arrays.
+	private void loadGameInfo(Session mysession, String modulenumber) {
+		int size = mysession.getElementlist().size();
+		String currentStage = "";
+		for(int o = 0; o < 4; o++)
+		{
+			currentStage = stages[o];
+			for(int i = 0; i < size; i++)
+			{
+				Element gameElement = mysession.getElementlist().get(i);
+				if(getBooleanOfModule(modulenumber, gameElement.getName() + currentStage))
+				{
+					mymodule.addElement(o, gameElement);					
+				}
+			}
+		}
+		
+	}
+
+
 	public void onclick_touched(View view)
 	{		
 		switch(stagecounter)
@@ -220,6 +248,16 @@ public class GameActivity extends Activity {
         String nameOfDescrition = pref_modulesettings.getString("descrition", ACCESSIBILITY_SERVICE);
 		return nameOfDescrition;		
 	}
+	
+	//Does the module contain this element
+	public Boolean getBooleanOfModule(String i, String elementName)
+	{	
+		String nameOfModulePref = "MODULE" + i;
+    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+        Boolean nameOfDescription = pref_modulesettings.getBoolean(elementName, false);        
+		return nameOfDescription;
+	}
+	
 	
 	
 	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way

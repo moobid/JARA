@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
@@ -36,11 +37,15 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		System.out.println("MainActivity started");
 		
+		//set full screen
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 	    //connect the .java to the .xml make sure you set fullscreen first in code else it will crash
 		setContentView(R.layout.activity_main);
 		
-		//load all elements
-		
+		//hides keyboard until user presses a field
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);		
 	}
 	
 	//Dont know yet
@@ -83,6 +88,7 @@ public class MainActivity extends Activity {
     		bundle = new Bundle();    		
     		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
         	intent.putExtras(bundle);
+        	
         	
         	
         	
@@ -172,9 +178,7 @@ public class MainActivity extends Activity {
 		return type;
 	}
 	
-	
 
-	
 	
 
 }

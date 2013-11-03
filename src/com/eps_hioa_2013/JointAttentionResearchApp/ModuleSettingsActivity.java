@@ -13,6 +13,8 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -66,9 +68,14 @@ public class ModuleSettingsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println("ModuleSettingsActivity started");
 		super.onCreate(savedInstanceState);
-		//addPreferencesFromResource(R.xml.settings); deactivated for testing
+		
+		//set full screen
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
+		//addPreferencesFromResource(R.xml.settings); 
 		setContentView(R.layout.activity_module_settings);
-		setupActionBar();
+		
 		
 //		addElementToList("asdfasdf", "Signals");
 		Intent intent = getIntent();
@@ -89,6 +96,9 @@ public class ModuleSettingsActivity extends Activity {
 		configureNumberPickers(); //just some settings for the NumberPickers; nothing special
 		
 		loadModuleSettings(modulenumber); //loads and shows all the saved Settings of a module
+		
+		//hides keyboard until user presses a field
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 	}
 	
 
@@ -103,27 +113,27 @@ public class ModuleSettingsActivity extends Activity {
 	    	editText1.setText(getDescriptionOfModule(modulenumber));
 	    	Toast.makeText(getApplicationContext(), "MODULE" + this.currentModuleNumber + " loaded", Toast.LENGTH_SHORT).show();
 	    	
-	    	for(int i = 0; i <= preactionsCounter; i++) //the states of all checkboxes get loaded
+	    	for(int i = 0; i < preactionsCounter; i++) //the states of all checkboxes get loaded
 	    	{	    		
-	    		Boolean b = getBooleanOfModule(modulenumber, preactions.get(i).getName());
+	    		Boolean b = getBooleanOfModule(modulenumber, preactions.get(i).getName() + "preaction");
 	    		checkboxPreactions.get(i).setChecked(b);
 	    	}
 	    	
-	    	for(int i = 0; i <= signalsCounter; i++) //the states of all checkboxes get loaded
+	    	for(int i = 0; i < signalsCounter; i++) //the states of all checkboxes get loaded
 	    	{	    		
-	    		Boolean b = getBooleanOfModule(modulenumber, signals.get(i).getName());
+	    		Boolean b = getBooleanOfModule(modulenumber, signals.get(i).getName() + "signal");
 	    		checkboxSignals.get(i).setChecked(b);
 	    	}
 	    	
-	    	for(int i = 0; i <= actionsCounter; i++) //the states of all checkboxes get loaded
+	    	for(int i = 0; i < actionsCounter; i++) //the states of all checkboxes get loaded
 	    	{	    		
-	    		Boolean b = getBooleanOfModule(modulenumber, actions.get(i).getName());
+	    		Boolean b = getBooleanOfModule(modulenumber, actions.get(i).getName() + "action");
 	    		checkboxActions.get(i).setChecked(b);
 	    	}
 	    	
-	    	for(int i = 0; i <= rewardsCounter; i++) //the states of all checkboxes get loaded
+	    	for(int i = 0; i < rewardsCounter; i++) //the states of all checkboxes get loaded
 	    	{	    		
-	    		Boolean b = getBooleanOfModule(modulenumber, rewards.get(i).getName());
+	    		Boolean b = getBooleanOfModule(modulenumber, rewards.get(i).getName() + "reward");
 	    		checkboxRewards.get(i).setChecked(b);
 	    	}
 	    	
@@ -174,55 +184,59 @@ public class ModuleSettingsActivity extends Activity {
     	}
     	
     	
-    	//saves the variables into the ShardPreferences for the current Module START START START START
+    	//saves the variables into the ShardPreferences for the current Module 
     	SharedPreferences pref_modulesettings = getSharedPreferences(nameForModule, 0);
         SharedPreferences.Editor editor = pref_modulesettings.edit();       
+        // editor is cleared for boxes that were checked once but are not anymore.
+        editor.clear();
         editor.putString("module_name", module_name);
         editor.putString("module_description", module_description);
         
     	//ask all Preaction TextBoxes if checked or unchecked
-    	for(int i = 0; i <= preactionsCounter; i++)
+    	for(int i = 0; i < preactionsCounter; i++)
     	{
 	    	Boolean checked = false;
 	    	if(checkboxPreactions.get(i).isChecked())
 	    	{
-	    		checked = true;
-	    		editor.putBoolean(preactions.get(i).getName(), checked);
+	    		checked = true;	   
+	    		editor.putBoolean(preactions.get(i).getName() + "preaction", checked);
 	    		//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
 	    	}
+	    	
+    		
     	}
     	//ask all Signals TextBoxes if checked or unchecked
-    	for(int i = 0; i <= signalsCounter; i++)
+    	for(int i = 0; i < signalsCounter; i++)
     	{
 	    	Boolean checked = false;
 	    	if(checkboxSignals.get(i).isChecked())
 	    	{
 	    		checked = true;
-	    		editor.putBoolean(signals.get(i).getName(), checked);
+	    		editor.putBoolean(signals.get(i).getName() + "signal", checked);	    		
 	    		//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
 	    	}
     	}
     	//ask all Action TextBoxes if checked or unchecked
-    	for(int i = 0; i <= actionsCounter; i++)
+    	for(int i = 0; i < actionsCounter; i++)
     	{
 	    	Boolean checked = false;
 	    	if(checkboxActions.get(i).isChecked())
 	    	{
 	    		checked = true;
-	    		editor.putBoolean(actions.get(i).getName(), checked);
+	    		editor.putBoolean(actions.get(i).getName() + "action", checked);
 	    		//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
 	    	}
     	}
     	//ask all Rewards TextBoxes if checked or unchecked
-    	for(int i = 0; i <= preactionsCounter; i++)
+    	for(int i = 0; i < preactionsCounter; i++)
     	{
 	    	Boolean checked = false;
 	    	if(checkboxRewards.get(i).isChecked())
 	    	{
 	    		checked = true;
-	    		editor.putBoolean(rewards.get(i).getName(), checked);
+	    		editor.putBoolean(rewards.get(i).getName() + "reward", checked);
 	    		//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
-	    	}
+	    	}	    	
     	}
         
         
@@ -241,7 +255,7 @@ public class ModuleSettingsActivity extends Activity {
 	
 	private void setupDynamicElementList(List<Element> elements)
 	{
-		for(int i = 0; i <= elements.size(); i++)
+		for(int i = 0; i < elements.size(); i++)
 		{
 			if(elements.get(i) instanceof ElementPicture)
 			{
@@ -388,12 +402,12 @@ public class ModuleSettingsActivity extends Activity {
 				
 		npRoundsToPlay = (NumberPicker) findViewById(R.id.npRoundsToPlay);
 		npRoundsToPlay.setMaxValue(999);
-		npRoundsToPlay.setMinValue(0);		
+		npRoundsToPlay.setMinValue(1);		
 	}
 	
 	private int calculateTimeToPlayInSeconds() {
 		int minutes = npMinutes.getValue();
-		int seconds = npSeconds.getValue();		
+		int seconds = npSeconds.getValue();	
 		return ((minutes*60)+seconds);
 	}
 	
@@ -459,51 +473,8 @@ public class ModuleSettingsActivity extends Activity {
 	{	
 		String nameOfModulePref = "MODULE" + i;
     	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-        Boolean nameOfDescrition = pref_modulesettings.getBoolean(elementName, false);
-		return nameOfDescrition;
+        Boolean nameOfDescription = pref_modulesettings.getBoolean(elementName, false);        
+		return nameOfDescription;
 	}
 	
-
-	
-	
-
-	
-
-	
-	
-
-
-
-	
-/////////////////////////////////NOT IMPORTANT FOR NOW//////////////////////////////////
-	//Autogenerated, dont know
-	private void setupActionBar() {
-
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-
-	}
-
-	//Autogenerated, dont know
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.module_settings, menu);
-		return true;
-	}
-
-	//Autogenerated, dont know
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 }

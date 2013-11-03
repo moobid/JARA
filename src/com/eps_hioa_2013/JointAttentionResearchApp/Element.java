@@ -1,8 +1,9 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class Element {
+public class Element implements Serializable {
 	private String name;
 	
 	private String path;
