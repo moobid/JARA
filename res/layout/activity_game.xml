@@ -2,13 +2,21 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical" >
 
     <VideoView
         android:id="@+id/videoView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2.41"
+        android:scaleType="center"
+        android:src="@android:drawable/btn_star"
         android:visibility="gone" />
 
     <LinearLayout
@@ -90,5 +98,12 @@
             android:onClick="onclick_touched"
             android:src="@drawable/ic_launcher" />
     </LinearLayout>
+
+    <Chronometer
+        android:id="@+id/chronometer1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chronometer"
+        android:visibility="gone" />
 
 </LinearLayout>

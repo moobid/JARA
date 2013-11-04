@@ -18,7 +18,10 @@ import android.os.Environment;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Chronometer;
+import android.widget.Chronometer.OnChronometerTickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.VideoView;
 
 public class GameActivity extends Activity {
@@ -196,10 +199,28 @@ public class GameActivity extends Activity {
 		    mPlayer = MediaPlayer.create(this, Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+mySound.getPath()));
 		    mPlayer.start();
 	}
+	public void playMyPicture(ElementPicture myPicture)
+	{
+		ImageView myPhoto = ((ImageView)findViewById(R.id.imageView1));
+		myPhoto.setImageURI(Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+myPicture.getPath()));
+		myPhoto.setVisibility(View.VISIBLE);
+		Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));
+		myChrono.setBase(0);
+		myChrono.start();
+		myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
+			@Override
+			public void onChronometerTick(Chronometer c)
+			{
+				if(c.getBase()>5000)
+				{
+					 c.stop();
+					 ImageView myPhoto = ((ImageView)findViewById(R.id.imageView1));
+					 myPhoto.setVisibility(View.VISIBLE); 
+				}
+			}
+		});
+	}
 
-	
-	
-	
 	private void initializeViews() {
 		topleft = (ImageButton) findViewById(R.id.topleft);
 		topmid = (ImageButton) findViewById(R.id.topmid);
@@ -247,8 +268,6 @@ public class GameActivity extends Activity {
         Boolean nameOfDescription = pref_modulesettings.getBoolean(elementName, false);        
 		return nameOfDescription;
 	}
-	
-	
 	
 	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way
 	public int getModulecounterOutOfPreferences() {
