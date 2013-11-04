@@ -47,17 +47,13 @@ public class MainActivity extends Activity {
 		//hides keyboard until user presses a field
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);	
 		
-		//Create Java directory if it doesn't exist
-		String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-		File f = new File(dirPath+"/Jara");
-		if (!f.isDirectory())
-		{
-			f.mkdirs();
-		}
 		
+		checkExistingDirs();
 		
 	}
 	
+	
+
 	//Dont know yet
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -121,7 +117,7 @@ public class MainActivity extends Activity {
 		//Start values
 		ArrayList<Element> elementList = new ArrayList<Element>();		
 		int size = 0;
-		String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+		String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() +"/Jara/Elements/";
 		
 		//Search for all files in dirPath and add their paths to a String array.
 		List<String> paths = new ArrayList<String>();
@@ -188,7 +184,25 @@ public class MainActivity extends Activity {
 		return type;
 	}
 	
-
+	private void checkExistingDirs() {
+		//Create Java directory if it doesn't exist
+				String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+				File f = new File(dirPath+"/Jara");
+				File g = new File(dirPath+"/Jara/Statistics");
+				File h = new File(dirPath+"/Jara/Elements");
+				if (!f.isDirectory())
+				{
+					f.mkdirs();
+				}
+				if (!g.isDirectory())
+				{
+					g.mkdirs();
+				}
+				if (!h.isDirectory())
+				{
+					h.mkdirs();
+				}
+	}
 	
 
 }

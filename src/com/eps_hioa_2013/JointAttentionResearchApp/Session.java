@@ -54,8 +54,9 @@ public class Session implements Serializable {
 		if(isExternalStorageWritable()) //checks if ExternalStorage is available
 		{	
 				PrintWriter pw = null;
+				String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/Jara/Statistics/";
 		        try{
-		        	pw = new PrintWriter(new FileWriter("/sdcard/"+filename+".txt", true));
+		        	pw = new PrintWriter(new FileWriter(dirPath+filename+".txt", true));
 	            	pw.write(newData);
 	                pw.println();
 		        }
