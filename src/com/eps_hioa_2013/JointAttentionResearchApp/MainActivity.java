@@ -45,7 +45,17 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		//hides keyboard until user presses a field
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);		
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);	
+		
+		//Create Java directory if it doesn't exist
+		String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+		File f = new File(dirPath+"/Jara");
+		if (!f.isDirectory())
+		{
+			f.mkdirs();
+		}
+		
+		
 	}
 	
 	//Dont know yet

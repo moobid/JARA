@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -182,31 +183,20 @@ public class GameActivity extends Activity {
 		video.start();
 	}
 	
+
 	public void playMySound(ElementSound mySound)
 	{
-		MediaPlayer mediaPlayer = new MediaPlayer();
+		MediaPlayer mPlayer = new MediaPlayer();
 		File file = new File(mySound.getPath());
 		
-        try{
-            synchronized(this){
-            	FileInputStream inputStream = new FileInputStream(file);
-        		mediaPlayer.setDataSource(inputStream.getFD());
-        		inputStream.close();
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-            }
-        } catch(IllegalStateException ex){
-            ex.printStackTrace();
-        } catch(IOException ex){
-            ex.printStackTrace();
-        }
+		    if(mPlayer != null) {
+		        mPlayer.stop();
+		        mPlayer.release();
+		    }
+		    mPlayer = MediaPlayer.create(this, Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+mySound.getPath()));
+		    mPlayer.start();
 	}
 
-	
-	
-	
-	
-	
 	
 	
 	
