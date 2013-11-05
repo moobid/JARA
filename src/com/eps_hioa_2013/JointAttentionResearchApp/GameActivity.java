@@ -131,6 +131,7 @@ public class GameActivity extends Activity {
 		
 			//after certain amount of time:
 			//todo: showAllSignals()
+			
 			stagecounter++;
 				break;
 		case 2: //2 = Signal
@@ -140,15 +141,15 @@ public class GameActivity extends Activity {
 				Element myReward = mymodule.getRandomRewardElement();
 				if (myReward instanceof ElementVideo)
 				{
-					playVideoReward((ElementVideo)myReward);
+					displayVideoReward((ElementVideo)myReward);
 				}
 				if (myReward instanceof ElementSound)
 				{
-					playSoundReward((ElementSound)myReward);
+					displaySoundReward((ElementSound)myReward);
 				}
 				if (myReward instanceof ElementPicture)
 				{
-					//todo: show picture over whole screen
+					displayPictureReward((ElementPicture)myReward);
 				}
 				
 				if(/*todo: if no preaction*/false) stagecounter = 1; //if no Preaction selected
@@ -167,7 +168,7 @@ public class GameActivity extends Activity {
 		
 	}
 	
-	public void playVideoReward(ElementVideo myVideo)
+	public void displayVideoReward(ElementVideo myVideo)
 	{
 		final VideoView video = ((VideoView)findViewById(R.id.videoViewReward));
 		//video.se
@@ -187,7 +188,7 @@ public class GameActivity extends Activity {
 	}
 	
 
-	public void playSoundReward(ElementSound mySound)
+	public void displaySoundReward(ElementSound mySound)
 	{
 		MediaPlayer mPlayer = new MediaPlayer();
 		File file = new File(mySound.getPath());
@@ -196,13 +197,14 @@ public class GameActivity extends Activity {
 		        mPlayer.stop();
 		        mPlayer.release();
 		    }
-		    mPlayer = MediaPlayer.create(this, Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+mySound.getPath()));
+		    mPlayer = MediaPlayer.create(this, Uri.parse(mySound.getPath()));
 		    mPlayer.start();
 	}
-	public void playPictureReward(ElementPicture myPicture)
+
+	public void displayPictureReward(ElementPicture myPicture)
 	{
 		ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
-		myPhoto.setImageURI(Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+myPicture.getPath()));
+		myPhoto.setImageURI(Uri.parse(myPicture.getPath()));
 		myPhoto.setVisibility(View.VISIBLE);
 		Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));
 		myChrono.setBase(0);
@@ -216,6 +218,48 @@ public class GameActivity extends Activity {
 					 c.stop();
 					 ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
 					 myPhoto.setVisibility(View.VISIBLE); 
+				}
+			}
+		});
+	}
+	public void displayPictureReward(ElementPicture myPicture, final int time)
+	{
+		ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
+		myPhoto.setImageURI(Uri.parse(myPicture.getPath()));
+		myPhoto.setVisibility(View.VISIBLE);
+		Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));
+		myChrono.setBase(0);
+		myChrono.start();
+		myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
+			@Override
+			public void onChronometerTick(Chronometer c)
+			{
+				if(c.getBase()>time)
+				{
+					 c.stop();
+					 ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
+					 myPhoto.setVisibility(View.VISIBLE); 
+				}
+			}
+		});
+	}
+	
+	public void displayPictureElement(ElementPicture myPicture, ImageButton myButton, final int time)
+	{
+		myButton.setImageURI(Uri.parse(myPicture.getPath()));
+		Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));
+		
+		myChrono.setBase(0);
+		myChrono.start();
+		myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
+			@Override
+			public void onChronometerTick(Chronometer c)
+			{
+				if(c.getBase()>time)
+				{
+					 c.stop();
+					//clearPictureElement 
+					 
 				}
 			}
 		});

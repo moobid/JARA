@@ -59,7 +59,7 @@ public final class R {
         public static final int date_textview=0x7f0a001c;
         public static final int editText1=0x7f0a0032;
         public static final int editText2=0x7f0a0031;
-        public static final int imageView1=0x7f0a0002;
+        public static final int imageViewReward=0x7f0a0002;
         public static final int lastused_textview=0x7f0a001f;
         public static final int lastused_textview2=0x7f0a0021;
         public static final int lastused_textview3=0x7f0a0023;
@@ -95,7 +95,7 @@ public final class R {
         public static final int topleft=0x7f0a0003;
         public static final int topmid=0x7f0a0004;
         public static final int topright=0x7f0a0005;
-        public static final int videoView1=0x7f0a0001;
+        public static final int videoViewReward=0x7f0a0001;
     }
     public static final class layout {
         public static final int activity_game=0x7f030000;
