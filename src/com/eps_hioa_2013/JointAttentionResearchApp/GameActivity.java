@@ -140,11 +140,11 @@ public class GameActivity extends Activity {
 				Element myReward = mymodule.getRandomRewardElement();
 				if (myReward instanceof ElementVideo)
 				{
-					playMyVideo((ElementVideo)myReward);
+					playVideoReward((ElementVideo)myReward);
 				}
 				if (myReward instanceof ElementSound)
 				{
-					playMySound((ElementSound)myReward);
+					playSoundReward((ElementSound)myReward);
 				}
 				if (myReward instanceof ElementPicture)
 				{
@@ -167,9 +167,9 @@ public class GameActivity extends Activity {
 		
 	}
 	
-	public void playMyVideo(ElementVideo myVideo)
+	public void playVideoReward(ElementVideo myVideo)
 	{
-		final VideoView video = ((VideoView)findViewById(R.id.videoView1));
+		final VideoView video = ((VideoView)findViewById(R.id.videoViewReward));
 		//video.se
 		video.setOnCompletionListener(new OnCompletionListener() {
 			@Override
@@ -187,7 +187,7 @@ public class GameActivity extends Activity {
 	}
 	
 
-	public void playMySound(ElementSound mySound)
+	public void playSoundReward(ElementSound mySound)
 	{
 		MediaPlayer mPlayer = new MediaPlayer();
 		File file = new File(mySound.getPath());
@@ -199,9 +199,9 @@ public class GameActivity extends Activity {
 		    mPlayer = MediaPlayer.create(this, Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+mySound.getPath()));
 		    mPlayer.start();
 	}
-	public void playMyPicture(ElementPicture myPicture)
+	public void playPictureReward(ElementPicture myPicture)
 	{
-		ImageView myPhoto = ((ImageView)findViewById(R.id.imageView1));
+		ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
 		myPhoto.setImageURI(Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+myPicture.getPath()));
 		myPhoto.setVisibility(View.VISIBLE);
 		Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));
@@ -214,7 +214,7 @@ public class GameActivity extends Activity {
 				if(c.getBase()>5000)
 				{
 					 c.stop();
-					 ImageView myPhoto = ((ImageView)findViewById(R.id.imageView1));
+					 ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
 					 myPhoto.setVisibility(View.VISIBLE); 
 				}
 			}
