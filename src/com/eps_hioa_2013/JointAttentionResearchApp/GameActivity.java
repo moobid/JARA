@@ -44,7 +44,7 @@ public class GameActivity extends Activity {
 	private ImageButton bottomright;
 	
 	private int stagecounter = 0; //0 = Preaction; 1 = Action/signal; 2 = reward; 
-	private int roundcounter = 0;
+	private int roundcounter = 1;
 	private int roundcounterlimit;
 	
 	private Date DateStartedPlaying = null;
@@ -63,6 +63,8 @@ public class GameActivity extends Activity {
 	private StopWatch stopWatch;
 	private String endMessage;
 
+	private String timedLocation;
+	private ElementPicture timedElement;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -89,8 +91,6 @@ public class GameActivity extends Activity {
 		
 		initializeViews(); //initializes the views (Imagebuttons)
 		
-		//todo: if there's no preaction in module, then the stagecounter has to be 1 in beginning (just in the beginning!)
-		
 		mysession.updateStatistics("\n\n" +
 			"Started Playing a module\n" +
 			"Started playing: " + DateStartedPlaying + "\n" +
@@ -102,10 +102,7 @@ public class GameActivity extends Activity {
 				);
 		
 		loadGameInfo(mysession);
-		// TODO uncomment for testing
-				/*
-		nextStage();
-		*/		
+		nextStage();				
 		stopWatch.start();	
 		if(timeToPlayInSeconds > 0)
 			startDurationTimer();
@@ -178,10 +175,12 @@ public class GameActivity extends Activity {
 				stopGame("The last round has been played");
 			}
 			else
+			{
 				stagecounter = 0;
 				roundcounter++;
 				resetScreen();
 				nextStage();
+			}
 			break;
 		}
 	}
@@ -245,7 +244,7 @@ public class GameActivity extends Activity {
 		String currentTime = convertTime(stopWatch.getTime());
 
 		//TODO get correct imageButton name		
-		mysession.updateStatistics(currentTime + " " + view.getId());
+		mysession.updateStatistics(currentTime + " " +  getImageButton(view.getId()));
 	}
 	
 	private String convertTime(long millis)
@@ -273,7 +272,10 @@ public class GameActivity extends Activity {
 	private void LoadSignalStage(boolean actionAvailable) {
 		// TODO More options ? several signals
 		Element element = mymodule.getSignals().get(0);
-		String Location = getElementLocation(modulenumber, element + "signal"); 
+		String location = getElementLocation(modulenumber, element.getName() + "Signal"); 
+		
+		timedElement = (ElementPicture) element;
+		timedLocation = location;
 		
 		if(actionAvailable)
 		{
@@ -281,14 +283,15 @@ public class GameActivity extends Activity {
 			timer.schedule(new TimerTask() {
 				  @Override
 				  public void run() {					  
-					//TODO theo load image + location
+					 displayPictureElement(timedElement, getImageButton(timedLocation), 10);
 					 buttonWorks = true;
+					 this.cancel();
 				  }
 				}, 5*1000); //TODO use actual time setting, now 5 seconds
 		}
 		else
 		{
-			//TODO theo load image + location
+			displayPictureElement((ElementPicture) element, getImageButton(location), 10);
 			Timer timer = new Timer();
 			timer.schedule(new TimerTask() {
 				  @Override
@@ -299,20 +302,28 @@ public class GameActivity extends Activity {
 		}
 	}
 
-	
+
 	private void LoadActionStage(boolean buttenActive) {
 		// TODO more options
-		buttonWorks = buttenActive;
+		buttonWorks = buttenActive;		
 		Element element = mymodule.getActions().get(0);
-		//TODO theo load image + location
-		//TODO add butten id to validid actionlist
+		String location = getElementLocation(modulenumber, element.getName() + "Action"); 
+
+		// display
+		displayPictureElement((ElementPicture) element, getImageButton(location), 10);
+		// add valid ID
+		validActionID.add(getImageButton(location).getId());		
 	}
 
 	private void LoadPreactionStage() {
 		// TODO more options
 		Element element = mymodule.getPreactions().get(0);
-		//TODO theo load image + location
-		//TODO add butten id to validid preactionlist
+		String location = getElementLocation(modulenumber, element.getName() + "Preaction"); 
+
+		// display
+		displayPictureElement((ElementPicture) element, getImageButton(location), 10);
+		// add valid ID
+		validPreactionID.add(getImageButton(location).getId());	
 	}
 	
 	//stops the game
@@ -351,11 +362,11 @@ public class GameActivity extends Activity {
 		{
 			displayPictureReward((ElementPicture) element);
 		}
-		if(element instanceof ElementSound)
+		else if(element instanceof ElementSound)
 		{
 			displaySoundReward((ElementSound) element);
 		}
-		if(element instanceof ElementVideo)
+		else if(element instanceof ElementVideo)
 		{
 			displayVideoReward((ElementVideo) element);
 		}					
@@ -368,8 +379,7 @@ public class GameActivity extends Activity {
 		//video.se
 		video.setOnCompletionListener(new OnCompletionListener() {
 			@Override
-			public void onCompletion(MediaPlayer v) {
-				// TODO Auto-generated method stub
+			public void onCompletion(MediaPlayer v) {				
 				video.setVisibility(View.GONE);
 			}
 		});
@@ -475,27 +485,51 @@ public class GameActivity extends Activity {
 	private ImageButton getImageButton(String location)
 	{
 		ImageButton button = null;
-		if(location == "topleft")
+		if(location.equals("topleft"))
 			button = topleft;
-		else if(location == "topmid")
+		else if(location.equals("topmid"))
 			button = topmid;
-		else if (location == "topright")
+		else if(location.equals("topright"))
 			button = topright;
-		else if(location == "midleft")
+		else if(location.equals("midleft"))
 			button = midleft;
-		else if(location == "midmid")
+		else if(location.equals("midmid"))
 			button = midmid;
-		else if(location == "midright")
+		else if(location.equals("midright"))
 			button = midright;
-		else if(location == "bottomleft")
+		else if(location.equals("bottomleft"))
 			button = bottomleft;
-		else if (location == "bottommid")
+		else if(location.equals("bottommid"))
 			button = bottommid;
-		else if (location == "bottomright")
+		else if(location.equals("bottomright"))
 			button = bottomright;
 		return button;		
 	}
 
+	private String getImageButton(int ID)
+	{
+		String button = "";
+		if(ID == topleft.getId())
+			button = "topleft";
+		else if(ID == topmid.getId())
+			button = "topmid";
+		else if (ID == topright.getId())
+			button = "topright";
+		else if(ID == midleft.getId())
+			button = "midleft";
+		else if(ID == midmid.getId())
+			button = "midmid" ;
+		else if(ID == midright.getId())
+			button = "midright";
+		else if(ID == bottomleft.getId())
+			button = "bottomleft";
+		else if (ID == bottommid.getId())
+			button = "bottommid";
+		else if (ID == bottomright.getId())
+			button = "bottomright";
+		return button;		
+	}
+	
 	public String getNameOfLastEditedModule()
 	{	
         int modulecounter = getModulecounterOutOfPreferences();
