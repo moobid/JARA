@@ -33,7 +33,11 @@ public final class R {
         public static final int size8=0x7f050004;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int a=0x7f020000;
+        public static final int b=0x7f020001;
+        public static final int c=0x7f020002;
+        public static final int d=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
     }
     public static final class id {
         public static final int Actions=0x7f0a0038;
@@ -45,17 +49,17 @@ public final class R {
         public static final int Rewardstext=0x7f0a0039;
         public static final int Signals=0x7f0a0036;
         public static final int Signalstext=0x7f0a0035;
-        public static final int TableLayout1=0x7f0a0010;
+        public static final int TableLayout1=0x7f0a0013;
         public static final int TableRow4=0x7f0a001a;
         public static final int TextView10=0x7f0a001e;
         public static final int TextView4=0x7f0a001b;
         public static final int action_settings=0x7f0a003b;
-        public static final int bottomleft=0x7f0a0009;
-        public static final int bottommid=0x7f0a000a;
-        public static final int bottomright=0x7f0a000b;
+        public static final int bottomleft=0x7f0a000d;
+        public static final int bottommid=0x7f0a000e;
+        public static final int bottomright=0x7f0a000f;
         public static final int button1=0x7f0a0029;
         public static final int button2=0x7f0a002a;
-        public static final int chronometer1=0x7f0a000c;
+        public static final int chronometer1=0x7f0a0003;
         public static final int date_textview=0x7f0a001c;
         public static final int editText1=0x7f0a0032;
         public static final int editText2=0x7f0a0031;
@@ -64,37 +68,37 @@ public final class R {
         public static final int lastused_textview2=0x7f0a0021;
         public static final int lastused_textview3=0x7f0a0023;
         public static final int lastused_textview4=0x7f0a0024;
-        public static final int midleft=0x7f0a0006;
-        public static final int midmid=0x7f0a0007;
-        public static final int midright=0x7f0a0008;
+        public static final int midleft=0x7f0a0009;
+        public static final int midmid=0x7f0a000a;
+        public static final int midright=0x7f0a000b;
         public static final int npMinutes=0x7f0a002d;
         public static final int npRoundsToPlay=0x7f0a002f;
         public static final int npSeconds=0x7f0a002e;
-        public static final int participant=0x7f0a000e;
-        public static final int participant_textview=0x7f0a0016;
-        public static final int password=0x7f0a000d;
-        public static final int password_textview=0x7f0a0013;
-        public static final int researcher=0x7f0a000f;
+        public static final int participant=0x7f0a0011;
+        public static final int participant_textview=0x7f0a0017;
+        public static final int password=0x7f0a0010;
+        public static final int password_textview=0x7f0a0015;
+        public static final int researcher=0x7f0a0012;
         public static final int researcher_textview=0x7f0a0019;
         public static final int start_module=0x7f0a002b;
-        public static final int tableRow1=0x7f0a0011;
+        public static final int tableRow1=0x7f0a0004;
         public static final int tableRow10=0x7f0a0022;
-        public static final int tableRow2=0x7f0a0014;
+        public static final int tableRow2=0x7f0a0008;
         public static final int tableRow22=0x7f0a002c;
         public static final int tableRow23=0x7f0a0030;
-        public static final int tableRow3=0x7f0a0017;
+        public static final int tableRow3=0x7f0a000c;
         public static final int tableRow5=0x7f0a0025;
         public static final int tableRow6=0x7f0a0027;
         public static final int tableRow7=0x7f0a0028;
         public static final int tableRow8=0x7f0a001d;
         public static final int tableRow9=0x7f0a0020;
-        public static final int textView1=0x7f0a0012;
-        public static final int textView2=0x7f0a0015;
+        public static final int textView1=0x7f0a0014;
+        public static final int textView2=0x7f0a0016;
         public static final int textView3=0x7f0a0018;
         public static final int textView5=0x7f0a0026;
-        public static final int topleft=0x7f0a0003;
-        public static final int topmid=0x7f0a0004;
-        public static final int topright=0x7f0a0005;
+        public static final int topleft=0x7f0a0005;
+        public static final int topmid=0x7f0a0006;
+        public static final int topright=0x7f0a0007;
         public static final int videoViewReward=0x7f0a0001;
     }
     public static final class layout {

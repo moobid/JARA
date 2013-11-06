@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/LinearLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_width="1280dp"
+    android:layout_height="720dp"
+    android:orientation="horizontal" >
 
     <VideoView
         android:id="@+id/videoViewReward"
@@ -19,91 +19,107 @@
         android:src="@android:drawable/btn_star"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
-
-        <ImageButton
-            android:id="@+id/topleft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/topmid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/topright"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <ImageButton
-            android:id="@+id/midleft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/midmid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/midright"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <ImageButton
-            android:id="@+id/bottomleft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/bottommid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/bottomright"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
-    </LinearLayout>
 
     <Chronometer
         android:id="@+id/chronometer1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chronometer"
         android:visibility="gone" />
+
+    <TableLayout
+        android:layout_width="960dp"
+        android:layout_height="470dp" >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="960dp"
+            android:layout_height="156dp" >
+            
+         <ImageButton
+             android:id="@+id/topleft"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+             android:background="@drawable/b"
+             android:cropToPadding="true"
+             android:onClick="onclick_touched"
+             android:scaleType="fitCenter" />
+
+        <ImageButton
+            android:id="@+id/topmid"
+        	 android:layout_width="match_parent"
+        	 android:layout_height="match_parent"
+            android:onClick="onclick_touched"
+            android:src="@drawable/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/topright"
+        	 android:layout_width="match_parent"
+        	 android:layout_height="match_parent"
+            android:onClick="onclick_touched"
+            android:src="@drawable/ic_launcher" />
+            
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="match_parent"
+            android:layout_height="156dp" >
+            
+        <ImageButton
+            android:id="@+id/midleft"
+        	 android:layout_width="match_parent"
+        	 android:layout_height="match_parent"
+            android:onClick="onclick_touched"
+            android:src="@drawable/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/midmid"
+            android:layout_width="426dp"
+            android:layout_height="240dp"
+            android:maxHeight="@dimen/activity_vertical_margin"
+            android:maxWidth="@dimen/activity_horizontal_margin"
+            android:onClick="onclick_touched"
+            android:scaleType="center"
+            android:src="@drawable/d" />
+
+        <ImageButton
+            android:id="@+id/midright"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="onclick_touched"
+            android:src="@drawable/a" />
+            
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="match_parent"
+            android:layout_height="156dp" >
+
+        <ImageButton
+            android:id="@+id/bottomleft"
+        	 android:layout_width="match_parent"
+        	 android:layout_height="match_parent"
+            android:onClick="onclick_touched"
+            android:src="@drawable/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/bottommid"
+        	 android:layout_width="match_parent"
+        	 android:layout_height="match_parent"
+            android:onClick="onclick_touched"
+            android:src="@drawable/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/bottomright"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cropToPadding="true"
+            android:onClick="onclick_touched"
+            android:scaleType="centerInside"
+            android:src="@drawable/b" />
+            
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>
