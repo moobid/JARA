@@ -34,11 +34,7 @@ public final class R {
         public static final int size8=0x7f050004;
     }
     public static final class drawable {
-        public static final int a=0x7f020000;
-        public static final int b=0x7f020001;
-        public static final int c=0x7f020002;
-        public static final int d=0x7f020003;
-        public static final int ic_launcher=0x7f020004;
+        public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
         public static final int Actions=0x7f0a0038;
