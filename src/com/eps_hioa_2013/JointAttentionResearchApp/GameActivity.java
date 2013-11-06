@@ -1,13 +1,20 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.time.StopWatch;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -24,6 +31,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
+@SuppressLint("ValidFragment")
 public class GameActivity extends Activity {
 	private ImageButton topleft;
 	private ImageButton topmid;
@@ -35,7 +43,7 @@ public class GameActivity extends Activity {
 	private ImageButton bottommid;
 	private ImageButton bottomright;
 	
-	private int stagecounter = 0; //0 = Preaction; 1 = Action; 2 = Signal; 3 = reward
+	private int stagecounter = 0; //0 = Preaction; 1 = Action/signal; 2 = reward; 
 	private int roundcounter = 0;
 	private int roundcounterlimit;
 	
@@ -49,6 +57,12 @@ public class GameActivity extends Activity {
 	private String modulenumber;
 	private Session mysession;	
 	private String[] stages = {"preaction", "signal", "action", "reward"};
+	private ArrayList<Integer> validPreactionID;
+	private ArrayList<Integer> validActionID;
+	private Boolean buttonWorks;
+	private StopWatch stopWatch;
+	private String endMessage;
+
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -61,12 +75,17 @@ public class GameActivity extends Activity {
 	    
 	    System.out.println("GameActivity started");
 		
-	    Intent intent = getIntent();		
+	    //All class variables
+	    Intent intent = getIntent();
+	    validPreactionID = new ArrayList<Integer>();
+	    validActionID = new ArrayList<Integer>();
 		mysession = (Session) intent.getSerializableExtra(ModuleSettingsActivity.EXTRA_SESSION);		
 		modulenumber = (intent.getStringExtra(ModuleSettingsActivity.MODULENUMBER));
-		roundcounterlimit = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_ROUNDSTOPLAY, 0);		
-		timeToPlayInSeconds = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_TIME, 0);
+		roundcounterlimit = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_ROUNDSTOPLAY, 0);
+		timeToPlayInSeconds = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_TIME, 0); 
 		DateStartedPlaying = new Date();
+		mymodule = new Module();	
+		stopWatch = new StopWatch();
 		
 		initializeViews(); //initializes the views (Imagebuttons)
 		
@@ -82,20 +101,94 @@ public class GameActivity extends Activity {
 			"Rounds to play: " + roundcounterlimit + "\n"			
 				);
 		
-		//starts the time and makes sure to end it, if the time is over; not working; dont know how to do
-		//timecounter = new Timecounter(mysession.getDeadlineDate());
-		mymodule = new Module();
-		loadGameInfo(mysession, modulenumber);
+		loadGameInfo(mysession);
+		// TODO uncomment for testing
+				/*
 		nextStage();
+		*/		
+		stopWatch.start();	
+		if(timeToPlayInSeconds > 0)
+			startDurationTimer();
 	}
 
 	private void nextStage() {
-		// TODO Auto-generated method stub
 		
+		//check stagecounter number and do appropriate things based on number
+		switch(stagecounter)
+		{
+		case 0:
+			//=0, check if preactionElements exist,
+			if(!mymodule.getPreactions().isEmpty())
+			{
+				//yes? -> load stuff needed for preaction.
+				LoadPreactionStage();
+			}
+			else
+			{
+				//no? increase stagecounter call this method again
+				stagecounter++;
+				nextStage();
+			}
+			break;
+			
+		case 1:
+			if(!mymodule.getSignals().isEmpty())
+			{
+				if(!mymodule.getActions().isEmpty())
+				{
+					//show actions
+					LoadActionStage(false);	//false because button isn't active until signal appears
+					LoadSignalStage(true); //True because there is a button, signal will activate button when it appears										
+				}
+				else
+				{
+					LoadSignalStage(false); //false because no action. time option is for how long signal appears until reward.
+					//no action but signal ? show signal for specified time
+				}
+			}
+			else
+			{
+				if(!mymodule.getActions().isEmpty())
+				{
+					//show actions
+					LoadActionStage(true); //pressing button will instantly show the reward.
+					buttonWorks = true;
+				}
+				else
+				{
+					//go straight to reward
+					stagecounter++;
+					nextStage();
+				}
+			}
+			break;
+			
+		case 2:
+			//Show reward reward will change depending on options.		
+			LoadRewardStage();
+			stagecounter++;
+			nextStage();
+			break;
+			
+		case 3:
+			//exit game if number of round are met else go back to stage 0			
+			if(roundcounter == roundcounterlimit)
+			{
+				//exit
+				stopGame("The last round has been played");
+			}
+			else
+				stagecounter = 0;
+				roundcounter++;
+				resetScreen();
+				nextStage();
+			break;
+		}
 	}
 
+
 	//Load elements belonging to this module and put them in the appropriate arrays.
-	private void loadGameInfo(Session mysession, String modulenumber) {
+	private void loadGameInfo(Session mysession) {
 		int size = mysession.getElementlist().size();
 		String currentStage = "";
 		for(int o = 0; o < 4; o++)
@@ -113,60 +206,161 @@ public class GameActivity extends Activity {
 		
 	}
 
+	//Will create a timer that stops the game when the time has passed.
+	private void startDurationTimer() {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			  @Override
+			  public void run() {
+					stopGame("The set duration has been reached"); 
+			  }
+			}, timeToPlayInSeconds*1000);
+		
+	}
 
+	//Check if an action is required and updates the statistics file for press location and time.
 	public void onclick_touched(View view)
 	{		
 		switch(stagecounter)
 		{
 		case 0: //0 = Preaction;
-			//todo: if(view.getId() == id of indeed a Preactionimage)
+			if(validPreactionID.contains(view.getId()))
 			{
-				//todo: showAllActions()
-				//.....
-			}
-			
-			stagecounter++;
+				stagecounter++;
+				nextStage();
+			}	
 				break;
 		case 1: //1 = Action
-		
-			//after certain amount of time:
-			//todo: showAllSignals()
-			
+			if(validActionID.contains(view.getId()) && buttonWorks)
+			{
+				buttonWorks = false;
+				stagecounter++;
+				nextStage();
+			}	
 			stagecounter++;
 				break;
-		case 2: //2 = Signal
-			//todo: if(view.getId() == id of indeed a Actionimage)
-			{
-				//show reward:
-				Element myReward = mymodule.getRandomRewardElement();
-				if (myReward instanceof ElementVideo)
-				{
-					displayVideoReward((ElementVideo)myReward);
-				}
-				if (myReward instanceof ElementSound)
-				{
-					displaySoundReward((ElementSound)myReward);
-				}
-				if (myReward instanceof ElementPicture)
-				{
-					displayPictureReward((ElementPicture)myReward);
-				}
-				
-				if(/*todo: if no preaction*/false) stagecounter = 1; //if no Preaction selected
-				else stagecounter = 0;
-				
-				roundcounter++;
-				stagecounter++;
-			}
+			default:
 				break;
 		}
-		
-		if(roundcounter >= roundcounterlimit) //check if limit of rounds reached
-		{			
-			//end game
-		}
-		
+		String currentTime = convertTime(stopWatch.getTime());
+
+		//TODO get correct imageButton name		
+		mysession.updateStatistics(currentTime + " " + view.getId());
 	}
+	
+	private String convertTime(long millis)
+	{
+		String time = String.format("%02d:%02d:%02d", 
+				TimeUnit.MILLISECONDS.toHours(millis),
+				TimeUnit.MILLISECONDS.toMinutes(millis) -  
+				TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), // The change is in this line
+				TimeUnit.MILLISECONDS.toSeconds(millis) - 
+				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))); 
+		return time;
+	}
+	
+	//Loads the reward(s)
+	private void LoadRewardStage() {
+		// TODO random element and next element for several rounds		
+		Element element = null;		
+		element = mymodule.getRewards().get(0);
+		loadReward(element);
+	}
+
+	//Loads the signal(s) starts timer for signal
+	//if boolean true then there is a previous action timer will be used to delay image showing up
+	//if boolean false then timer will be used to show signal for that period until reward is shown
+	private void LoadSignalStage(boolean actionAvailable) {
+		// TODO More options ? several signals
+		Element element = mymodule.getSignals().get(0);
+		String Location = getElementLocation(modulenumber, element + "signal"); 
+		
+		if(actionAvailable)
+		{
+			Timer timer = new Timer();
+			timer.schedule(new TimerTask() {
+				  @Override
+				  public void run() {					  
+					//TODO theo load image + location
+					 buttonWorks = true;
+				  }
+				}, 5*1000); //TODO use actual time setting, now 5 seconds
+		}
+		else
+		{
+			//TODO theo load image + location
+			Timer timer = new Timer();
+			timer.schedule(new TimerTask() {
+				  @Override
+				  public void run() {
+				    nextStage();
+				  }
+				}, 5*1000); //TODO use actual time setting, now 5 seconds
+		}
+	}
+
+	
+	private void LoadActionStage(boolean buttenActive) {
+		// TODO more options
+		buttonWorks = buttenActive;
+		Element element = mymodule.getActions().get(0);
+		//TODO theo load image + location
+		//TODO add butten id to validid actionlist
+	}
+
+	private void LoadPreactionStage() {
+		// TODO more options
+		Element element = mymodule.getPreactions().get(0);
+		//TODO theo load image + location
+		//TODO add butten id to validid preactionlist
+	}
+	
+	//stops the game
+	private void stopGame(String message) {
+		endMessage = message;
+		DialogFragment newFragment = new StopModuleDialog();
+	    newFragment.show(getFragmentManager(), "endGame");
+	    
+	}
+	
+	public class StopModuleDialog extends DialogFragment {		
+	    public Dialog onCreateDialog(Bundle savedInstanceState) {
+	        // Use the Builder class for convenient dialog construction
+	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+	        builder.setMessage(endMessage)
+	               .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                	   finish();
+	                	   }
+	               });
+	        // Create the AlertDialog object and return it
+	        return builder.create();
+	    }
+	}
+	
+	//removes everything on screen
+	private void resetScreen() {
+		// TODO Auto-generated method stub		
+	}
+	
+
+	
+	//Checks which type of element must be loaded
+	private void loadReward(Element element) {
+		if(element instanceof ElementPicture)
+		{
+			displayPictureReward((ElementPicture) element);
+		}
+		if(element instanceof ElementSound)
+		{
+			displaySoundReward((ElementSound) element);
+		}
+		if(element instanceof ElementVideo)
+		{
+			displayVideoReward((ElementVideo) element);
+		}					
+	}
+	
 	
 	public void displayVideoReward(ElementVideo myVideo)
 	{
@@ -265,6 +459,7 @@ public class GameActivity extends Activity {
 		});
 	}
 
+
 	private void initializeViews() {
 		topleft = (ImageButton) findViewById(R.id.topleft);
 		topmid = (ImageButton) findViewById(R.id.topmid);
@@ -274,7 +469,31 @@ public class GameActivity extends Activity {
 		midright = (ImageButton) findViewById(R.id.midright);
 		bottomleft = (ImageButton) findViewById(R.id.bottomleft);
 		bottommid = (ImageButton) findViewById(R.id.bottommid);
-		bottomright = (ImageButton) findViewById(R.id.bottomright);		
+		bottomright = (ImageButton) findViewById(R.id.bottomright);			
+	}
+	
+	private ImageButton getImageButton(String location)
+	{
+		ImageButton button = null;
+		if(location == "topleft")
+			button = topleft;
+		else if(location == "topmid")
+			button = topmid;
+		else if (location == "topright")
+			button = topright;
+		else if(location == "midleft")
+			button = midleft;
+		else if(location == "midmid")
+			button = midmid;
+		else if(location == "midright")
+			button = midright;
+		else if(location == "bottomleft")
+			button = bottomleft;
+		else if (location == "bottommid")
+			button = bottommid;
+		else if (location == "bottomright")
+			button = bottomright;
+		return button;		
 	}
 
 	public String getNameOfLastEditedModule()
@@ -318,5 +537,13 @@ public class GameActivity extends Activity {
 		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
         int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
 		return modulecounter;
+	}
+	
+	public String getElementLocation(String i, String elementName)
+	{
+		String nameOfModulePref = "MODULE" + i;
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		String location = pref_modulesettings.getString(elementName + "location", "Not set");
+		return location;
 	}
 }
