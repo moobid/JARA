@@ -23,5 +23,16 @@
     <string name="module_description">Module Discripton</string>
     <string name="module_description_key">Module_Discripton</string>
     <string name="title_activity_game">GameActivity</string>
+    <string-array name="locations">
+        <item >topleft</item>
+        <item >topmid</item>
+        <item >topright</item>
+        <item >midleft</item>
+        <item >midmid</item>
+        <item >midright</item>
+        <item >bottomleft</item>
+        <item >bottommid</item>
+        <item >bottomright</item>
+    </string-array>
 
 </resources>
