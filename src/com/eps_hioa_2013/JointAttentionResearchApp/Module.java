@@ -72,7 +72,26 @@ public class Module{
 			//Shouldn't get here stage is bigger than 3 or lower than 0
 			break;
 		}
+	}
+	
+	public List<Element> getPreactions()
+	{
+		return myPreactions;
+	}
 
+	public List<Element> getActions()
+	{
+		return myActions;
+	}
+
+	public List<Element> getSignals()
+	{
+		return mySignals;
+	}
+
+	public List<Element> getRewards()
+	{
+		return myRewards;
 	}
 
 }
