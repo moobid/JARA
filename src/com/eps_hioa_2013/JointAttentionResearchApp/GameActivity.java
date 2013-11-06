@@ -278,12 +278,30 @@ public class GameActivity extends Activity {
 		timedLocation = location;
 		
 		if(actionAvailable)
+			
 		{
+			/* TODO change timer for Chronometer
+			Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));
+			
+			myChrono.setBase(0);
+			myChrono.start();
+			myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
+				@Override
+				public void onChronometerTick(Chronometer c)
+				{
+					if(c.getBase()>time)
+					{
+						 c.stop();
+						//clearPictureElement 
+						 
+					}
+				}
+			});*/
 			Timer timer = new Timer();
 			timer.schedule(new TimerTask() {
 				  @Override
 				  public void run() {					  
-					 displayPictureElement(timedElement, getImageButton(timedLocation), 10);
+					 displayPictureElement(timedElement, getImageButton(timedLocation));
 					 buttonWorks = true;
 					 this.cancel();
 				  }
@@ -291,7 +309,7 @@ public class GameActivity extends Activity {
 		}
 		else
 		{
-			displayPictureElement((ElementPicture) element, getImageButton(location), 10);
+			displayPictureElement((ElementPicture) element, getImageButton(location));
 			Timer timer = new Timer();
 			timer.schedule(new TimerTask() {
 				  @Override
@@ -310,7 +328,7 @@ public class GameActivity extends Activity {
 		String location = getElementLocation(modulenumber, element.getName() + "Action"); 
 
 		// display
-		displayPictureElement((ElementPicture) element, getImageButton(location), 10);
+		displayPictureElement((ElementPicture) element, getImageButton(location));
 		// add valid ID
 		validActionID.add(getImageButton(location).getId());		
 	}
@@ -321,7 +339,7 @@ public class GameActivity extends Activity {
 		String location = getElementLocation(modulenumber, element.getName() + "Preaction"); 
 
 		// display
-		displayPictureElement((ElementPicture) element, getImageButton(location), 10);
+		displayPictureElement((ElementPicture) element, getImageButton(location));
 		// add valid ID
 		validPreactionID.add(getImageButton(location).getId());	
 	}
@@ -448,25 +466,9 @@ public class GameActivity extends Activity {
 		});
 	}
 	
-	public void displayPictureElement(ElementPicture myPicture, ImageButton myButton, final int time)
+	public void displayPictureElement(ElementPicture myPicture, ImageButton myButton)
 	{
-		myButton.setImageURI(Uri.parse(myPicture.getPath()));
-		Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));
-		
-		myChrono.setBase(0);
-		myChrono.start();
-		myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
-			@Override
-			public void onChronometerTick(Chronometer c)
-			{
-				if(c.getBase()>time)
-				{
-					 c.stop();
-					//clearPictureElement 
-					 
-				}
-			}
-		});
+		myButton.setImageURI(Uri.parse(myPicture.getPath()));		
 	}
 
 

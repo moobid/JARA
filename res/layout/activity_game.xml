@@ -39,7 +39,6 @@
              android:id="@+id/topleft"
              android:layout_width="fill_parent"
              android:layout_height="fill_parent"
-             android:background="@drawable/b"
              android:cropToPadding="true"
              android:onClick="onclick_touched"
              android:scaleType="fitCenter" />
@@ -79,15 +78,13 @@
             android:maxHeight="@dimen/activity_vertical_margin"
             android:maxWidth="@dimen/activity_horizontal_margin"
             android:onClick="onclick_touched"
-            android:scaleType="center"
-            android:src="@drawable/d" />
+            android:scaleType="center" />
 
         <ImageButton
             android:id="@+id/midright"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:onClick="onclick_touched"
-            android:src="@drawable/a" />
+            android:onClick="onclick_touched" />
             
         </TableRow>
 
@@ -116,8 +113,7 @@
             android:layout_height="match_parent"
             android:cropToPadding="true"
             android:onClick="onclick_touched"
-            android:scaleType="centerInside"
-            android:src="@drawable/b" />
+            android:scaleType="centerInside" />
             
         </TableRow>
     </TableLayout>

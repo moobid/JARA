@@ -26,9 +26,9 @@ public class MainActivity extends Activity {
 	private Module modulelist[]; //all Modules are in here
 	private List<Element> elementlist; //all Elements are in here
 	//valid extensions
-	private String[] videoExtensions  = {"wav", "vlc"};
+	private String[] videoExtensions  = {"wav", "vlc", "gif"};
 	private String[] soundExtensions  = {"mp3"};
-	private String[] pictureExtensions  = {"jpg"};
+	private String[] pictureExtensions  = {"jpg", "png"};
 	
 	Bundle bundle;
 	
@@ -153,7 +153,7 @@ public class MainActivity extends Activity {
 				createdElement = new ElementPicture(elementPath, type);
 			break;
 			case 2:  
-				createdElement = new ElementPicture(elementPath, type);
+				createdElement = new ElementSound(elementPath, type);
 			break;				
 			case 3:
 				createdElement = new ElementVideo(elementPath, type);
