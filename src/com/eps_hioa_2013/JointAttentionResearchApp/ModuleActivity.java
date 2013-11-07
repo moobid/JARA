@@ -29,7 +29,6 @@ public class ModuleActivity extends ListActivity {
 	public final static String MODULENUMBER = "com.eps_hioa_2013.JointAttentionResearchApp.MODULENUMBER";
 	Bundle bundle;
 	public final static String EXTRA_SESSION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_SESSION";
-	public final static String MODE = "com.eps_hioa_2013.JointAttentionResearchApp.MODE";
 
 	//receives the sessionobject and saves it into mysession
 	//+ sets the input in the overview of the top of the screen
@@ -73,7 +72,6 @@ public class ModuleActivity extends ListActivity {
 	{				
 		Intent intent = new Intent(this, ModuleSettingsActivity.class);
 		intent.putExtra(MODULENUMBER, Integer.toString(-1)); //-1 for new module
-		intent.putExtra(MODE, "0"); //1 for load a module; 0 for create a new module
 		bundle = new Bundle();    		
 		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
     	intent.putExtras(bundle);
@@ -119,7 +117,6 @@ public class ModuleActivity extends ListActivity {
 	{
 		Intent intent = new Intent(this, ModuleSettingsActivity.class);
 		intent.putExtra(MODULENUMBER, Integer.toString(moduleNumber));
-		intent.putExtra(MODE, "1"); //1 for load a modulse; 0 foor create a new module
 		bundle = new Bundle();    		
 		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
     	intent.putExtras(bundle);

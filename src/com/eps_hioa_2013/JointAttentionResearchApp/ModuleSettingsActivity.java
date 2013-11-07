@@ -85,13 +85,6 @@ public class ModuleSettingsActivity extends Activity {
 
 		elementChangeQueue = new LinkedList<String>();
 		Intent intent = getIntent();
-		String mode = (intent.getStringExtra(ModuleActivity.MODE));
-		if(mode.equals("0"))
-		{
-			//makes Start module button disapear
-			Button start_module = (Button) findViewById(R.id.start_module);
-			start_module.setVisibility(View.GONE);
-		}
 		mysession = (Session) intent.getSerializableExtra(ModuleActivity.EXTRA_SESSION);
 		String modulenumber = (intent.getStringExtra(ModuleActivity.MODULENUMBER));
 		this.currentModuleNumber = Integer.parseInt(modulenumber);
@@ -151,14 +144,15 @@ public class ModuleSettingsActivity extends Activity {
 	public void onclick_start_game(View view)
 	{	
 		//TODO: save made changes by the user before starting the game!
-		mysession.updateStatistics("Clicked on Start Module");		
+		onclick_save(view);		
+		mysession.updateStatistics("Clicked on Start Module");
 		Intent intent = new Intent(this, GameActivity.class);
 		intent.putExtra(MODULENUMBER, Integer.toString(currentModuleNumber));
-		intent.putExtra(EXTRA_ROUNDSTOPLAY, npRoundsToPlay.getValue()); 
-		intent.putExtra(EXTRA_TIME, calculateTimeToPlayInSeconds()); 
+		intent.putExtra(EXTRA_ROUNDSTOPLAY, npRoundsToPlay.getValue());
+		intent.putExtra(EXTRA_TIME, calculateTimeToPlayInSeconds());
 		bundle = new Bundle();
 		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
-		intent.putExtras(bundle);    	
+		intent.putExtras(bundle);
 		startActivity(intent);
 		finish();
 	}
@@ -288,6 +282,12 @@ public class ModuleSettingsActivity extends Activity {
 				addElementToList(elements.get(i).getName(), "Rewards");
 				rewards.add(rewardsCounter, elements.get(i));
 				rewardsCounter++;
+			}
+			if(elements.get(i) instanceof ElementSound)
+			{
+				addElementToList(elements.get(i).getName(), "Signals");
+				signals.add(signalsCounter, elements.get(i));
+				signalsCounter++;
 			}
 		}
 	}
@@ -520,6 +520,7 @@ public class ModuleSettingsActivity extends Activity {
 					// of the selected item
 					elementChangeQueue.add(currentElement);
 					elementChangeQueue.add(locationArray[which]);
+					
 				}
 			});
 			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
