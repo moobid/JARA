@@ -37,7 +37,7 @@ public class Element implements Serializable {
 	public void setPath(String path) {
 		this.path = path;
 		String name = path.substring(path.lastIndexOf("/")+1);
-		setName(name.substring(0, name.lastIndexOf(".")));
+		setName(name);
 	}
 
 	public File getFile() {

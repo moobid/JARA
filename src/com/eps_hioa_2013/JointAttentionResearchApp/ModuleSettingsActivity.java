@@ -48,6 +48,7 @@ public class ModuleSettingsActivity extends Activity {
 	//The donald Element will of course also be in Signals and Actions because its a picture
 	private List<CheckBox> checkboxPreactions = new ArrayList<CheckBox>();
 	private List<Button> buttonPreactions = new ArrayList<Button>();
+	private List<Button> buttonPreactions2 = new ArrayList<Button>();
 	private List<Element> preactions = new ArrayList<Element>();
 	private int preactionsCounter = 0;
 
@@ -68,8 +69,10 @@ public class ModuleSettingsActivity extends Activity {
 
 	private int currentModuleNumber = -1;
 	private Queue<String> elementChangeQueue;
+	private Queue<String> elementChangeQueue2;
 	private String currentElement;
 	private String[] locationArray = {"topleft", "topmid", "topright", "midleft", "midmid", "midright", "bottomleft", "bottommid", "bottomright"};
+	private String[] durationArray = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println("ModuleSettingsActivity started");
@@ -83,6 +86,7 @@ public class ModuleSettingsActivity extends Activity {
 		setContentView(R.layout.activity_module_settings);
 
 
+		elementChangeQueue = new LinkedList<String>();
 		elementChangeQueue = new LinkedList<String>();
 		Intent intent = getIntent();
 		mysession = (Session) intent.getSerializableExtra(ModuleActivity.EXTRA_SESSION);
@@ -143,7 +147,7 @@ public class ModuleSettingsActivity extends Activity {
 
 	public void onclick_start_game(View view)
 	{	
-		//TODO: save made changes by the user before starting the game!
+
 		onclick_save(view);		
 		mysession.updateStatistics("Clicked on Start Module");
 		Intent intent = new Intent(this, GameActivity.class);
@@ -239,11 +243,20 @@ public class ModuleSettingsActivity extends Activity {
 			}	    	
 		}
 		
+		//saving location
 		while(!elementChangeQueue.isEmpty())
 		{
 			editor.putString(elementChangeQueue.poll() + "location", elementChangeQueue.poll());
 		}
 		
+		//saving duration
+		while(!elementChangeQueue2.isEmpty())
+		{
+			editor.putString(elementChangeQueue2.poll() + "duration", elementChangeQueue2.poll());
+		}
+		
+		//checking if Settings are ok to start the game
+		//todo: expand this!
 		if((module_name == null) || (module_name.equals("")))
 		{
 			Toast.makeText(getApplicationContext(), "Modulename empty", Toast.LENGTH_SHORT).show();
@@ -264,28 +277,28 @@ public class ModuleSettingsActivity extends Activity {
 			if(elements.get(i) instanceof ElementPicture)
 			{
 				//creates CheckBox and Button and shows it in the right place and adds both in the Membervariables
-				addElementToList(elements.get(i).getName(), "Preactions");
+				addElementToList(elements.get(i).getName(), "Preactions", true);
 				preactions.add(preactionsCounter, elements.get(i)); //adds the Element in the Membervariables
 				preactionsCounter++; //counter how many elements are in this array
-				addElementToList(elements.get(i).getName(), "Actions");
+				addElementToList(elements.get(i).getName(), "Actions", true);
 				actions.add(actionsCounter, elements.get(i));
 				actionsCounter++;
-				addElementToList(elements.get(i).getName(), "Signals");
+				addElementToList(elements.get(i).getName(), "Signals", true);
 				signals.add(signalsCounter, elements.get(i));
 				signalsCounter++;
-				addElementToList(elements.get(i).getName(), "Rewards");
+				addElementToList(elements.get(i).getName(), "Rewards", true);
 				rewards.add(rewardsCounter, elements.get(i));
 				rewardsCounter++;
 			}
 			if((elements.get(i) instanceof ElementVideo) || (elements.get(i) instanceof ElementSound))
 			{
-				addElementToList(elements.get(i).getName(), "Rewards");
+				addElementToList(elements.get(i).getName(), "Rewards", false);
 				rewards.add(rewardsCounter, elements.get(i));
 				rewardsCounter++;
 			}
 			if(elements.get(i) instanceof ElementSound)
 			{
-				addElementToList(elements.get(i).getName(), "Signals");
+				addElementToList(elements.get(i).getName(), "Signals", false);
 				signals.add(signalsCounter, elements.get(i));
 				signalsCounter++;
 			}
@@ -294,13 +307,15 @@ public class ModuleSettingsActivity extends Activity {
 
 	//adds a Checkbox for an Element to the Settingsscreen
 	//WARNING: elementType must be either "Preactions", "Signals", "Actions" or "Rewards"
-	public void addElementToList(String elementName, String elementType)
+	public void addElementToList(String elementName, String elementType, boolean buttonNeeded)
 	{		
 		TableLayout table = null;
 		String currentLocation = "";
+		String currentDuration = "";
 
 		if(elementType == "Preactions"){
 			currentLocation = getElementLocation(Integer.toString(currentModuleNumber), elementName + "Preaction");
+			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Preaction");
 			table = (TableLayout) findViewById(R.id.Preactions);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
@@ -309,21 +324,40 @@ public class ModuleSettingsActivity extends Activity {
 			//creates new Checkbox with the name of the element and sets it into the Tablerow
 			checkboxPreactions.add(preactionsCounter, new CheckBox(this));
 			checkboxPreactions.get(preactionsCounter).setText(elementName);
-			//	checkboxPreactions.add(preactionsCounter, (checkboxPreactions.get(preactionsCounter)));
 
 			newTablerow.addView(checkboxPreactions.get(preactionsCounter));
 
-			//creates new Button and sets it also into the Tablerow
+			//creates new Button for choosing the LOCATION of the Element and sets it also into the Tablerow 
 			buttonPreactions.add(preactionsCounter, new Button(this));
-			buttonPreactions.get(preactionsCounter).setTag( elementName + "Preaction");
-			buttonPreactions.get(preactionsCounter).setText(currentLocation);
-			buttonPreactions.get(preactionsCounter).setOnClickListener(new View.OnClickListener() {
+			buttonPreactions.get(preactionsCounter).setTag( elementName + "Preaction");				
+			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
+			buttonPreactions2.add(preactionsCounter, new Button(this));
+			buttonPreactions2.get(preactionsCounter).setTag( elementName + "Preaction2");
+			if(buttonNeeded == true)
+			{
+				buttonPreactions.get(preactionsCounter).setText(currentLocation);
+				buttonPreactions.get(preactionsCounter).setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					currentElement = (String) v.getTag();
-					showElementSettingsDiaglog();
-				}
-			});			
-			newTablerow.addView(buttonPreactions.get(preactionsCounter)); 
+					showElementPositionDiaglog();
+					}
+				});		
+					
+				buttonPreactions2.get(preactionsCounter).setText(currentDuration);
+				buttonPreactions2.get(preactionsCounter).setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					currentElement = (String) v.getTag();
+					showElementDurationDiaglog();
+					}
+				});	
+			}
+			else
+			{
+				buttonPreactions.get(preactionsCounter).setVisibility(View.GONE);
+				buttonPreactions2.get(preactionsCounter).setVisibility(View.GONE);
+			}
+			newTablerow.addView(buttonPreactions.get(preactionsCounter));
+			newTablerow.addView(buttonPreactions2.get(preactionsCounter));			
 		}
 
 		if(elementType == "Signals"){
@@ -340,17 +374,25 @@ public class ModuleSettingsActivity extends Activity {
 
 			newTablerow.addView(checkboxSignals.get(signalsCounter));
 
-			//creates new Button and sets it also into the Tablerow
+				//creates new Button and sets it also into the Tablerow
 			buttonSignals.add(signalsCounter, new Button(this));	
 			buttonSignals.get(signalsCounter).setTag( elementName + "Signal");
-			buttonSignals.get(signalsCounter).setText(currentLocation);
-			buttonSignals.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					currentElement = (String) v.getTag();
-					showElementSettingsDiaglog();
-				}
-			});			
-			newTablerow.addView(buttonSignals.get(signalsCounter)); 		
+			if(buttonNeeded == true)
+			{
+				buttonSignals.get(signalsCounter).setText(currentLocation);
+				buttonSignals.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						currentElement = (String) v.getTag();
+						showElementPositionDiaglog();
+					}
+				});		
+			}
+			else
+			{
+				buttonSignals.get(signalsCounter).setVisibility(View.GONE);
+			}
+			newTablerow.addView(buttonSignals.get(signalsCounter)); 
+		
 		}
 
 		if(elementType == "Actions"){
@@ -367,17 +409,25 @@ public class ModuleSettingsActivity extends Activity {
 
 			newTablerow.addView(checkboxActions.get(actionsCounter));
 
-			//creates new Button and sets it also into the Tablerow
+				//creates new Button and sets it also into the Tablerow
 			buttonActions.add(actionsCounter, new Button(this));
 			buttonActions.get(actionsCounter).setTag(elementName + "Action");
-			buttonActions.get(actionsCounter).setText(currentLocation);
-			buttonActions.get(actionsCounter).setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					currentElement = (String) v.getTag();
-					showElementSettingsDiaglog();
-				}
-			});			
+			if(buttonNeeded == true)
+			{
+				buttonActions.get(actionsCounter).setText(currentLocation);
+				buttonActions.get(actionsCounter).setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						currentElement = (String) v.getTag();
+						showElementPositionDiaglog();
+					}
+				});			
+			}
+			else
+			{
+				buttonActions.get(actionsCounter).setVisibility(View.GONE);
+			}
 			newTablerow.addView(buttonActions.get(actionsCounter)); 		
+			
 		}
 
 		if(elementType == "Rewards"){
@@ -393,18 +443,26 @@ public class ModuleSettingsActivity extends Activity {
 			//	checkboxPreactions.add(preactionsCounter, (checkboxPreactions.get(preactionsCounter)));
 
 			newTablerow.addView(checkboxRewards.get(rewardsCounter));
-
-			//creates new Button and sets it also into the Tablerow
+			
+				//creates new Button and sets it also into the Tablerow
 			buttonRewards.add(rewardsCounter, new Button(this));
 			buttonRewards.get(rewardsCounter).setTag(elementName + "Reward");
-			buttonRewards.get(rewardsCounter).setText(currentLocation);
-			buttonRewards.get(rewardsCounter).setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					currentElement = (String) v.getTag();
-					showElementSettingsDiaglog();
-				}
-			});			
-			newTablerow.addView(buttonRewards.get(rewardsCounter)); 			
+			if(buttonNeeded == true)
+			{
+				buttonRewards.get(rewardsCounter).setText(currentLocation);
+				buttonRewards.get(rewardsCounter).setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						currentElement = (String) v.getTag();
+						showElementPositionDiaglog();
+					}
+				});
+			}
+			else
+			{
+				buttonRewards.get(rewardsCounter).setVisibility(View.GONE);
+			}
+			newTablerow.addView(buttonRewards.get(rewardsCounter)); 	
+			
 		}
 
 		if(table == null){ //error
@@ -435,9 +493,14 @@ public class ModuleSettingsActivity extends Activity {
 	}
 
 	//shows the popup when you click on the Edit-button
-	public void showElementSettingsDiaglog() {
-		DialogFragment newFragment = new ElementSettingsDialog();
-		newFragment.show(getFragmentManager(), "diaglogsettings");
+	public void showElementPositionDiaglog() {
+		DialogFragment newFragment = new ElementPositionDialog();
+		newFragment.show(getFragmentManager(), "dialogsettings");
+	}
+	
+	public void showElementDurationDiaglog() {
+		DialogFragment newFragment = new ElementDurationDialog();
+		newFragment.show(getFragmentManager(), "dialogsettings");
 	}
 
 	//returns the counter for the modules
@@ -504,12 +567,22 @@ public class ModuleSettingsActivity extends Activity {
 	{
 		String nameOfModulePref = "MODULE" + i;
 		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-		String location = pref_modulesettings.getString(elementName + "location", "Not set");
+		String location = pref_modulesettings.getString(elementName + "location", "location");
+		return location;
+	}
+	
+	public String getElementDuration(String i, String elementName)
+	{
+		String nameOfModulePref = "MODULE" + i;
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		String location = pref_modulesettings.getString(elementName + "duration", "duration");
 		return location;
 	}
 
+	
 	@SuppressLint("ValidFragment")
-	public class ElementSettingsDialog extends DialogFragment {
+	//Position of an Element Popup
+	public class ElementPositionDialog extends DialogFragment {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -519,8 +592,7 @@ public class ModuleSettingsActivity extends Activity {
 					// The 'which' argument contains the index position
 					// of the selected item
 					elementChangeQueue.add(currentElement);
-					elementChangeQueue.add(locationArray[which]);
-					
+					elementChangeQueue.add(locationArray[which]);	
 				}
 			});
 			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -528,9 +600,30 @@ public class ModuleSettingsActivity extends Activity {
 					// User cancelled the dialog
 				}
 			});
-
 			return builder.create();
 		}
 	}
-
+	@SuppressLint("ValidFragment")
+	//Duration of an Element Popup
+	public class ElementDurationDialog extends DialogFragment {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle("Element Duration settings")
+			.setItems(durationArray, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					// The 'which' argument contains the index position
+					// of the selected item
+					elementChangeQueue2.add(currentElement);
+					elementChangeQueue2.add(durationArray[which]);	
+				}
+			});
+			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					// User cancelled the dialog
+				}
+			});
+			return builder.create();
+		}
+	}
 }
