@@ -22,6 +22,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -280,43 +281,41 @@ public class GameActivity extends Activity {
 		if(actionAvailable)
 			
 		{
-			/* TODO change timer for Chronometer
-			Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));
-			
-			myChrono.setBase(0);
+			 //TODO load real time
+			Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));			
 			myChrono.start();
 			myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
 				@Override
 				public void onChronometerTick(Chronometer c)
 				{
-					if(c.getBase()>time)
+					long getal = SystemClock.elapsedRealtime();
+					
+					if(( c.getBase())>5*100)
 					{
 						 c.stop();
 						//clearPictureElement 
-						 
+						 displayPictureElement(timedElement, getImageButton(timedLocation));
+						 buttonWorks = true;						 
 					}
 				}
-			});*/
-			Timer timer = new Timer();
-			timer.schedule(new TimerTask() {
-				  @Override
-				  public void run() {					  
-					 displayPictureElement(timedElement, getImageButton(timedLocation));
-					 buttonWorks = true;
-					 this.cancel();
-				  }
-				}, 5*1000); //TODO use actual time setting, now 5 seconds
+			});
 		}
 		else
 		{
-			displayPictureElement((ElementPicture) element, getImageButton(location));
-			Timer timer = new Timer();
-			timer.schedule(new TimerTask() {
-				  @Override
-				  public void run() {
-				    nextStage();
-				  }
-				}, 5*1000); //TODO use actual time setting, now 5 seconds
+			Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));			
+			myChrono.start();
+			myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
+				@Override
+				public void onChronometerTick(Chronometer c)
+				{
+					if(c.getBase()>5*100)
+					{
+						 c.stop();
+						//clearPictureElement 
+						 nextStage();					 
+					}
+				}
+			});
 		}
 	}
 

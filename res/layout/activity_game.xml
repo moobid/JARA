@@ -27,12 +27,12 @@
         android:visibility="gone" />
 
     <TableLayout
-        android:layout_width="960dp"
-        android:layout_height="470dp" >
+        android:layout_width="1400dp"
+        android:layout_height="700dp" >
 
         <TableRow
             android:id="@+id/tableRow1"
-            android:layout_width="960dp"
+            android:layout_width="1400dp"
             android:layout_height="156dp" >
             
          <ImageButton
@@ -61,7 +61,7 @@
 
         <TableRow
             android:id="@+id/tableRow2"
-            android:layout_width="match_parent"
+          android:layout_width="960dp"
             android:layout_height="156dp" >
             
         <ImageButton
@@ -90,7 +90,7 @@
 
         <TableRow
             android:id="@+id/tableRow3"
-            android:layout_width="match_parent"
+            android:layout_width="960dp"
             android:layout_height="156dp" >
 
         <ImageButton
