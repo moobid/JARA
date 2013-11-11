@@ -87,7 +87,7 @@ public class ModuleSettingsActivity extends Activity {
 
 
 		elementChangeQueue = new LinkedList<String>();
-		elementChangeQueue = new LinkedList<String>();
+		elementChangeQueue2 = new LinkedList<String>();
 		Intent intent = getIntent();
 		mysession = (Session) intent.getSerializableExtra(ModuleActivity.EXTRA_SESSION);
 		String modulenumber = (intent.getStringExtra(ModuleActivity.MODULENUMBER));
