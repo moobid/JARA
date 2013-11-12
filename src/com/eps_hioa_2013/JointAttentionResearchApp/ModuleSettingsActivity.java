@@ -2,9 +2,7 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -24,6 +22,7 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //ModuleSettingsActivity gets called, when you create a new Module or like to edit an existing one
@@ -54,23 +53,28 @@ public class ModuleSettingsActivity extends Activity {
 
 	private List<CheckBox> checkboxSignals = new ArrayList<CheckBox>();
 	private List<Button> buttonSignals = new ArrayList<Button>();
+	private List<Button> buttonSignals2 = new ArrayList<Button>();
 	private List<Element> signals = new ArrayList<Element>();
 	private int signalsCounter = 0;
 
 	private List<CheckBox> checkboxActions = new ArrayList<CheckBox>();
 	private List<Button> buttonActions = new ArrayList<Button>();
+	private List<Button> buttonActions2 = new ArrayList<Button>();
 	private List<Element> actions = new ArrayList<Element>();
 	private int actionsCounter = 0;
 
 	private List<CheckBox> checkboxRewards = new ArrayList<CheckBox>();
 	private List<Button> buttonRewards = new ArrayList<Button>();
+	private List<Button> buttonRewards2 = new ArrayList<Button>();
 	private List<Element> rewards = new ArrayList<Element>();
 	private int rewardsCounter = 0;
 
 	private int currentModuleNumber = -1;
-	private Queue<String> elementChangeQueue;
-	private Queue<String> elementChangeQueue2;
+
 	private String currentElement;
+	private String currentLocation;
+	private String currentDuration;
+	private String popupMode;
 	private String[] locationArray = {"topleft", "topmid", "topright", "midleft", "midmid", "midright", "bottomleft", "bottommid", "bottomright"};
 	private String[] durationArray = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"};
 	
@@ -85,9 +89,6 @@ public class ModuleSettingsActivity extends Activity {
 		//addPreferencesFromResource(R.xml.settings); 
 		setContentView(R.layout.activity_module_settings);
 
-
-		elementChangeQueue = new LinkedList<String>();
-		elementChangeQueue2 = new LinkedList<String>();
 		Intent intent = getIntent();
 		mysession = (Session) intent.getSerializableExtra(ModuleActivity.EXTRA_SESSION);
 		String modulenumber = (intent.getStringExtra(ModuleActivity.MODULENUMBER));
@@ -102,6 +103,12 @@ public class ModuleSettingsActivity extends Activity {
 
 		//hides keyboard until user presses a field
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
+		TextView title = (TextView) findViewById(R.id.Title);
+		
+		String module_name = getNameOfModule(modulenumber);
+		if((module_name == null) || (module_name.equals("")) || module_name.equals("accessibility")) module_name = "NEW MODULE";
+		title.setText("Settings of Module: " + module_name);
 	}
 
 
@@ -114,7 +121,16 @@ public class ModuleSettingsActivity extends Activity {
 
 			EditText editText1 = (EditText) findViewById(R.id.editText1); //descrition gets loaded
 			editText1.setText(getDescriptionOfModule(modulenumber));
-			Toast.makeText(getApplicationContext(), "MODULE" + this.currentModuleNumber + " loaded", Toast.LENGTH_SHORT).show();
+			
+			npRoundsToPlay.setValue(getRoundsToPlayOfModule(modulenumber));
+			
+			int secondsOverall = getTimeToPlayOfModule(modulenumber);
+			int minutes = secondsOverall/60;
+			npMinutes.setValue(minutes);
+			int seconds = secondsOverall%60;
+			npSeconds.setValue(seconds);
+			
+			
 
 			for(int i = 0; i < preactionsCounter; i++) //the states of all checkboxes get loaded
 			{	    		
@@ -139,7 +155,8 @@ public class ModuleSettingsActivity extends Activity {
 				Boolean b = getBooleanOfModule(modulenumber, rewards.get(i).getName() + "reward");
 				checkboxRewards.get(i).setChecked(b);
 			}
-
+			
+			Toast.makeText(getApplicationContext(), "MODULE" + this.currentModuleNumber + " loaded", Toast.LENGTH_SHORT).show();
 
 		}
 		else {/*nothing to do here*/}
@@ -168,101 +185,164 @@ public class ModuleSettingsActivity extends Activity {
 
 		EditText editText1 = (EditText) findViewById(R.id.editText1);
 		String module_description = editText1.getText().toString();
-
-		//if the modulecounter is smaller than -1 it gets set to -1
-		if(getModulecounterOutOfPreferences() < -1) resetModulecounterInPreferences();
-
-
-		String nameForModule = null;
-		if(this.currentModuleNumber == -1) //jumps in here if new modules gets added
-		{
-			//modulecounter gets iterated
-			incrementModulecounterInPreferences();     	
-			//the Name for the new Module gets created. It is like MODULE0, MODULE1, MODULE2, ...
-			nameForModule = "MODULE"+getModulecounterOutOfPreferences();
-			this.currentModuleNumber = getModulecounterOutOfPreferences();
-		}
-		else //jumps in here if existing module gets saved
-		{
-			nameForModule = "MODULE"+this.currentModuleNumber;
-		}
-
-
-		//saves the variables into the ShardPreferences for the current Module 
-		SharedPreferences pref_modulesettings = getSharedPreferences(nameForModule, 0);
-		SharedPreferences.Editor editor = pref_modulesettings.edit();       
-		// editor is cleared for boxes that were checked once but are not anymore.
-		editor.clear(); //TODO editor clears empty boxes but also empty locations.
-		editor.putString("module_name", module_name);
-		editor.putString("module_description", module_description);
-
-		//ask all Preaction TextBoxes if checked or unchecked
-		for(int i = 0; i < preactionsCounter; i++)
-		{
-			Boolean checked = false;
-			if(checkboxPreactions.get(i).isChecked())
-			{
-				checked = true;	   
-				editor.putBoolean(preactions.get(i).getName() + "preaction", checked);
-				//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
-			}
-
-
-		}
-		//ask all Signals TextBoxes if checked or unchecked
-		for(int i = 0; i < signalsCounter; i++)
-		{
-			Boolean checked = false;
-			if(checkboxSignals.get(i).isChecked())
-			{
-				checked = true;
-				editor.putBoolean(signals.get(i).getName() + "signal", checked);	    		
-				//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
-			}
-		}
-		//ask all Action TextBoxes if checked or unchecked
-		for(int i = 0; i < actionsCounter; i++)
-		{
-			Boolean checked = false;
-			if(checkboxActions.get(i).isChecked())
-			{
-				checked = true;
-				editor.putBoolean(actions.get(i).getName() + "action", checked);
-				//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
-			}
-		}
-		//ask all Rewards TextBoxes if checked or unchecked
-		for(int i = 0; i < preactionsCounter; i++)
-		{
-			Boolean checked = false;
-			if(checkboxRewards.get(i).isChecked())
-			{
-				checked = true;
-				editor.putBoolean(rewards.get(i).getName() + "reward", checked);
-				//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
-			}	    	
-		}
 		
-		//saving location
-		while(!elementChangeQueue.isEmpty())
-		{
-			editor.putString(elementChangeQueue.poll() + "location", elementChangeQueue.poll());
-		}
-		
-		//saving duration
-		while(!elementChangeQueue2.isEmpty())
-		{
-			editor.putString(elementChangeQueue2.poll() + "duration", elementChangeQueue2.poll());
-		}
-		
+		int roundsToPlay = npRoundsToPlay.getValue();
+		int timeToPlay = calculateTimeToPlayInSeconds();
 		//checking if Settings are ok to start the game
-		//todo: expand this!
-		if((module_name == null) || (module_name.equals("")))
+		//TODO: expand this!
+		if(((module_name == null) || (module_name.equals(""))) &&
+		   ((roundsToPlay >= 1) || (timeToPlay >= 1)) //one of these has to be >= 1
+				)
 		{
-			Toast.makeText(getApplicationContext(), "Modulename empty", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Error in Settings; Check them!", Toast.LENGTH_SHORT).show();
 		}
 		else
-		{
+		{	
+			//if the modulecounter is smaller than -1 it gets set to -1
+			if(getModulecounterOutOfPreferences() < -1) resetModulecounterInPreferences();
+	
+			
+			String nameForModule = null;
+			if(this.currentModuleNumber == -1) //jumps in here if new modules gets added
+			{
+				//modulecounter gets iterated
+				incrementModulecounterInPreferences();     	
+				//the Name for the new Module gets created. It is like MODULE0, MODULE1, MODULE2, ...
+				nameForModule = "MODULE"+getModulecounterOutOfPreferences();
+				this.currentModuleNumber = getModulecounterOutOfPreferences();
+			}
+			else //jumps in here if existing module gets saved
+			{
+				nameForModule = "MODULE"+this.currentModuleNumber;
+			}
+	
+	
+			//saves the variables into the ShardPreferences for the current Module 
+			SharedPreferences pref_modulesettings = getSharedPreferences(nameForModule, 0);
+			SharedPreferences.Editor editor = pref_modulesettings.edit();       
+			// editor is cleared for boxes that were checked once but are not anymore.
+			editor.clear(); //editor clears empty boxes
+			editor.putString("module_name", module_name);
+			editor.putString("module_description", module_description);
+			editor.putInt("timeToPlay", timeToPlay);
+			editor.putInt("roundsToPlay", roundsToPlay);
+	
+			//ask all Preaction TextBoxes if checked or unchecked
+			for(int i = 0; i < preactionsCounter; i++)
+			{
+				Boolean checked = false;
+				if(checkboxPreactions.get(i).isChecked())
+				{
+					checked = true;	   
+					editor.putBoolean(preactions.get(i).getName() + "preaction", checked);
+					//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
+				}
+		
+			}
+			//ask all Signals TextBoxes if checked or unchecked
+			for(int i = 0; i < signalsCounter; i++)
+			{
+				Boolean checked = false;
+				if(checkboxSignals.get(i).isChecked())
+				{
+					checked = true;
+					editor.putBoolean(signals.get(i).getName() + "signal", checked);	    		
+					//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
+				}
+			}
+			//ask all Action TextBoxes if checked or unchecked
+			for(int i = 0; i < actionsCounter; i++)
+			{
+				Boolean checked = false;
+				if(checkboxActions.get(i).isChecked())
+				{
+					checked = true;
+					editor.putBoolean(actions.get(i).getName() + "action", checked);
+					//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
+				}
+			}
+			//ask all Rewards TextBoxes if checked or unchecked
+			for(int i = 0; i < preactionsCounter; i++)
+			{
+				Boolean checked = false;
+				if(checkboxRewards.get(i).isChecked())
+				{
+					checked = true;
+					editor.putBoolean(rewards.get(i).getName() + "reward", checked);
+					//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
+				}	    	
+			}
+			
+			//saving location for preactions			
+			for(int i = 0; i < buttonPreactions.size(); i++)
+			{
+				String buttontext = buttonPreactions.get(i).getText().toString();
+				if(buttontext.equals("location")) ;//do nothing
+				else editor.putString(buttonPreactions.get(i).getTag() + "location", buttontext);
+			}
+			
+			//saving duration for preactions	
+			for(int i = 0; i < buttonPreactions2.size(); i++)
+			{
+				String buttontext = buttonPreactions2.get(i).getText().toString();
+				if(buttontext.equals("duration")) ;//do nothing
+				else editor.putString(buttonPreactions2.get(i).getTag() + "duration", buttontext);
+			}
+
+			
+			
+			//saving location for signals			
+			for(int i = 0; i < buttonSignals.size(); i++)
+			{
+				String buttontext = buttonSignals.get(i).getText().toString();
+				if(buttontext.equals("location")) ;//do nothing
+				else editor.putString(buttonSignals.get(i).getTag() + "location", buttontext);
+			}
+			
+			//saving duration for signals	
+			for(int i = 0; i < buttonSignals2.size(); i++)
+			{
+				String buttontext = buttonSignals2.get(i).getText().toString();
+				if(buttontext.equals("duration")) ;//do nothing
+				else editor.putString(buttonSignals2.get(i).getTag() + "duration", buttontext);
+			}
+			
+			
+			
+			//saving location for actions			
+			for(int i = 0; i < buttonActions.size(); i++)
+			{
+				String buttontext = buttonActions.get(i).getText().toString();
+				if(buttontext.equals("location")) ;//do nothing
+				else editor.putString(buttonActions.get(i).getTag() + "location", buttontext);
+			}
+			
+			//saving duration for actions	
+			for(int i = 0; i < buttonActions2.size(); i++)
+			{
+				String buttontext = buttonActions2.get(i).getText().toString();
+				if(buttontext.equals("duration")) ;//do nothing
+				else editor.putString(buttonActions2.get(i).getTag() + "duration", buttontext);
+			}
+			
+			
+			
+			//saving location for rewards			
+			for(int i = 0; i < buttonRewards.size(); i++)
+			{
+				String buttontext = buttonRewards.get(i).getText().toString();
+				if(buttontext.equals("location")) ;//do nothing
+				else editor.putString(buttonRewards.get(i).getTag() + "location", buttontext);
+			}
+			
+			//saving duration for rewards	
+			for(int i = 0; i < buttonRewards2.size(); i++)
+			{
+				String buttontext = buttonRewards2.get(i).getText().toString();
+				if(buttontext.equals("duration")) ;//do nothing
+				else editor.putString(buttonRewards2.get(i).getTag() + "duration", buttontext);
+			}
+
 			editor.commit();        
 			Toast.makeText(getApplicationContext(), "Saved as MODULE" + this.currentModuleNumber, Toast.LENGTH_SHORT).show();
 			finish(); //goes back to last Activity (ModuleActivity)
@@ -305,6 +385,8 @@ public class ModuleSettingsActivity extends Activity {
 		}
 	}
 
+	
+
 	//adds a Checkbox for an Element to the Settingsscreen
 	//WARNING: elementType must be either "Preactions", "Signals", "Actions" or "Rewards"
 	public void addElementToList(String elementName, String elementType, boolean buttonNeeded)
@@ -313,9 +395,10 @@ public class ModuleSettingsActivity extends Activity {
 		String currentLocation = "";
 		String currentDuration = "";
 
-		if(elementType == "Preactions"){
+		if(elementType == "Preactions")
+		{
 			currentLocation = getElementLocation(Integer.toString(currentModuleNumber), elementName + "Preaction");
-			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Preaction");
+			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Preaction2");
 			table = (TableLayout) findViewById(R.id.Preactions);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
@@ -333,35 +416,39 @@ public class ModuleSettingsActivity extends Activity {
 			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
 			buttonPreactions2.add(preactionsCounter, new Button(this));
 			buttonPreactions2.get(preactionsCounter).setTag( elementName + "Preaction2");
-			if(buttonNeeded == true)
+			
+			if(buttonNeeded == true) //shows the buttons
 			{
 				buttonPreactions.get(preactionsCounter).setText(currentLocation);
 				buttonPreactions.get(preactionsCounter).setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					currentElement = (String) v.getTag();
-					showElementPositionDiaglog();
+					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+					popupMode = "preactionLocation"; //determines the popupMode;
+					showElementPositionDiaglog(); //shows Popup					
 					}
 				});		
 					
 				buttonPreactions2.get(preactionsCounter).setText(currentDuration);
 				buttonPreactions2.get(preactionsCounter).setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					currentElement = (String) v.getTag();
-					showElementDurationDiaglog();
+					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+					popupMode = "preactionDuration"; //determines the popupMode;
+					showElementDurationDiaglog(); //shows Popup
 					}
 				});	
 			}
-			else
+			else //makes the buttons disappear
 			{
 				buttonPreactions.get(preactionsCounter).setVisibility(View.GONE);
 				buttonPreactions2.get(preactionsCounter).setVisibility(View.GONE);
 			}
 			newTablerow.addView(buttonPreactions.get(preactionsCounter));
-			newTablerow.addView(buttonPreactions2.get(preactionsCounter));			
+			newTablerow.addView(buttonPreactions2.get(preactionsCounter));		
 		}
 
 		if(elementType == "Signals"){
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Signal");
+			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Signal2");
 			table = (TableLayout) findViewById(R.id.Signals);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
@@ -377,26 +464,42 @@ public class ModuleSettingsActivity extends Activity {
 				//creates new Button and sets it also into the Tablerow
 			buttonSignals.add(signalsCounter, new Button(this));	
 			buttonSignals.get(signalsCounter).setTag( elementName + "Signal");
+			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
+			buttonSignals2.add(signalsCounter, new Button(this));
+			buttonSignals2.get(signalsCounter).setTag( elementName + "Signal2");
 			if(buttonNeeded == true)
 			{
 				buttonSignals.get(signalsCounter).setText(currentLocation);
 				buttonSignals.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						currentElement = (String) v.getTag();
+						popupMode = "signalLocation"; //determines the popupMode;
 						showElementPositionDiaglog();
 					}
 				});		
+				buttonSignals2.get(signalsCounter).setText(currentDuration);
+				buttonSignals2.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+					popupMode = "signalDuration"; //determines the popupMode;
+					showElementDurationDiaglog(); //shows Popup
+					}
+				});	
 			}
+			
 			else
 			{
 				buttonSignals.get(signalsCounter).setVisibility(View.GONE);
+				buttonSignals2.get(signalsCounter).setVisibility(View.GONE);
 			}
 			newTablerow.addView(buttonSignals.get(signalsCounter)); 
+			newTablerow.addView(buttonSignals2.get(signalsCounter));	
 		
 		}
 
 		if(elementType == "Actions"){
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Action");
+			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Action2");
 			table = (TableLayout) findViewById(R.id.Actions);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
@@ -412,26 +515,41 @@ public class ModuleSettingsActivity extends Activity {
 				//creates new Button and sets it also into the Tablerow
 			buttonActions.add(actionsCounter, new Button(this));
 			buttonActions.get(actionsCounter).setTag(elementName + "Action");
+			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
+			buttonActions2.add(actionsCounter, new Button(this));
+			buttonActions2.get(actionsCounter).setTag( elementName + "Action2");
 			if(buttonNeeded == true)
 			{
 				buttonActions.get(actionsCounter).setText(currentLocation);
 				buttonActions.get(actionsCounter).setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						currentElement = (String) v.getTag();
+						popupMode = "actionLocation"; //determines the popupMode;
 						showElementPositionDiaglog();
 					}
-				});			
+				});	
+				buttonActions2.get(actionsCounter).setText(currentDuration);
+				buttonActions2.get(actionsCounter).setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+					popupMode = "actionDuration"; //determines the popupMode;
+					showElementDurationDiaglog(); //shows Popup
+					}
+				});
 			}
 			else
 			{
 				buttonActions.get(actionsCounter).setVisibility(View.GONE);
+				buttonActions2.get(actionsCounter).setVisibility(View.GONE);
 			}
-			newTablerow.addView(buttonActions.get(actionsCounter)); 		
+			newTablerow.addView(buttonActions.get(actionsCounter));
+			newTablerow.addView(buttonActions2.get(actionsCounter));	
 			
 		}
 
 		if(elementType == "Rewards"){
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Reward");
+			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Reward2");
 			table = (TableLayout) findViewById(R.id.Rewards);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
@@ -447,21 +565,35 @@ public class ModuleSettingsActivity extends Activity {
 				//creates new Button and sets it also into the Tablerow
 			buttonRewards.add(rewardsCounter, new Button(this));
 			buttonRewards.get(rewardsCounter).setTag(elementName + "Reward");
+			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
+			buttonRewards2.add(rewardsCounter, new Button(this));
+			buttonRewards2.get(rewardsCounter).setTag( elementName + "Reward2");
 			if(buttonNeeded == true)
 			{
 				buttonRewards.get(rewardsCounter).setText(currentLocation);
 				buttonRewards.get(rewardsCounter).setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						currentElement = (String) v.getTag();
+						popupMode = "rewardLocation"; //determines the popupMode;
 						showElementPositionDiaglog();
+					}
+				});
+				buttonRewards2.get(rewardsCounter).setText(currentDuration);
+				buttonRewards2.get(rewardsCounter).setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+					popupMode = "rewardDuration"; //determines the popupMode;
+					showElementDurationDiaglog(); //shows Popup
 					}
 				});
 			}
 			else
 			{
 				buttonRewards.get(rewardsCounter).setVisibility(View.GONE);
+				buttonRewards2.get(rewardsCounter).setVisibility(View.GONE);
 			}
-			newTablerow.addView(buttonRewards.get(rewardsCounter)); 	
+			newTablerow.addView(buttonRewards.get(rewardsCounter)); 
+			newTablerow.addView(buttonRewards2.get(rewardsCounter));
 			
 		}
 
@@ -490,17 +622,6 @@ public class ModuleSettingsActivity extends Activity {
 		int minutes = npMinutes.getValue();
 		int seconds = npSeconds.getValue();	
 		return ((minutes*60)+seconds);
-	}
-
-	//shows the popup when you click on the Edit-button
-	public void showElementPositionDiaglog() {
-		DialogFragment newFragment = new ElementPositionDialog();
-		newFragment.show(getFragmentManager(), "dialogsettings");
-	}
-	
-	public void showElementDurationDiaglog() {
-		DialogFragment newFragment = new ElementDurationDialog();
-		newFragment.show(getFragmentManager(), "dialogsettings");
 	}
 
 	//returns the counter for the modules
@@ -554,6 +675,24 @@ public class ModuleSettingsActivity extends Activity {
 		String nameOfDescrition = pref_modulesettings.getString("module_description", ACCESSIBILITY_SERVICE);
 		return nameOfDescrition;		
 	}
+	
+	public int getTimeToPlayOfModule(String i)
+	{	
+		String nameOfModulePref = "MODULE" + i;
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		int timeToPlay = pref_modulesettings.getInt("timeToPlay", 0); //TODO: dont know if this 0 is correct
+		return timeToPlay;		
+	}
+	
+	public int getRoundsToPlayOfModule(String i)
+	{	
+		String nameOfModulePref = "MODULE" + i;
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		int roundsToPlay = pref_modulesettings.getInt("roundsToPlay", 0); //TODO: dont know if this 0 is correct
+		return roundsToPlay;
+	}
+	
+
 
 	public Boolean getBooleanOfModule(String i, String elementName)
 	{	
@@ -578,7 +717,17 @@ public class ModuleSettingsActivity extends Activity {
 		String location = pref_modulesettings.getString(elementName + "duration", "duration");
 		return location;
 	}
-
+	
+	//shows the popup when you click on the Edit-button
+	public void showElementPositionDiaglog() {
+		DialogFragment newFragment = new ElementPositionDialog();
+		newFragment.show(getFragmentManager(), "dialogsettings");
+	}
+	
+	public void showElementDurationDiaglog() {
+		DialogFragment newFragment = new ElementDurationDialog();
+		newFragment.show(getFragmentManager(), "dialogsettings");
+	}
 	
 	@SuppressLint("ValidFragment")
 	//Position of an Element Popup
@@ -591,8 +740,12 @@ public class ModuleSettingsActivity extends Activity {
 				public void onClick(DialogInterface dialog, int which) {
 					// The 'which' argument contains the index position
 					// of the selected item
-					elementChangeQueue.add(currentElement);
-					elementChangeQueue.add(locationArray[which]);	
+					
+					currentLocation = locationArray[which];
+					if(popupMode.equals("preactionLocation")) SetLocationButtonTextPreaction();
+					if(popupMode.equals("signalLocation")) SetLocationButtonTextSignal();
+					if(popupMode.equals("actionLocation")) SetLocationButtonTextAction();
+					if(popupMode.equals("rewardLocation")) SetLocationButtonTextReward();
 				}
 			});
 			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -603,6 +756,44 @@ public class ModuleSettingsActivity extends Activity {
 			return builder.create();
 		}
 	}
+	
+	void SetLocationButtonTextPreaction()
+	{
+		int i = 0;
+		for(; i < preactionsCounter; i++)
+		{
+			if((preactions.get(i).getName() + "Preaction").equals(currentElement)) break;
+		}
+		buttonPreactions.get(i).setText(currentLocation); //refreshes buttontext at once!
+	}
+	void SetLocationButtonTextSignal()
+	{
+		int i = 0;
+		for(; i < signalsCounter; i++)
+		{
+			if((signals.get(i).getName() + "Signal").equals(currentElement)) break;
+		}
+		buttonSignals.get(i).setText(currentLocation); //refreshes buttontext at once!
+	}
+	void SetLocationButtonTextAction()
+	{
+		int i = 0;
+		for(; i < actionsCounter; i++)
+		{
+			if((actions.get(i).getName() + "Action").equals(currentElement)) break;
+		}
+		buttonActions.get(i).setText(currentLocation); //refreshes buttontext at once!
+	}
+	void SetLocationButtonTextReward()
+	{
+		int i = 0;
+		for(; i < rewardsCounter; i++)
+		{
+			if((rewards.get(i).getName() + "Reward").equals(currentElement)) break;
+		}
+		buttonRewards.get(i).setText(currentLocation); //refreshes buttontext at once!
+	}
+	
 	@SuppressLint("ValidFragment")
 	//Duration of an Element Popup
 	public class ElementDurationDialog extends DialogFragment {
@@ -613,9 +804,12 @@ public class ModuleSettingsActivity extends Activity {
 			.setItems(durationArray, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// The 'which' argument contains the index position
-					// of the selected item
-					elementChangeQueue2.add(currentElement);
-					elementChangeQueue2.add(durationArray[which]);	
+					// of the selected item					
+					currentDuration = durationArray[which];
+					if(popupMode.equals("preactionDuration")) SetDurationButtonTextPreaction();
+					if(popupMode.equals("signalDuration")) SetDurationButtonTextSignal();
+					if(popupMode.equals("actionDuration")) SetDurationButtonTextAction();
+					if(popupMode.equals("rewardDuration")) SetDurationButtonTextReward();
 				}
 			});
 			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -625,5 +819,42 @@ public class ModuleSettingsActivity extends Activity {
 			});
 			return builder.create();
 		}
+	}
+	
+	void SetDurationButtonTextPreaction()
+	{
+		int i = 0;
+		for(; i < preactionsCounter; i++)
+		{
+			if((preactions.get(i).getName() + "Preaction2").equals(currentElement)) break;
+		}
+		buttonPreactions2.get(i).setText(currentDuration); //refreshes buttontext at once!
+	}
+	void SetDurationButtonTextSignal()
+	{
+		int i = 0;
+		for(; i < signalsCounter; i++)
+		{
+			if((signals.get(i).getName() + "Signal2").equals(currentElement)) break;
+		}
+		buttonSignals2.get(i).setText(currentDuration); //refreshes buttontext at once!
+	}
+	void SetDurationButtonTextAction()
+	{
+		int i = 0;
+		for(; i < actionsCounter; i++)
+		{
+			if((actions.get(i).getName() + "Action2").equals(currentElement)) break;
+		}
+		buttonActions2.get(i).setText(currentDuration); //refreshes buttontext at once!
+	}
+	void SetDurationButtonTextReward()
+	{
+		int i = 0;
+		for(; i < rewardsCounter; i++)
+		{
+			if((rewards.get(i).getName() + "Reward2").equals(currentElement)) break;
+		}
+		buttonRewards2.get(i).setText(currentDuration); //refreshes buttontext at once!
 	}
 }

@@ -48,12 +48,13 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Settings"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="30dp" />
+                android:textSize="30dp"
+                android:layout_span="2" />
         </TableRow>
 
         <TableRow
@@ -89,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
-                android:text="max Rounds to play"
+                android:text="Rounds to play"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </TableRow>
 
@@ -122,7 +123,8 @@
                     android:id="@+id/npRoundsToPlay"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp" />
+                    android:layout_marginLeft="50dp"
+                    />
             </LinearLayout>
         </TableRow>
 
@@ -210,7 +212,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Preaction"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </TableRow>
 
         <TableLayout
@@ -218,6 +220,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
         </TableLayout>
+        
+                <TableRow
+            android:id="@+id/tableRow23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="10dp"
+                android:background="@android:color/background_light" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="10dp"
+                android:background="@android:color/background_light" />
+        </TableRow>
 
         <TableRow
             android:id="@+id/Signalstext"
@@ -229,7 +247,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Signals"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </TableRow>
 
         <TableLayout
@@ -238,6 +256,22 @@
             android:layout_height="wrap_content" >
         </TableLayout>
 
+                        <TableRow
+            android:id="@+id/tableRow23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="10dp"
+                android:background="@android:color/background_light" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="10dp"
+                android:background="@android:color/background_light" />
+        </TableRow>
+        
         <TableRow
             android:id="@+id/Actionstext"
             android:layout_width="wrap_content"
@@ -248,7 +282,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Actions"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </TableRow>
 
         <TableLayout
@@ -256,7 +290,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
         </TableLayout>
+                <TableRow
+            android:id="@+id/tableRow23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
 
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="10dp"
+                android:background="@android:color/background_light" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="10dp"
+                android:background="@android:color/background_light" />
+        </TableRow>
         <TableRow
             android:id="@+id/Rewardstext"
             android:layout_width="wrap_content"
@@ -267,7 +315,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rewards"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </TableRow>
 
         <TableLayout
@@ -277,6 +325,21 @@
         </TableLayout>
 
         <!-- dynamic end -->
+                        <TableRow
+            android:id="@+id/tableRow23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="10dp"
+                android:background="@android:color/background_light" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="10dp"
+                android:background="@android:color/background_light" />
+        </TableRow>
 
         <TableRow
             android:id="@+id/tableRow6"
@@ -285,9 +348,9 @@
 
             <Button
                 android:id="@+id/button1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:onClick="onclick_save"
+                android:layout_width="190dp"
+                android:layout_height="80dp"
                 android:text="Save" />
         </TableRow>
     </TableLayout>
