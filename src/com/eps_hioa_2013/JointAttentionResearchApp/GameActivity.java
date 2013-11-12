@@ -42,17 +42,17 @@ public class GameActivity extends Activity {
 	private ImageButton bottomleft;
 	private ImageButton bottommid;
 	private ImageButton bottomright;
-	
+
 	private int stagecounter = 0; //0 = Preaction; 1 = Action/signal; 2 = reward; 
 	private int roundcounter = 1;
 	private int roundcounterlimit;
-	
+
 	private Date DateStartedPlaying = null;
 	private int timeToPlayInSeconds;
 	//private Timecounter timecounter;
-	
+
 	private boolean PreactionPresent = true;
-	
+
 	private Module mymodule;
 	private String modulenumber;
 	private Session mysession;	
@@ -64,23 +64,24 @@ public class GameActivity extends Activity {
 	private String endMessage;
 
 	private String timedLocation;
-	private ElementPicture timedElement;
+	private Element timedElement;
+	private Timer SignalAppearTimer;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
-		
+
 		//set full screen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-	    this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-	    
-	    setContentView(R.layout.activity_game);
-	    
-	    System.out.println("GameActivity started");
-		
-	    //All class variables
-	    Intent intent = getIntent();
-	    validPreactionID = new ArrayList<Integer>();
-	    validActionID = new ArrayList<Integer>();
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+		setContentView(R.layout.activity_game);
+
+		System.out.println("GameActivity started");
+
+		//All class variables
+		Intent intent = getIntent();
+		validPreactionID = new ArrayList<Integer>();
+		validActionID = new ArrayList<Integer>();
 		mysession = (Session) intent.getSerializableExtra(ModuleSettingsActivity.EXTRA_SESSION);		
 		modulenumber = (intent.getStringExtra(ModuleSettingsActivity.MODULENUMBER));
 		roundcounterlimit = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_ROUNDSTOPLAY, 0);
@@ -88,19 +89,19 @@ public class GameActivity extends Activity {
 		DateStartedPlaying = new Date();
 		mymodule = new Module();	
 		stopWatch = new StopWatch();
-		
+
 		initializeViews(); //initializes the views (Imagebuttons)
-		
+
 		mysession.updateStatistics("\n\n" +
-			"Started Playing a module\n" +
-			"Started playing: " + DateStartedPlaying + "\n" +
-			"Modulename: " + getNameOfModule(modulenumber) + "\n" +
-			"Preferencename: " + "MODULE" + modulenumber + "\n" +
-			"Moduledescription: " + getDescriptionOfModule(modulenumber) + "\n" +
-			"Time to play in s: " + timeToPlayInSeconds + "\n" +	
-			"Rounds to play: " + roundcounterlimit + "\n"			
+				"Started Playing a module\n" +
+				"Started playing: " + DateStartedPlaying + "\n" +
+				"Modulename: " + getNameOfModule(modulenumber) + "\n" +
+				"Preferencename: " + "MODULE" + modulenumber + "\n" +
+				"Moduledescription: " + getDescriptionOfModule(modulenumber) + "\n" +
+				"Time to play in s: " + timeToPlayInSeconds + "\n" +	
+				"Rounds to play: " + roundcounterlimit + "\n"			
 				);
-		
+
 		loadGameInfo(mysession);
 		nextStage();				
 		stopWatch.start();	
@@ -109,7 +110,7 @@ public class GameActivity extends Activity {
 	}
 
 	private void nextStage() {
-		
+
 		//check stagecounter number and do appropriate things based on number
 		switch(stagecounter)
 		{
@@ -127,7 +128,7 @@ public class GameActivity extends Activity {
 				nextStage();
 			}
 			break;
-			
+
 		case 1:
 			if(!mymodule.getSignals().isEmpty())
 			{
@@ -159,14 +160,14 @@ public class GameActivity extends Activity {
 				}
 			}
 			break;
-			
+
 		case 2:
 			//Show reward reward will change depending on options.		
 			LoadRewardStage();
 			stagecounter++;
 			nextStage();
 			break;
-			
+
 		case 3:
 			//exit game if number of round are met else go back to stage 0			
 			if(roundcounter == roundcounterlimit)
@@ -202,19 +203,19 @@ public class GameActivity extends Activity {
 				}
 			}
 		}
-		
+
 	}
 
 	//Will create a timer that stops the game when the time has passed.
 	private void startDurationTimer() {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
-			  @Override
-			  public void run() {
-					stopGame("The set duration has been reached"); 
-			  }
-			}, timeToPlayInSeconds*1000);
-		
+			@Override
+			public void run() {
+				stopGame("The set duration has been reached"); 
+			}
+		}, timeToPlayInSeconds*1000);
+
 	}
 
 	//Check if an action is required and updates the statistics file for press location and time.
@@ -228,7 +229,7 @@ public class GameActivity extends Activity {
 				stagecounter++;
 				nextStage();
 			}	
-				break;
+			break;
 		case 1: //1 = Action
 			if(validActionID.contains(view.getId()) && buttonWorks)
 			{
@@ -237,32 +238,22 @@ public class GameActivity extends Activity {
 				nextStage();
 			}	
 			stagecounter++;
-				break;
-			default:
-				break;
+			break;
+		default:
+			break;
 		}
 		String currentTime = convertTime(stopWatch.getTime());
 
-		//TODO get correct imageButton name		
+		//TODO If image button contains element write down which element
 		mysession.updateStatistics(currentTime + " " +  getImageButton(view.getId()));
 	}
-	
-	private String convertTime(long millis)
-	{
-		String time = String.format("%02d:%02d:%02d", 
-				TimeUnit.MILLISECONDS.toHours(millis),
-				TimeUnit.MILLISECONDS.toMinutes(millis) -  
-				TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), // The change is in this line
-				TimeUnit.MILLISECONDS.toSeconds(millis) - 
-				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))); 
-		return time;
-	}
-	
-	//Loads the reward(s)
+
+
+
+	//Loads a random reward
 	private void LoadRewardStage() {
-		// TODO random element and next element for several rounds		
 		Element element = null;		
-		element = mymodule.getRewards().get(0);
+		element = mymodule.getRandomRewardElement();
 		loadReward(element);
 	}
 
@@ -270,108 +261,147 @@ public class GameActivity extends Activity {
 	//if boolean true then there is a previous action timer will be used to delay image showing up
 	//if boolean false then timer will be used to show signal for that period until reward is shown
 	private void LoadSignalStage(boolean actionAvailable) {
-		// TODO More options ? several signals
-		Element element = mymodule.getSignals().get(0);
-		String location = getElementLocation(modulenumber, element.getName() + "Signal"); 
-		
-		timedElement = (ElementPicture) element;
-		timedLocation = location;
-		
-		if(actionAvailable)
-			
+		// TODO using multiple signals, timedElement and timedLocation get overwriten when you load second signal
+
+		for(int i = 0; i < mymodule.getSignals().size(); i++)
 		{
-			 //TODO load real time
-			Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));			
-			myChrono.start();
-			myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
-				@Override
-				public void onChronometerTick(Chronometer c)
-				{
-					long getal = SystemClock.elapsedRealtime();
-					
-					if(( c.getBase())>5*100)
-					{
-						 c.stop();
-						//clearPictureElement 
-						 displayPictureElement(timedElement, getImageButton(timedLocation));
-						 buttonWorks = true;						 
-					}
-				}
-			});
+			Element element = mymodule.getSignals().get(i);
+			String location = getElementLocation(modulenumber, element.getName() + "Signal"); 
+			//if location is not empty then it's a picture
+			if(!location.isEmpty())
+			{
+				timedElement = (ElementPicture) element;
+				timedLocation = location;
+
+			}
+			else
+			{
+				timedElement = (ElementSound) element;
+			}	
+
+			if(actionAvailable)
+			{
+				//TODO load real time
+				SignalAppearTimer = new Timer();				
+				SignalAppearTimer.schedule(new TimerTask() {
+					public void run() {
+					    
+					    runOnUiThread(new Runnable() {
+
+					    @Override
+					    public void run() {
+					    	if(!timedLocation.isEmpty())							
+								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));							
+							else
+								displaySoundReward((ElementSound)timedElement);
+
+							buttonWorks = true;
+					            }
+					    });
+					        }
+					    },  5*1000);
+			}
+			else
+			{
+				SignalAppearTimer = new Timer();				
+				SignalAppearTimer.schedule(new TimerTask() {
+					public void run() {
+					    
+					    runOnUiThread(new Runnable() {
+
+					    @Override
+					    public void run() {
+					    	if(!timedLocation.isEmpty())							
+								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));							
+							else
+								displaySoundReward((ElementSound)timedElement);
+
+							nextStage();
+					            }
+					    });
+					        }
+					    },  5*1000);//TODO load real time
+			}
 		}
-		else
-		{
-			Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));			
-			myChrono.start();
-			myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
-				@Override
-				public void onChronometerTick(Chronometer c)
-				{
-					if(c.getBase()>5*100)
-					{
-						 c.stop();
-						//clearPictureElement 
-						 nextStage();					 
-					}
-				}
-			});
-		}
+
+
 	}
 
 
 	private void LoadActionStage(boolean buttenActive) {
-		// TODO more options
-		buttonWorks = buttenActive;		
-		Element element = mymodule.getActions().get(0);
-		String location = getElementLocation(modulenumber, element.getName() + "Action"); 
+		// TODO more options atm doesn't matter which button is pressed
+		buttonWorks = buttenActive;			
 
-		// display
-		displayPictureElement((ElementPicture) element, getImageButton(location));
-		// add valid ID
-		validActionID.add(getImageButton(location).getId());		
+		for(int i = 0; i < mymodule.getActions().size(); i++)
+		{
+			Element element = mymodule.getActions().get(i);
+			String location = getElementLocation(modulenumber, element.getName() + "Action"); 
+
+			// display
+			displayPictureElement((ElementPicture) element, getImageButton(location));
+			// add valid ID
+			validActionID.add(getImageButton(location).getId());
+		}
 	}
 
 	private void LoadPreactionStage() {
-		// TODO more options
-		Element element = mymodule.getPreactions().get(0);
-		String location = getElementLocation(modulenumber, element.getName() + "Preaction"); 
+		// TODO more options?
 
-		// display
-		displayPictureElement((ElementPicture) element, getImageButton(location));
-		// add valid ID
-		validPreactionID.add(getImageButton(location).getId());	
+		for(int i = 0; i < mymodule.getPreactions().size(); i++)
+		{
+			Element element = mymodule.getPreactions().get(i);
+			String location = getElementLocation(modulenumber, element.getName() + "Preaction"); 
+
+			// display
+			displayPictureElement((ElementPicture) element, getImageButton(location));
+			// add valid ID
+			validPreactionID.add(getImageButton(location).getId());	
+		}
 	}
-	
+
 	//stops the game
-	private void stopGame(String message) {
+	private void stopGame(String message) {		
+		// TODO remove/replace/decide to keep,  dirty code which is/was used for testing purposes
+		try {
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e) {				
+		}
+
 		endMessage = message;
 		DialogFragment newFragment = new StopModuleDialog();
-	    newFragment.show(getFragmentManager(), "endGame");
-	    
+		newFragment.show(getFragmentManager(), "endGame");	    
 	}
-	
+
 	public class StopModuleDialog extends DialogFragment {		
-	    public Dialog onCreateDialog(Bundle savedInstanceState) {
-	        // Use the Builder class for convenient dialog construction
-	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	        builder.setMessage(endMessage)
-	               .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-	                   public void onClick(DialogInterface dialog, int id) {
-	                	   finish();
-	                	   }
-	               });
-	        // Create the AlertDialog object and return it
-	        return builder.create();
-	    }
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the Builder class for convenient dialog construction
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setMessage(endMessage)
+			.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					finish();
+				}
+			});
+			// Create the AlertDialog object and return it
+			return builder.create();
+		}
 	}
-	
+
 	//removes everything on screen
 	private void resetScreen() {
-		// TODO Auto-generated method stub		
+		topleft.setImageURI(null);
+		topmid.setImageURI(null);
+		topright.setImageURI(null);
+		midleft.setImageURI(null);
+		midmid.setImageURI(null);
+		midright.setImageURI(null);
+		bottomleft.setImageURI(null);
+		bottommid.setImageURI(null);
+		bottomright.setImageURI(null);
 	}
-	
 
-	
+
+
 	//Checks which type of element must be loaded
 	private void loadReward(Element element) {
 		if(element instanceof ElementPicture)
@@ -387,8 +417,8 @@ public class GameActivity extends Activity {
 			displayVideoReward((ElementVideo) element);
 		}					
 	}
-	
-	
+
+
 	public void displayVideoReward(ElementVideo myVideo)
 	{
 		final VideoView video = ((VideoView)findViewById(R.id.videoViewReward));
@@ -399,26 +429,26 @@ public class GameActivity extends Activity {
 				video.setVisibility(View.GONE);
 			}
 		});
-		
-		
+
+
 		video.setVisibility(View.VISIBLE);
 		video.setVideoURI(Uri.parse(myVideo.getPath()));
 		video.requestFocus();
 		video.start();
 	}
-	
+
 
 	public void displaySoundReward(ElementSound mySound)
 	{
 		MediaPlayer mPlayer = new MediaPlayer();
 		File file = new File(mySound.getPath());
-		
-		    if(mPlayer != null) {
-		        mPlayer.stop();
-		        mPlayer.release();
-		    }
-		    mPlayer = MediaPlayer.create(this, Uri.parse(mySound.getPath()));
-		    mPlayer.start();
+
+		if(mPlayer != null) {
+			mPlayer.stop();
+			mPlayer.release();
+		}
+		mPlayer = MediaPlayer.create(this, Uri.parse(mySound.getPath()));
+		mPlayer.start();
 	}
 
 	public void displayPictureReward(ElementPicture myPicture)
@@ -435,9 +465,9 @@ public class GameActivity extends Activity {
 			{
 				if(c.getBase()>5000)
 				{
-					 c.stop();
-					 ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
-					 myPhoto.setVisibility(View.VISIBLE); 
+					c.stop();
+					ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
+					myPhoto.setVisibility(View.VISIBLE); 
 				}
 			}
 		});
@@ -456,14 +486,14 @@ public class GameActivity extends Activity {
 			{
 				if(c.getBase()>time)
 				{
-					 c.stop();
-					 ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
-					 myPhoto.setVisibility(View.VISIBLE); 
+					c.stop();
+					ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
+					myPhoto.setVisibility(View.VISIBLE); 
 				}
 			}
 		});
 	}
-	
+
 	public void displayPictureElement(ElementPicture myPicture, ImageButton myButton)
 	{
 		myButton.setImageURI(Uri.parse(myPicture.getPath()));		
@@ -481,7 +511,7 @@ public class GameActivity extends Activity {
 		bottommid = (ImageButton) findViewById(R.id.bottommid);
 		bottomright = (ImageButton) findViewById(R.id.bottomright);			
 	}
-	
+
 	private ImageButton getImageButton(String location)
 	{
 		ImageButton button = null;
@@ -529,55 +559,66 @@ public class GameActivity extends Activity {
 			button = "bottomright";
 		return button;		
 	}
-	
+
 	public String getNameOfLastEditedModule()
 	{	
-        int modulecounter = getModulecounterOutOfPreferences();
-        
+		int modulecounter = getModulecounterOutOfPreferences();
+
 		String nameOfModulePref = "MODULE" + modulecounter;
-    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-        String lastEditedModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		String lastEditedModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
 		return lastEditedModule;				
 	}
-	
+
 	//gets module_name out of the module i
 	public String getNameOfModule(String i)
 	{	
 		String nameOfModulePref = "MODULE" + i;
-    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-        String nameOfModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		String nameOfModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
 		return nameOfModule;				
 	}
-	
+
 	public String getDescriptionOfModule(String i)
 	{	
 		String nameOfModulePref = "MODULE" + i;
-    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-        String nameOfDescrition = pref_modulesettings.getString("descrition", ACCESSIBILITY_SERVICE);
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		String nameOfDescrition = pref_modulesettings.getString("descrition", ACCESSIBILITY_SERVICE);
 		return nameOfDescrition;		
 	}
-	
+
 	//Does the module contain this element
 	public Boolean getBooleanOfModule(String i, String elementName)
 	{	
 		String nameOfModulePref = "MODULE" + i;
-    	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-        Boolean nameOfDescription = pref_modulesettings.getBoolean(elementName, false);        
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		Boolean nameOfDescription = pref_modulesettings.getBoolean(elementName, false);        
 		return nameOfDescription;
 	}
-	
+
 	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way
 	public int getModulecounterOutOfPreferences() {
 		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
-        int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
+		int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
 		return modulecounter;
 	}
-	
+
 	public String getElementLocation(String i, String elementName)
 	{
 		String nameOfModulePref = "MODULE" + i;
 		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
 		String location = pref_modulesettings.getString(elementName + "location", "Not set");
 		return location;
+	}
+
+	private String convertTime(long millis)
+	{
+		String time = String.format("%02d:%02d:%02d", 
+				TimeUnit.MILLISECONDS.toHours(millis),
+				TimeUnit.MILLISECONDS.toMinutes(millis) -  
+				TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), // The change is in this line
+				TimeUnit.MILLISECONDS.toSeconds(millis) - 
+				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))); 
+		return time;
 	}
 }
