@@ -1,11 +1,7 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.app.Activity;
-import android.content.SharedPreferences;
 
 public class Module{
 	//private File Settingsfile; //should be the txt file, where the settings of the module are saved //not used anymore

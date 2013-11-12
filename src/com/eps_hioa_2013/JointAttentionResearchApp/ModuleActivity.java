@@ -10,9 +10,6 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -51,17 +48,7 @@ public class ModuleActivity extends ListActivity {
 		
 	}
 	
-	protected void onResume() {
-		//getting last 4 saved modules
-		TextView textView10 = (TextView) findViewById(R.id.lastused_textview);
-		textView10.setText(this.getNameOfModule("0"));
-		TextView textView11 = (TextView) findViewById(R.id.lastused_textview2);
-		textView11.setText(this.getNameOfModule("1"));
-		TextView textView12 = (TextView) findViewById(R.id.lastused_textview3);
-		textView12.setText(this.getNameOfModule("2"));		
-		TextView textView13 = (TextView) findViewById(R.id.lastused_textview4);
-		textView13.setText(this.getNameOfModule("3"));
-		
+	protected void onResume() {		
 		myModules = createModules();
 		setupModuleList();
 		super.onResume();

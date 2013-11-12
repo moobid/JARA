@@ -84,79 +84,7 @@
             android:layout_height="wrap_content"
             android:text="@string/date" />
     </TableRow>
-	<!-- modulelist above real modulelist for testing -->
-    <TableRow
-        android:id="@+id/tableRow8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-        <TextView
-            android:id="@+id/TextView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/size4"
-            android:text="Last saved module0" />
 
-        <TextView
-            android:id="@+id/lastused_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="not found" />
-    </TableRow>
-    
-        <TableRow
-        android:id="@+id/tableRow9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-        <TextView
-            android:id="@+id/TextView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/size4"
-            android:text="Last saved module1" />
-
-        <TextView
-            android:id="@+id/lastused_textview2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="not found" />
-    </TableRow>
-    
-    <TableRow
-        android:id="@+id/tableRow10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-        <TextView
-            android:id="@+id/TextView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/size4"
-            android:text="Last saved module2" />
-
-        <TextView
-            android:id="@+id/lastused_textview3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="not found" />
-    </TableRow>
-    <TableRow
-        android:id="@+id/tableRow8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-        <TextView
-            android:id="@+id/TextView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="@dimen/size4"
-            android:text="Last saved module3" />
-
-        <TextView
-            android:id="@+id/lastused_textview4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="not found" />
-    </TableRow>
-
-<!-- modulelist above real modulelist for testing END-->
     <TableRow
         android:id="@+id/tableRow5"
         android:layout_width="wrap_content"

@@ -8,7 +8,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
@@ -23,7 +22,7 @@ public class MainActivity extends Activity {
 	public final static String EXTRA_SESSION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_SESSION";
 
 	private Session mysession;
-	private Module modulelist[]; //all Modules are in here
+
 	private List<Element> elementlist; //all Elements are in here
 	//valid extensions
 	private String[] videoExtensions  = {"wav", "vlc", "gif"};
