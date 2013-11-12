@@ -13,7 +13,7 @@
     <ImageView
         android:id="@+id/imageViewReward"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="2.41"
         android:scaleType="center"
         android:src="@android:drawable/btn_star"
@@ -27,8 +27,9 @@
         android:visibility="gone" />
 
     <TableLayout
-        android:layout_width="1400dp"
-        android:layout_height="700dp" >
+        style="@style/AppBaseTheme"
+        android:layout_width="match_parent"
+        android:layout_height="672dp" >
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -45,8 +46,8 @@
 
         <ImageButton
             android:id="@+id/topmid"
-        	 android:layout_width="match_parent"
-        	 android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="224dp"
             android:onClick="onclick_touched"
             android:src="@drawable/ic_launcher" />
 
@@ -66,15 +67,15 @@
             
         <ImageButton
             android:id="@+id/midleft"
-        	 android:layout_width="match_parent"
-        	 android:layout_height="match_parent"
+            android:layout_width="423dp"
+            android:layout_height="match_parent"
             android:onClick="onclick_touched"
             android:src="@drawable/ic_launcher" />
 
         <ImageButton
             android:id="@+id/midmid"
             android:layout_width="426dp"
-            android:layout_height="240dp"
+            android:layout_height="224dp"
             android:maxHeight="@dimen/activity_vertical_margin"
             android:maxWidth="@dimen/activity_horizontal_margin"
             android:onClick="onclick_touched"
@@ -82,7 +83,7 @@
 
         <ImageButton
             android:id="@+id/midright"
-            android:layout_width="match_parent"
+            android:layout_width="423dp"
             android:layout_height="match_parent"
             android:onClick="onclick_touched" />
             
@@ -91,21 +92,20 @@
         <TableRow
             android:id="@+id/tableRow3"
             android:layout_width="960dp"
-            android:layout_height="156dp" >
+            android:layout_height="500dp" >
 
         <ImageButton
             android:id="@+id/bottomleft"
-        	 android:layout_width="match_parent"
-        	 android:layout_height="match_parent"
-            android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="onclick_touched" />
 
         <ImageButton
             android:id="@+id/bottommid"
-        	 android:layout_width="match_parent"
-        	 android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="224dp"
             android:onClick="onclick_touched"
-            android:src="@drawable/ic_launcher" />
+            android:scaleType="center" />
 
         <ImageButton
             android:id="@+id/bottomright"
@@ -116,6 +116,7 @@
             android:scaleType="centerInside" />
             
         </TableRow>
+
     </TableLayout>
 
 </LinearLayout>
