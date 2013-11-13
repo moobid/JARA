@@ -43,6 +43,15 @@ public class ModuleActivity extends ListActivity {
 		mysession = this.fillSession(intent);		
 		myModules = createModules();
 		
+		//saves the names of the modules in an array for use in the settingsscreen
+		List<String> modulenames = new ArrayList<String>();
+		for(int i = 0; i < myModules.size(); i++)
+		{
+			modulenames.add(i, myModules.get(i).getName());
+		}
+		mysession.setModulenames(modulenames);
+		
+		
 		setupModuleList(); //for the list 
 		setupOnModuleClick();
 		

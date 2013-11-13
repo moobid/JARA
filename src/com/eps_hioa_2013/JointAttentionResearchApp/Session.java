@@ -32,7 +32,9 @@ public class Session implements Serializable {
 	
     private int mData;
 
-    private List<Element> elementlist = new ArrayList<Element>();;
+    private List<Element> elementlist = new ArrayList<Element>();
+    
+    private List<String> modulenames = new ArrayList<String>();
 
 	//sets Membervaribales (incl. current Date) + calls updateStatistics() the first time
 	public Session(String pass, String part, String research) {
@@ -84,6 +86,12 @@ public class Session implements Serializable {
 	    return false;
 	}
 	
+	public List<String> getModulenames() {
+		return modulenames;
+	}
+	public void setModulenames(List<String> modulenames) {
+		this.modulenames = modulenames;
+	}
 	public List<Element> getElementlist() {
 		return elementlist;
 	}
