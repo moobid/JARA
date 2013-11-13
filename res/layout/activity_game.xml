@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/LinearLayout1"
-    android:layout_width="1280dp"
-    android:layout_height="720dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="horizontal" >
 
     <VideoView
@@ -29,17 +29,17 @@
     <TableLayout
         style="@style/AppBaseTheme"
         android:layout_width="match_parent"
-        android:layout_height="672dp" >
+        android:layout_height="match_parent" >
 
         <TableRow
             android:id="@+id/tableRow1"
-            android:layout_width="1400dp"
-            android:layout_height="156dp" >
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
             
          <ImageButton
              android:id="@+id/topleft"
-             android:layout_width="fill_parent"
-             android:layout_height="fill_parent"
+            android:layout_width="423dp"
+            android:layout_height="250dp"
              android:background="@drawable/withe"
              android:cropToPadding="true"
              android:onClick="onclick_touched"
@@ -47,16 +47,16 @@
 
         <ImageButton
             android:id="@+id/topmid"
-            android:layout_width="match_parent"
-            android:layout_height="224dp"
+            android:layout_width="423dp"
+            android:layout_height="250dp"
             android:background="@drawable/withe"
             android:onClick="onclick_touched"
             android:scaleType="centerInside" />
 
         <ImageButton
             android:id="@+id/topright"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="423dp"
+            android:layout_height="250dp"
             android:background="@drawable/withe"
             android:onClick="onclick_touched"
             android:scaleType="centerInside" />
@@ -65,13 +65,13 @@
 
         <TableRow
             android:id="@+id/tableRow2"
-          android:layout_width="960dp"
-            android:layout_height="156dp" >
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
             
         <ImageButton
             android:id="@+id/midleft"
             android:layout_width="423dp"
-            android:layout_height="match_parent"
+            android:layout_height="250dp"
             android:background="@drawable/withe"
             android:onClick="onclick_touched"
             android:scaleType="centerInside" />
@@ -79,8 +79,7 @@
         <ImageButton
             android:id="@+id/midmid"
             android:layout_width="426dp"
-            android:layout_height="224dp"
-            android:background="@drawable/withe"
+            android:layout_height="250dp"
             android:maxHeight="@dimen/activity_vertical_margin"
             android:maxWidth="@dimen/activity_horizontal_margin"
             android:onClick="onclick_touched"
@@ -89,7 +88,7 @@
         <ImageButton
             android:id="@+id/midright"
             android:layout_width="423dp"
-            android:layout_height="match_parent"
+            android:layout_height="250dp"
             android:background="@drawable/withe"
             android:onClick="onclick_touched"
             android:scaleType="centerInside" />
@@ -98,30 +97,29 @@
 
         <TableRow
             android:id="@+id/tableRow3"
-            android:layout_width="960dp"
-            android:layout_height="500dp" >
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
 
         <ImageButton
             android:id="@+id/bottomleft"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="423dp"
+            android:layout_height="250dp"
             android:background="@drawable/withe"
             android:onClick="onclick_touched"
             android:scaleType="centerInside" />
 
         <ImageButton
             android:id="@+id/bottommid"
-            android:layout_width="match_parent"
-            android:layout_height="224dp"
+            android:layout_width="423dp"
+            android:layout_height="250dp"
             android:background="@drawable/withe"
             android:onClick="onclick_touched"
             android:scaleType="centerInside" />
 
         <ImageButton
             android:id="@+id/bottomright"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/withe"
+            android:layout_width="423dp"
+            android:layout_height="250dp"
             android:cropToPadding="true"
             android:onClick="onclick_touched"
             android:scaleType="centerInside" />
