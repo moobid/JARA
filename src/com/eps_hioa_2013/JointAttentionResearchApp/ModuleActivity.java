@@ -6,7 +6,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eps_hioa_2013.JointAttentionResearchApp.ModuleSettingsActivity.ElementPositionDialog;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -127,8 +134,6 @@ public class ModuleActivity extends ListActivity {
 	{
 		mysession = (Session) intent.getSerializableExtra(MainActivity.EXTRA_SESSION);
 		// Create the text view
-		TextView textView = (TextView) findViewById(R.id.password_textview);
-		textView.setText(mysession.getPassword());
 		
 		TextView textView2 = (TextView) findViewById(R.id.participant_textview);
 		textView2.setText(mysession.getParticipant());
@@ -230,8 +235,6 @@ public class ModuleActivity extends ListActivity {
 		return nameOfDescrition;		
 	}
 	
-	
-	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way
 	public int getModulecounterOutOfPreferences() {
 		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
         int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
@@ -239,14 +242,39 @@ public class ModuleActivity extends ListActivity {
 	}
 	
 	//sets the modulecounter to -1. When a new module gets added, it has the number 0
-	//this Method is also present in ModuleSettingsActivity.java; This should be solved in a better way
 	public void onclick_reset_modulecounter(View view)
 	{
-    	SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0);
-        SharedPreferences.Editor editor = pref_modulecounter.edit();
-        int count = -1;
-        editor.putInt("modulecounter", count);
-        editor.commit();
+		DialogFragment newFragment = new ElementYouSureDialog();
+		newFragment.show(getFragmentManager(), "dialogsettings");
+	}
+	
+	@SuppressLint("ValidFragment")
+	public class ElementYouSureDialog extends DialogFragment {
+	    @Override
+	    public Dialog onCreateDialog(Bundle savedInstanceState) {
+	        // Use the Builder class for convenient dialog construction
+	        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+	        builder.setMessage("Are you sure? Can not be undone!")
+	               .setPositiveButton("Delete all Modules", new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                   	SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0);
+	                    SharedPreferences.Editor editor = pref_modulecounter.edit();
+	                    int count = -1;
+	                    editor.putInt("modulecounter", count);
+	                    editor.commit();
+	                    
+	                    myModules = createModules();
+	            		setupModuleList();
+	                   }
+	               })
+	               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	                   public void onClick(DialogInterface dialog, int id) {
+	                       // User cancelled the dialog
+	                   }
+	               });
+	        // Create the AlertDialog object and return it
+	        return builder.create();
+	    }
 	}
 
 }

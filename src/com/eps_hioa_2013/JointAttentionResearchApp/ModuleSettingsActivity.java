@@ -200,7 +200,12 @@ public class ModuleSettingsActivity extends Activity {
 			}
 		}
 	}
-
+	
+	public void onclick_cancel(View view)
+	{
+		finish();
+	}
+	
 	public void onclick_save(View view)
 	{	
 		

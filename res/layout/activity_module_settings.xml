@@ -347,11 +347,25 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/button1"
-                android:onClick="onclick_save"
+                android:id="@+id/Button01"
                 android:layout_width="190dp"
                 android:layout_height="80dp"
+                android:onClick="onclick_save"
                 android:text="Save" />
+        </TableRow>
+        
+        <TableRow
+            android:id="@+id/tableRow6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="190dp"
+                android:layout_height="80dp"
+                android:onClick="onclick_cancel"
+                android:text="Cancel" />
+
         </TableRow>
     </TableLayout>
 
