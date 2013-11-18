@@ -3,7 +3,6 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +29,8 @@ import android.widget.Chronometer;
 import android.widget.Chronometer.OnChronometerTickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.VideoView;
 
 @SuppressLint("ValidFragment")
@@ -43,11 +44,9 @@ public class GameActivity extends Activity {
 	private ImageButton bottomleft;
 	private ImageButton bottommid;
 	private ImageButton bottomright;
-
 	private int stagecounter = 0; //0 = Preaction; 1 = Action/signal; 2 = reward; 
 	private int roundcounter = 1;
 	private int roundcounterlimit;
-
 	private Date DateStartedPlaying = null;
 	private int timeToPlayInSeconds;
 	//private Timecounter timecounter;
@@ -67,7 +66,6 @@ public class GameActivity extends Activity {
 	private String timedLocation;
 	private Element timedElement;
 	private Timer SignalAppearTimer;
-	private Element currentReward;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -117,11 +115,6 @@ public class GameActivity extends Activity {
 		switch(stagecounter)
 		{
 		case 0:
-			//Load a random reward to be shown at the end of this round
-			currentReward = mymodule.getRandomRewardElement();
-			if(currentReward == null) // stop game if there are no rewards
-				stopGame("No reward is selected");
-
 			//=0, check if preactionElements exist,
 			if(!mymodule.getPreactions().isEmpty())
 			{
@@ -169,13 +162,14 @@ public class GameActivity extends Activity {
 			break;
 
 		case 2:
-			//Show reward, reward will change depending on options.
-			stagecounter++;
+			//Show reward reward will change depending on options.		
 			LoadRewardStage();
+			stagecounter++;
+			nextStage();
 			break;
 
 		case 3:
-			//exit game if number of round are met else go back to stage 0		
+			//exit game if number of round are met else go back to stage 0			
 			if(roundcounter == roundcounterlimit)
 			{
 				//exit
@@ -183,20 +177,15 @@ public class GameActivity extends Activity {
 			}
 			else
 			{
-				nextRound();				
+				stagecounter = 0;
+				roundcounter++;
+				resetScreen();
+				nextStage();
 			}
 			break;
 		}
 	}
 
-
-	private void nextRound() {
-		// TODO expand for new settings
-		roundcounter++;
-		stagecounter = 0;
-		resetScreen();
-		nextStage();
-	}
 
 	//Load elements belonging to this module and put them in the appropriate arrays.
 	private void loadGameInfo(Session mysession) {
@@ -247,7 +236,8 @@ public class GameActivity extends Activity {
 				buttonWorks = false;
 				stagecounter++;
 				nextStage();
-			}
+			}	
+			stagecounter++;
 			break;
 		default:
 			break;
@@ -255,18 +245,16 @@ public class GameActivity extends Activity {
 		String currentTime = convertTime(stopWatch.getTime());
 
 		//TODO If image button contains element write down which element
-		String buttonName = getImageButton(view.getId());
-		//	String currentImageName = getImagePath(buttonName); TODO fix getImagePath
-		mysession.updateStatistics(currentTime + " " +  buttonName);
+		mysession.updateStatistics(currentTime + " " +  getImageButton(view.getId()));
 	}
 
 
 
-
-
-	//TODO cut out the middle man.
-	private void LoadRewardStage() {		
-		loadReward(currentReward);	
+	//Loads a random reward
+	private void LoadRewardStage() {
+		Element element = null;		
+		element = mymodule.getRandomRewardElement();
+		loadReward(element);
 	}
 
 	//Loads the signal(s) starts timer for signal
@@ -292,58 +280,47 @@ public class GameActivity extends Activity {
 			}	
 
 			if(actionAvailable)
-			{		
-				int time = getElementDuration(modulenumber, element.getName() + "Signal");
+			{
+				//TODO load real time
 				SignalAppearTimer = new Timer();				
 				SignalAppearTimer.schedule(new TimerTask() {
 					public void run() {
+					    
+					    runOnUiThread(new Runnable() {
 
-						runOnUiThread(new Runnable() {
+					    @Override
+					    public void run() {
+					    	if(!timedLocation.isEmpty())							
+								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));							
+							else
+								displaySoundReward((ElementSound)timedElement);
 
-							@Override
-							public void run() {
-								if(!timedLocation.isEmpty())
-								{
-									displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));										
-								}
-								else
-								{
-									loadSignalSound((ElementSound)timedElement);
-								}
-								buttonWorks = true;
-							}
-						});
-					}
-				},  time*1000);
+							buttonWorks = true;
+					            }
+					    });
+					        }
+					    },  5*1000);
 			}
 			else
 			{
-				int time = getElementDuration(modulenumber, element.getName() + "Signal");
 				SignalAppearTimer = new Timer();				
 				SignalAppearTimer.schedule(new TimerTask() {
 					public void run() {
+					    
+					    runOnUiThread(new Runnable() {
 
-						runOnUiThread(new Runnable() {
+					    @Override
+					    public void run() {
+					    	if(!timedLocation.isEmpty())							
+								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));							
+							else
+								displaySoundReward((ElementSound)timedElement);
 
-							@Override
-							public void run() {
-								if(!timedLocation.isEmpty())
-								{
-									displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));	
-									stagecounter++;
-									nextStage();
-								}
-								else
-								{
-									loadSignalSound((ElementSound)timedElement);									
-								}
-
-
-							}						
-
-						});
-					}
-				},  time*1000);
+							nextStage();
+					            }
+					    });
+					        }
+					    },  5*1000);//TODO load real time
 			}
 		}
 
@@ -351,14 +328,8 @@ public class GameActivity extends Activity {
 	}
 
 
-	private void loadSignalSound(ElementSound timedElement) {
-		displaySoundReward((ElementSound)timedElement);	
-		stagecounter++;
-		nextStage();
-	}
-
-
 	private void LoadActionStage(boolean buttenActive) {
+		// TODO more options atm doesn't matter which button is pressed
 		buttonWorks = buttenActive;			
 
 		for(int i = 0; i < mymodule.getActions().size(); i++)
@@ -374,6 +345,8 @@ public class GameActivity extends Activity {
 	}
 
 	private void LoadPreactionStage() {
+		// TODO more options?
+
 		for(int i = 0; i < mymodule.getPreactions().size(); i++)
 		{
 			Element element = mymodule.getPreactions().get(i);
@@ -386,29 +359,14 @@ public class GameActivity extends Activity {
 		}
 	}
 
-	private int getElementDuration(String i, String elementName)
-	{
-		int time = 0;
-
-		String nameOfModulePref = "MODULE" + i;
-		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-		String duration = pref_modulesettings.getString(elementName + "2duration", "0");
-
-		if(duration.contains("-"))
-		{ //Get random number between 2 numbers
-			Random r = new Random();
-			int loc = duration.indexOf("-");
-			int a = Integer.parseInt(duration.substring(0, loc));
-			int b = Integer.parseInt(duration.substring(loc));
-			time = r.nextInt(a-b) + a;
-		}
-		else
-			time = Integer.parseInt(duration);
-		return time;		
-	}
-
 	//stops the game
 	private void stopGame(String message) {		
+		// TODO remove/replace/decide to keep,  dirty code which is/was used for testing purposes
+		try {
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e) {				
+		}
+
 		endMessage = message;
 		DialogFragment newFragment = new StopModuleDialog();
 		newFragment.show(getFragmentManager(), "endGame");	    
@@ -448,34 +406,13 @@ public class GameActivity extends Activity {
 	private void loadReward(Element element) {
 		if(element instanceof ElementPicture)
 		{
-			String location = getElementLocation(modulenumber, element.getName() + "Reward"); 
-			// display
-			displayPictureElement((ElementPicture) element, getImageButton(location));
-			int time = getElementDuration(modulenumber, currentReward.getName() + "Reward");
-			if(time != 0)
-			{
-				Timer nextRoundtimer = new Timer();				
-				nextRoundtimer.schedule(new TimerTask() {
-					public void run() {
-
-						runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								nextStage();
-							}
-						});
-					}
-				}, time*1000);
-			}
+			displayPictureReward((ElementPicture) element);
 		}
 		else if(element instanceof ElementSound)
 		{
 			displaySoundReward((ElementSound) element);
-			nextStage();
-
 		}
-		else if(element instanceof ElementVideo)
+		else
 		{
 			displayVideoReward((ElementVideo) element);
 		}					
@@ -484,28 +421,48 @@ public class GameActivity extends Activity {
 
 	public void displayVideoReward(ElementVideo myVideo)
 	{
-		final VideoView video = ((VideoView)findViewById(R.id.videoViewReward));
-		//video.se
+		//Manage Sreen
+		String location = getElementLocation(modulenumber,  myVideo.getName() + "Reward"); 
+		ImageButton myButton = getImageButton(location);
+		myButton.setVisibility(View.GONE);
+		
+		final VideoView video;
+		if (myButton==topleft) video = ((VideoView)findViewById(R.id.videoTopLeft));
+		else if (myButton==topmid) video = ((VideoView)findViewById(R.id.videoTopMid));
+		else if (myButton==topright) video = ((VideoView)findViewById(R.id.videoTopRight));
+		else if (myButton==midleft) video = ((VideoView)findViewById(R.id.videoMidLeft));
+		else if (myButton==midmid) video = ((VideoView)findViewById(R.id.videoMidMid));
+		else if (myButton==midright) video = ((VideoView)findViewById(R.id.videoMidRight));
+		else if (myButton==bottomleft) video = ((VideoView)findViewById(R.id.videoBottomLeft));
+		else if (myButton==bottommid) video = ((VideoView)findViewById(R.id.videoBottomMid));
+		else video = ((VideoView)findViewById(R.id.videoBottomRight));
 		video.setOnCompletionListener(new OnCompletionListener() {
 			@Override
 			public void onCompletion(MediaPlayer v) {				
 				video.setVisibility(View.GONE);
+				topleft.setVisibility(View.VISIBLE);
+				topmid.setVisibility(View.VISIBLE);
+				topright.setVisibility(View.VISIBLE);
+				midleft.setVisibility(View.VISIBLE);
+				midmid.setVisibility(View.VISIBLE);
+				midright.setVisibility(View.VISIBLE);
+				bottomleft.setVisibility(View.VISIBLE);
+				bottommid.setVisibility(View.VISIBLE);
+				bottomright.setVisibility(View.VISIBLE);
 			}
 		});
 
-
+		//Play a video
 		video.setVisibility(View.VISIBLE);
 		video.setVideoURI(Uri.parse(myVideo.getPath()));
 		video.requestFocus();
 		video.start();
 	}
 
-
 	public void displaySoundReward(ElementSound mySound)
 	{
-		//TODO something
 		MediaPlayer mPlayer = new MediaPlayer();
-		File file = new File(mySound.getPath());		
+		File file = new File(mySound.getPath());
 
 		if(mPlayer != null) {
 			mPlayer.stop();
@@ -513,33 +470,16 @@ public class GameActivity extends Activity {
 		}
 		mPlayer = MediaPlayer.create(this, Uri.parse(mySound.getPath()));
 		mPlayer.start();
-
 	}
 
-	/* OBSOLETE
 	public void displayPictureReward(ElementPicture myPicture)
 	{
-		ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
-		myPhoto.setImageURI(Uri.parse(myPicture.getPath()));
-		myPhoto.setVisibility(View.VISIBLE);
-		Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));
-		myChrono.setBase(0);
-		myChrono.start();
-		myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
-			@Override
-			public void onChronometerTick(Chronometer c)
-			{
-				if(c.getBase()>5000)
-				{
-					c.stop();
-					ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
-					myPhoto.setVisibility(View.VISIBLE); 
-				}
-			}
-		});
+		String location = getElementLocation(modulenumber,  myPicture.getName() + "Reward"); 
+		ImageButton myButton = getImageButton(location);
+		myButton.setImageURI(Uri.parse(myPicture.getPath()));
+		myButton.setVisibility(View.VISIBLE);
 	}
-
-	public void displayPictureReward(ElementPicture myPicture, final int time)
+	/*public void displayPictureReward(ElementPicture myPicture, final int time)
 	{
 		ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
 		myPhoto.setImageURI(Uri.parse(myPicture.getPath()));
@@ -559,16 +499,12 @@ public class GameActivity extends Activity {
 				}
 			}
 		});
-	}
-	 */
-
+	}*/
 	public void displayPictureElement(ElementPicture myPicture, ImageButton myButton)
 	{
-		if(myButton == null)
-			stopGame("An picture has no location set");
 		myButton.setImageURI(Uri.parse(myPicture.getPath()));		
 	}
-
+	
 
 	private void initializeViews() {
 		topleft = (ImageButton) findViewById(R.id.topleft);
@@ -579,7 +515,7 @@ public class GameActivity extends Activity {
 		midright = (ImageButton) findViewById(R.id.midright);
 		bottomleft = (ImageButton) findViewById(R.id.bottomleft);
 		bottommid = (ImageButton) findViewById(R.id.bottommid);
-		bottomright = (ImageButton) findViewById(R.id.bottomright);			
+		bottomright = (ImageButton) findViewById(R.id.bottomright);
 	}
 
 	private ImageButton getImageButton(String location)
@@ -608,7 +544,7 @@ public class GameActivity extends Activity {
 
 	private String getImageButton(int ID)
 	{
-		String button = "";		
+		String button = "";
 		if(ID == topleft.getId())
 			button = "topleft";
 		else if(ID == topmid.getId())
@@ -629,31 +565,6 @@ public class GameActivity extends Activity {
 			button = "bottomright";
 		return button;		
 	}
-
-	/* TODO get Imagebutton image uri
-	private String getImagePath(String location) {
-		String path = "";
-		if(location.equals("topleft"))
-			path = topleft.;
-		else if(location.equals("topmid"))
-			path = topmid;
-		else if(location.equals("topright"))
-			path = topright;
-		else if(location.equals("midleft"))
-			path = midleft;
-		else if(location.equals("midmid"))
-			path = midmid;
-		else if(location.equals("midright"))
-			path = midright;
-		else if(location.equals("bottomleft"))
-			path = bottomleft;
-		else if(location.equals("bottommid"))
-			path = bottommid;
-		else if(location.equals("bottomright"))
-			path = bottomright;
-		return path;		
-	}
-	 */
 
 	public String getNameOfLastEditedModule()
 	{	

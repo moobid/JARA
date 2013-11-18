@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
 
 	private List<Element> elementlist; //all Elements are in here
 	//valid extensions
-	private String[] videoExtensions  = {"wav", "vlc", "gif"};
+	private String[] videoExtensions  = {"wav", "vlc", "gif", "wmv"};
 	private String[] soundExtensions  = {"mp3"};
 	private String[] pictureExtensions  = {"jpg", "png"};
 	

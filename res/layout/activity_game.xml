@@ -2,13 +2,7 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
-
-    <VideoView
-        android:id="@+id/videoViewReward"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+    android:orientation="vertical" >
 
     <ImageView
         android:id="@+id/imageViewReward"
@@ -27,6 +21,7 @@
         android:visibility="gone" />
 
     <TableLayout
+        android:id="@+id/table"
         style="@style/AppBaseTheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -35,31 +30,73 @@
             android:id="@+id/tableRow1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
-            
-         <ImageButton
-             android:id="@+id/topleft"
-            android:layout_width="423dp"
-            android:layout_height="250dp"
-             android:background="@drawable/withe"
-             android:cropToPadding="true"
-             android:onClick="onclick_touched"
-             android:scaleType="centerInside" />
 
-        <ImageButton
-            android:id="@+id/topmid"
+        <LinearLayout
+            android:id="@+id/topleftlay"
             android:layout_width="423dp"
             android:layout_height="250dp"
-            android:background="@drawable/withe"
-            android:onClick="onclick_touched"
-            android:scaleType="centerInside" />
+            android:orientation="vertical" >
 
-        <ImageButton
-            android:id="@+id/topright"
+            <ImageButton
+                android:id="@+id/topleft"
+                android:layout_width="423dp"
+                android:layout_height="250dp"
+                android:background="@drawable/withe"
+                android:cropToPadding="true"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoTopLeft"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/topmidlay"
             android:layout_width="423dp"
             android:layout_height="250dp"
-            android:background="@drawable/withe"
-            android:onClick="onclick_touched"
-            android:scaleType="centerInside" />
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/topmid"
+                android:layout_width="423dp"
+                android:layout_height="250dp"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoTopMid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/toprightlay"
+            android:layout_width="423dp"
+            android:layout_height="250dp"
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/topright"
+                android:layout_width="423dp"
+                android:layout_height="250dp"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoTopRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
             
         </TableRow>
 
@@ -67,31 +104,74 @@
             android:id="@+id/tableRow2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
-            
-        <ImageButton
-            android:id="@+id/midleft"
+
+        <LinearLayout
+            android:id="@+id/midleftlay"
             android:layout_width="423dp"
             android:layout_height="250dp"
-            android:background="@drawable/withe"
-            android:onClick="onclick_touched"
-            android:scaleType="centerInside" />
+            android:orientation="vertical" >
 
-        <ImageButton
-            android:id="@+id/midmid"
-            android:layout_width="426dp"
-            android:layout_height="250dp"
-            android:maxHeight="@dimen/activity_vertical_margin"
-            android:maxWidth="@dimen/activity_horizontal_margin"
-            android:onClick="onclick_touched"
-            android:scaleType="centerInside" />
+            <ImageButton
+                android:id="@+id/midleft"
+                android:layout_width="423dp"
+                android:layout_height="250dp"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
 
-        <ImageButton
-            android:id="@+id/midright"
+            <VideoView
+                android:id="@+id/videoMidLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/midmidlay"
             android:layout_width="423dp"
             android:layout_height="250dp"
-            android:background="@drawable/withe"
-            android:onClick="onclick_touched"
-            android:scaleType="centerInside" />
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/midmid"
+                android:layout_width="426dp"
+                android:layout_height="250dp"
+                android:background="@drawable/withe"
+                android:maxHeight="@dimen/activity_vertical_margin"
+                android:maxWidth="@dimen/activity_horizontal_margin"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoMidMid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/midrightlay"
+            android:layout_width="423dp"
+            android:layout_height="250dp"
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/midright"
+                android:layout_width="423dp"
+                android:layout_height="250dp"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoMidRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
             
         </TableRow>
 
@@ -100,29 +180,71 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
-        <ImageButton
-            android:id="@+id/bottomleft"
+        <LinearLayout
+            android:id="@+id/bottomleftlay"
             android:layout_width="423dp"
             android:layout_height="250dp"
-            android:background="@drawable/withe"
-            android:onClick="onclick_touched"
-            android:scaleType="centerInside" />
+            android:orientation="vertical" >
 
-        <ImageButton
-            android:id="@+id/bottommid"
-            android:layout_width="423dp"
-            android:layout_height="250dp"
-            android:background="@drawable/withe"
-            android:onClick="onclick_touched"
-            android:scaleType="centerInside" />
+            <ImageButton
+                android:id="@+id/bottomleft"
+                android:layout_width="423dp"
+                android:layout_height="250dp"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
 
-        <ImageButton
-            android:id="@+id/bottomright"
+            <VideoView
+                android:id="@+id/videoBottomLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottommidlay"
             android:layout_width="423dp"
             android:layout_height="250dp"
-            android:cropToPadding="true"
-            android:onClick="onclick_touched"
-            android:scaleType="centerInside" />
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/bottommid"
+                android:layout_width="423dp"
+                android:layout_height="250dp"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoBottomMid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottomrightlay"
+            android:layout_width="423dp"
+            android:layout_height="250dp"
+            android:orientation="vertical" >
+
+            <ImageButton
+                android:id="@+id/bottomright"
+                android:layout_width="423dp"
+                android:layout_height="250dp"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoBottomRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
             
         </TableRow>
 
