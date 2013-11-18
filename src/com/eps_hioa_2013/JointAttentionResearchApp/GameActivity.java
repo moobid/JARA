@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
 import org.apache.commons.lang.time.StopWatch;
 
@@ -66,6 +67,7 @@ public class GameActivity extends Activity {
 	private String timedLocation;
 	private Element timedElement;
 	private Timer SignalAppearTimer;
+	private Element currentReward;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -115,6 +117,11 @@ public class GameActivity extends Activity {
 		switch(stagecounter)
 		{
 		case 0:
+			//Load a random reward to be shown at the end of this round
+			currentReward = mymodule.getRandomRewardElement();
+			if(currentReward == null) stopGame("No reward is selected");// stop game if there are no rewards
+			
+
 			//=0, check if preactionElements exist,
 			if(!mymodule.getPreactions().isEmpty())
 			{
@@ -162,10 +169,10 @@ public class GameActivity extends Activity {
 			break;
 
 		case 2:
-			//Show reward reward will change depending on options.		
+			//Show reward reward will change depending on options.	
+			stagecounter++;	
 			LoadRewardStage();
-			stagecounter++;
-			nextStage();
+			//nextStage();
 			break;
 
 		case 3:
@@ -177,15 +184,19 @@ public class GameActivity extends Activity {
 			}
 			else
 			{
-				stagecounter = 0;
-				roundcounter++;
-				resetScreen();
-				nextStage();
+				nextRound();
 			}
 			break;
 		}
 	}
 
+		private void nextRound() {
+			// TODO expand for new settings
+			roundcounter++;
+			stagecounter = 0;
+			resetScreen();
+			nextStage();
+			}
 
 	//Load elements belonging to this module and put them in the appropriate arrays.
 	private void loadGameInfo(Session mysession) {
@@ -237,7 +248,6 @@ public class GameActivity extends Activity {
 				stagecounter++;
 				nextStage();
 			}	
-			stagecounter++;
 			break;
 		default:
 			break;
@@ -245,17 +255,16 @@ public class GameActivity extends Activity {
 		String currentTime = convertTime(stopWatch.getTime());
 
 		//TODO If image button contains element write down which element
-		mysession.updateStatistics(currentTime + " " +  getImageButton(view.getId()));
+			String buttonName = getImageButton(view.getId());
+			//	String currentImageName = getImagePath(buttonName); TODO fix getImagePath
+			mysession.updateStatistics(currentTime + " " +  buttonName);
 	}
 
+		//TODO cut out the middle man.
+	private void LoadRewardStage() {		
+		loadReward(currentReward);	
+		}
 
-
-	//Loads a random reward
-	private void LoadRewardStage() {
-		Element element = null;		
-		element = mymodule.getRandomRewardElement();
-		loadReward(element);
-	}
 
 	//Loads the signal(s) starts timer for signal
 	//if boolean true then there is a previous action timer will be used to delay image showing up
@@ -280,56 +289,66 @@ public class GameActivity extends Activity {
 			}	
 
 			if(actionAvailable)
-			{
-				//TODO load real time
+				{		
+				int time = getElementDuration(modulenumber, element.getName() + "Signal");
+
 				SignalAppearTimer = new Timer();				
 				SignalAppearTimer.schedule(new TimerTask() {
 					public void run() {
-					    
-					    runOnUiThread(new Runnable() {
-
-					    @Override
-					    public void run() {
-					    	if(!timedLocation.isEmpty())							
-								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));							
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+							if(!timedLocation.isEmpty())
+							{
+								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));										
+							}
 							else
-								displaySoundReward((ElementSound)timedElement);
-
+							{
+								loadSignalSound((ElementSound)timedElement);
+							}
 							buttonWorks = true;
-					            }
-					    });
-					        }
-					    },  5*1000);
+							}
+							});
+							}
+							},  time*1000);
 			}
 			else
 			{
+				int time = getElementDuration(modulenumber, element.getName() + "Signal");
 				SignalAppearTimer = new Timer();				
 				SignalAppearTimer.schedule(new TimerTask() {
 					public void run() {
-					    
-					    runOnUiThread(new Runnable() {
-
-					    @Override
-					    public void run() {
-					    	if(!timedLocation.isEmpty())							
-								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));							
-							else
-								displaySoundReward((ElementSound)timedElement);
-
-							nextStage();
-					            }
-					    });
-					        }
-					    },  5*1000);//TODO load real time
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								if(!timedLocation.isEmpty())
+								{
+									displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));	
+									stagecounter++;
+									nextStage();
+								}
+								else
+								{
+									loadSignalSound((ElementSound)timedElement);									
+								}
+							}	
+						});
+					}
+				},  time*1000);
 			}
+		}
+	}
+	
+	private void loadSignalSound(ElementSound timedElement) {
+		displaySoundReward((ElementSound)timedElement);	
+		stagecounter++;
+		nextStage();
 		}
 
 
-	}
-
 
 	private void LoadActionStage(boolean buttenActive) {
-		// TODO more options atm doesn't matter which button is pressed
+		
 		buttonWorks = buttenActive;			
 
 		for(int i = 0; i < mymodule.getActions().size(); i++)
@@ -345,8 +364,6 @@ public class GameActivity extends Activity {
 	}
 
 	private void LoadPreactionStage() {
-		// TODO more options?
-
 		for(int i = 0; i < mymodule.getPreactions().size(); i++)
 		{
 			Element element = mymodule.getPreactions().get(i);
@@ -358,15 +375,30 @@ public class GameActivity extends Activity {
 			validPreactionID.add(getImageButton(location).getId());	
 		}
 	}
+	
+	private int getElementDuration(String i, String elementName)
+	{
+		int time = 0;
+		String nameOfModulePref = "MODULE" + i;
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		String duration = pref_modulesettings.getString(elementName + "2duration", "0");
+	
+		if(duration.contains("-"))
+		{ //Get random number between 2 numbers
+		Random r = new Random();
+		int loc = duration.indexOf("-");
+		int a = Integer.parseInt(duration.substring(0, loc));
+		int b = Integer.parseInt(duration.substring(loc));
+		time = r.nextInt(a-b) + a;
+		}
+		else
+		time = Integer.parseInt(duration);
+		return time;		
+	}
+
 
 	//stops the game
 	private void stopGame(String message) {		
-		// TODO remove/replace/decide to keep,  dirty code which is/was used for testing purposes
-		try {
-			TimeUnit.SECONDS.sleep(5);
-		} catch (InterruptedException e) {				
-		}
-
 		endMessage = message;
 		DialogFragment newFragment = new StopModuleDialog();
 		newFragment.show(getFragmentManager(), "endGame");	    
@@ -406,13 +438,34 @@ public class GameActivity extends Activity {
 	private void loadReward(Element element) {
 		if(element instanceof ElementPicture)
 		{
-			displayPictureReward((ElementPicture) element);
+				String location = getElementLocation(modulenumber, element.getName() + "Reward"); 
+				// display
+				displayPictureElement((ElementPicture) element, getImageButton(location));
+				int time = getElementDuration(modulenumber, currentReward.getName() + "Reward");
+				if(time != 0)
+				{
+				Timer nextRoundtimer = new Timer();				
+				nextRoundtimer.schedule(new TimerTask() {
+				public void run() {
+			
+				runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+						nextStage();
+					}
+					});
+					}
+				}, time*1000);
+			}
+
 		}
 		else if(element instanceof ElementSound)
 		{
 			displaySoundReward((ElementSound) element);
+			nextStage();
 		}
-		else
+		else if(element instanceof ElementVideo)
 		{
 			displayVideoReward((ElementVideo) element);
 		}					
@@ -502,6 +555,8 @@ public class GameActivity extends Activity {
 	}*/
 	public void displayPictureElement(ElementPicture myPicture, ImageButton myButton)
 	{
+		if(myButton == null)
+		stopGame("An picture has no location set");
 		myButton.setImageURI(Uri.parse(myPicture.getPath()));		
 	}
 	
@@ -565,6 +620,32 @@ public class GameActivity extends Activity {
 			button = "bottomright";
 		return button;		
 	}
+	
+	/* TODO get Imagebutton image uri
+	private String getImagePath(String location) {
+	String path = "";
+	if(location.equals("topleft"))
+		path = topleft.;
+	else if(location.equals("topmid"))
+		path = topmid;
+	else if(location.equals("topright"))
+		path = topright;
+	else if(location.equals("midleft"))
+		path = midleft;
+	else if(location.equals("midmid"))
+		path = midmid;
+	else if(location.equals("midright"))
+		path = midright;
+	else if(location.equals("bottomleft"))
+		path = bottomleft;
+	else if(location.equals("bottommid"))
+		path = bottommid;
+	else if(location.equals("bottomright"))
+		path = bottomright;
+		return path;		
+	}
+	 */
+
 
 	public String getNameOfLastEditedModule()
 	{	
