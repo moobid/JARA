@@ -23,7 +23,7 @@
                 android:layout_width="190dp"
                 android:layout_height="80dp"
                 android:onClick="onclick_start_game"
-                android:text="Start Module" />
+                android:text="Save &amp; Start Module" />
         </TableRow>
 
         <TableRow

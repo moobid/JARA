@@ -48,21 +48,21 @@ public class ModuleSettingsActivity extends Activity {
 	private List<CheckBox> checkboxPreactions = new ArrayList<CheckBox>();
 	private List<Button> buttonPreactions = new ArrayList<Button>();	//locationbutton
 	private List<Button> buttonPreactions2 = new ArrayList<Button>();	//durationbutton
+	private List<Button> buttonPreactions3 = new ArrayList<Button>(); //modulestarterbutton
 	private List<Element> preactions = new ArrayList<Element>();
 	private int preactionsCounter = 0;
-
+	
+	private List<CheckBox> checkboxActions = new ArrayList<CheckBox>();
+	private List<Button> buttonActions = new ArrayList<Button>();
+	private List<Button> buttonActions2 = new ArrayList<Button>();
+	private List<Element> actions = new ArrayList<Element>();
+	private int actionsCounter = 0;
+	
 	private List<CheckBox> checkboxSignals = new ArrayList<CheckBox>();
 	private List<Button> buttonSignals = new ArrayList<Button>();
 	private List<Button> buttonSignals2 = new ArrayList<Button>();
 	private List<Element> signals = new ArrayList<Element>();
 	private int signalsCounter = 0;
-
-	private List<CheckBox> checkboxActions = new ArrayList<CheckBox>();
-	private List<Button> buttonActions = new ArrayList<Button>();
-	private List<Button> buttonActions2 = new ArrayList<Button>();
-	private List<Button> buttonActions3 = new ArrayList<Button>(); //modulestarterbutton
-	private List<Element> actions = new ArrayList<Element>();
-	private int actionsCounter = 0;
 
 	private List<CheckBox> checkboxRewards = new ArrayList<CheckBox>();
 	private List<Button> buttonRewards = new ArrayList<Button>();
@@ -183,10 +183,10 @@ public class ModuleSettingsActivity extends Activity {
 		if((module_name == null) || (module_name.equals(""))) Toast.makeText(getApplicationContext(), "Modulename empty", Toast.LENGTH_SHORT).show();
 		else 
 		{
-			if (ElementHasLocation == false) Toast.makeText(getApplicationContext(), "One Element is missing its location", Toast.LENGTH_SHORT).show();	 		
+			onclick_save(view);
+			if (ElementHasLocation == false); //do nothing	 		
 			else
-			{
-				onclick_save(view);		
+			{	
 				mysession.updateStatistics("Clicked on Start Module");
 				Intent intent = new Intent(this, GameActivity.class);
 				intent.putExtra(MODULENUMBER, Integer.toString(currentModuleNumber));
@@ -263,8 +263,7 @@ public class ModuleSettingsActivity extends Activity {
 						ElementHasLocation = false;
 						Toast.makeText(getApplicationContext(), "At least one Element is missing its location", Toast.LENGTH_SHORT).show();						
 					}
-					else
-					{						
+					{	
 						checked = true;	   					
 						editor.putBoolean(preactions.get(i).getName() + "preaction", checked);
 						//saves true (checked) or false (unchecked) as a Boolean named after the Element in the Shared Pref
@@ -373,12 +372,12 @@ public class ModuleSettingsActivity extends Activity {
 				else editor.putString(buttonActions2.get(i).getTag() + "duration", buttontext);
 			}
 			
-			//saving modulestarter for actions	
-			for(int i = 0; i < buttonActions3.size(); i++)
+			//saving modulestarter for preactions	
+			for(int i = 0; i < buttonPreactions3.size(); i++)
 			{
-				String buttontext = buttonActions3.get(i).getText().toString();
+				String buttontext = buttonPreactions3.get(i).getText().toString();
 				if(buttontext.equals("startModule")) ;//do nothing
-				else editor.putString(buttonActions3.get(i).getTag() + "startModule", buttontext);
+				else editor.putString(buttonPreactions3.get(i).getTag() + "startModule", buttontext);
 			}
 			
 			
@@ -398,11 +397,17 @@ public class ModuleSettingsActivity extends Activity {
 				else editor.putString(buttonRewards2.get(i).getTag() + "duration", buttontext);
 			}
 
-			editor.commit();        
-			Toast.makeText(getApplicationContext(), "Saved as MODULE" + this.currentModuleNumber, Toast.LENGTH_SHORT).show();
+        
 			
-			if(ElementHasLocation == true) finish();
-			 //goes back to last Activity (ModuleActivity)
+			
+			if(ElementHasLocation == true)
+			{
+				editor.commit();
+				Toast.makeText(getApplicationContext(), "Saved as MODULE" + this.currentModuleNumber, Toast.LENGTH_SHORT).show();
+				finish();
+				//goes back to last Activity (ModuleActivity)
+			}
+			 
 		}
 
 	}
@@ -456,6 +461,7 @@ public class ModuleSettingsActivity extends Activity {
 		{
 			currentLocation = getElementLocation(Integer.toString(currentModuleNumber), elementName + "Preaction");
 			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Preaction2");
+			currentStartModule = getElementStartModule(Integer.toString(currentModuleNumber), elementName + "Preaction3");
 			table = (TableLayout) findViewById(R.id.Preactions);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
@@ -473,7 +479,9 @@ public class ModuleSettingsActivity extends Activity {
 			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
 			buttonPreactions2.add(preactionsCounter, new Button(this));
 			buttonPreactions2.get(preactionsCounter).setTag( elementName + "Preaction2");
-			
+			//creates new Button for choosing the Module wich should get started after pressing on the Action
+			buttonPreactions3.add(actionsCounter, new Button(this));
+			buttonPreactions3.get(actionsCounter).setTag( elementName + "Preaction3");
 			if(buttonNeeded == true) //shows the buttons
 			{
 				buttonPreactions.get(preactionsCounter).setText(currentLocation);
@@ -493,14 +501,24 @@ public class ModuleSettingsActivity extends Activity {
 					showElementDurationDialog(); //shows Popup
 					}
 				});	
+				buttonPreactions3.get(preactionsCounter).setText(currentStartModule);
+				buttonPreactions3.get(preactionsCounter).setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						currentElement = (String) v.getTag();
+						
+						showElementStartModuleDialog();
+					}
+				});
 			}
 			else //makes the buttons disappear
 			{
 				buttonPreactions.get(preactionsCounter).setVisibility(View.GONE);
 				buttonPreactions2.get(preactionsCounter).setVisibility(View.GONE);
+				buttonPreactions3.get(actionsCounter).setVisibility(View.GONE);
 			}
 			newTablerow.addView(buttonPreactions.get(preactionsCounter));
-			newTablerow.addView(buttonPreactions2.get(preactionsCounter));		
+			newTablerow.addView(buttonPreactions2.get(preactionsCounter));	
+			newTablerow.addView(buttonPreactions3.get(actionsCounter));
 		}
 
 		
@@ -508,7 +526,7 @@ public class ModuleSettingsActivity extends Activity {
 		if(elementType == "Actions"){
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Action");
 			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Action2");
-			currentStartModule = getElementStartModule(Integer.toString(currentModuleNumber), elementName + "Action3");
+
 			table = (TableLayout) findViewById(R.id.Signals); //Changed things around this is called Signals because the view was named Signals.
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
@@ -527,9 +545,6 @@ public class ModuleSettingsActivity extends Activity {
 			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
 			buttonActions2.add(actionsCounter, new Button(this));
 			buttonActions2.get(actionsCounter).setTag( elementName + "Action2");
-			//creates new Button for choosing the Module wich should get started after pressing on the Action
-			buttonActions3.add(actionsCounter, new Button(this));
-			buttonActions3.get(actionsCounter).setTag( elementName + "Action3");
 			if(buttonNeeded == true)
 			{
 				buttonActions.get(actionsCounter).setText(currentLocation);
@@ -548,25 +563,15 @@ public class ModuleSettingsActivity extends Activity {
 					showElementDurationDialog(); //shows Popup
 					}
 				});
-				buttonActions3.get(actionsCounter).setText(currentStartModule);
-				buttonActions3.get(actionsCounter).setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						currentElement = (String) v.getTag();
-						
-						showElementStartModuleDialog();
-					}
-				});	
+	
 			}
 			else
 			{
 				buttonActions.get(actionsCounter).setVisibility(View.GONE);
 				buttonActions2.get(actionsCounter).setVisibility(View.GONE);
-				buttonActions3.get(actionsCounter).setVisibility(View.GONE);
 			}
 			newTablerow.addView(buttonActions.get(actionsCounter));
-			newTablerow.addView(buttonActions2.get(actionsCounter));	
-			newTablerow.addView(buttonActions3.get(actionsCounter));	
-			
+			newTablerow.addView(buttonActions2.get(actionsCounter));					
 		}
 		
 		if(elementType == "Signals"){
@@ -953,18 +958,18 @@ public class ModuleSettingsActivity extends Activity {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle("Select Module which to start after pressing on this Action")
+			builder.setTitle("Select Module which to start after pressing on this Preaction")
 			.setItems(modulenamesArray, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// The 'which' argument contains the index position
 					// of the selected item					
 					currentStartModule = modulenamesArray[which];
 					int i = 0;
-					for(; i < actionsCounter; i++)
+					for(; i < preactionsCounter; i++)
 					{
-						if((actions.get(i).getName() + "Action3").equals(currentElement)) break;
+						if((preactions.get(i).getName() + "Preaction3").equals(currentElement)) break;
 					}
-					buttonActions3.get(i).setText(currentStartModule); //refreshes buttontext at once!
+					buttonPreactions3.get(i).setText(currentStartModule); //refreshes buttontext at once!
 				}
 			});
 			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
