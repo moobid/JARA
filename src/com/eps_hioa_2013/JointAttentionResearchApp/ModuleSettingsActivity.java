@@ -509,7 +509,7 @@ public class ModuleSettingsActivity extends Activity {
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Action");
 			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Action2");
 			currentStartModule = getElementStartModule(Integer.toString(currentModuleNumber), elementName + "Action3");
-			table = (TableLayout) findViewById(R.id.Signals);
+			table = (TableLayout) findViewById(R.id.Signals); //Changed things around this is called Signals because the view was named Signals.
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
 			table.addView(newTablerow);
@@ -572,7 +572,7 @@ public class ModuleSettingsActivity extends Activity {
 		if(elementType == "Signals"){
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Signal");
 			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Signal2");
-			table = (TableLayout) findViewById(R.id.Actions);
+			table = (TableLayout) findViewById(R.id.Actions);//Changed things around this is called Actions because the view was named Actions.
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
 			table.addView(newTablerow);
@@ -753,7 +753,7 @@ public class ModuleSettingsActivity extends Activity {
 	{	
 		String nameOfModulePref = "MODULE" + i;
 		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-		int timeToPlay = pref_modulesettings.getInt("timeToPlay", 0); //TODO: dont know if this 0 is correct
+		int timeToPlay = pref_modulesettings.getInt("timeToPlay", 0); 
 		return timeToPlay;		
 	}
 	
@@ -761,7 +761,7 @@ public class ModuleSettingsActivity extends Activity {
 	{	
 		String nameOfModulePref = "MODULE" + i;
 		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-		int roundsToPlay = pref_modulesettings.getInt("roundsToPlay", 0); //TODO: dont know if this 0 is correct
+		int roundsToPlay = pref_modulesettings.getInt("roundsToPlay", 1); 
 		return roundsToPlay;
 	}
 	

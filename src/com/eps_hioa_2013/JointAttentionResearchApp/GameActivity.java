@@ -121,7 +121,7 @@ public class GameActivity extends Activity {
 			currentReward = mymodule.getRandomRewardElement();
 			if(currentReward == null) // stop game if there are no rewards
 				stopGame("No reward is selected");
-			
+
 			//=0, check if preactionElements exist,
 			if(!mymodule.getPreactions().isEmpty())
 			{
@@ -169,10 +169,9 @@ public class GameActivity extends Activity {
 			break;
 
 		case 2:
-			//Show reward reward will change depending on options.		
-			LoadRewardStage();
+			//Show reward, reward will change depending on options.
 			stagecounter++;
-			
+			LoadRewardStage();
 			break;
 
 		case 3:
@@ -256,29 +255,18 @@ public class GameActivity extends Activity {
 		String currentTime = convertTime(stopWatch.getTime());
 
 		//TODO If image button contains element write down which element
-		mysession.updateStatistics(currentTime + " " +  getImageButton(view.getId()));
+		String buttonName = getImageButton(view.getId());
+		//	String currentImageName = getImagePath(buttonName); TODO fix getImagePath
+		mysession.updateStatistics(currentTime + " " +  buttonName);
 	}
 
 
 
-	//Loads a random reward
+
+
+	//TODO cut out the middle man.
 	private void LoadRewardStage() {		
 		loadReward(currentReward);	
-
-		Timer nextRoundtimer = new Timer();				
-		nextRoundtimer.schedule(new TimerTask() {
-			public void run() {
-
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						nextStage();
-					}
-				});
-			}
-		}, getElementDuration(modulenumber, currentReward.getName() + "Reward")*1000);
-
 	}
 
 	//Loads the signal(s) starts timer for signal
@@ -304,47 +292,58 @@ public class GameActivity extends Activity {
 			}	
 
 			if(actionAvailable)
-			{				
+			{		
+				int time = getElementDuration(modulenumber, element.getName() + "Signal");
 				SignalAppearTimer = new Timer();				
 				SignalAppearTimer.schedule(new TimerTask() {
 					public void run() {
-					    
-					    runOnUiThread(new Runnable() {
 
-					    @Override
-					    public void run() {
-					    	if(!timedLocation.isEmpty())							
-								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));							
-							else
-								displaySoundReward((ElementSound)timedElement);
+						runOnUiThread(new Runnable() {
 
-							buttonWorks = true;
-					            }
-					    });
-					        }
-					    },  getElementDuration(modulenumber, element.getName() + "Signal")*1000);
+							@Override
+							public void run() {
+								if(!timedLocation.isEmpty())
+								{
+									displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));										
+								}
+								else
+								{
+									loadSignalSound((ElementSound)timedElement);
+								}
+								buttonWorks = true;
+							}
+						});
+					}
+				},  time*1000);
 			}
 			else
 			{
+				int time = getElementDuration(modulenumber, element.getName() + "Signal");
 				SignalAppearTimer = new Timer();				
 				SignalAppearTimer.schedule(new TimerTask() {
 					public void run() {
-					    
-					    runOnUiThread(new Runnable() {
 
-					    @Override
-					    public void run() {
-					    	if(!timedLocation.isEmpty())							
-								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));							
-							else
-								displaySoundReward((ElementSound)timedElement);
-					    	
-					    	stagecounter++;
-							nextStage();
-					            }
-					    });
-					        }
-					    },  getElementDuration(modulenumber, element.getName() + "Signal")*1000);
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								if(!timedLocation.isEmpty())
+								{
+									displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));	
+									stagecounter++;
+									nextStage();
+								}
+								else
+								{
+									loadSignalSound((ElementSound)timedElement);									
+								}
+
+
+							}						
+
+						});
+					}
+				},  time*1000);
 			}
 		}
 
@@ -352,8 +351,14 @@ public class GameActivity extends Activity {
 	}
 
 
+	private void loadSignalSound(ElementSound timedElement) {
+		displaySoundReward((ElementSound)timedElement);	
+		stagecounter++;
+		nextStage();
+	}
+
+
 	private void LoadActionStage(boolean buttenActive) {
-		// TODO more options atm doesn't matter which button is pressed
 		buttonWorks = buttenActive;			
 
 		for(int i = 0; i < mymodule.getActions().size(); i++)
@@ -369,8 +374,6 @@ public class GameActivity extends Activity {
 	}
 
 	private void LoadPreactionStage() {
-		// TODO more options?
-
 		for(int i = 0; i < mymodule.getPreactions().size(); i++)
 		{
 			Element element = mymodule.getPreactions().get(i);
@@ -382,15 +385,15 @@ public class GameActivity extends Activity {
 			validPreactionID.add(getImageButton(location).getId());	
 		}
 	}
-	
+
 	private int getElementDuration(String i, String elementName)
 	{
 		int time = 0;
-		
+
 		String nameOfModulePref = "MODULE" + i;
 		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
 		String duration = pref_modulesettings.getString(elementName + "2duration", "0");
-		
+
 		if(duration.contains("-"))
 		{ //Get random number between 2 numbers
 			Random r = new Random();
@@ -406,12 +409,6 @@ public class GameActivity extends Activity {
 
 	//stops the game
 	private void stopGame(String message) {		
-		// TODO remove/replace/decide to keep,  dirty code which is/was used for testing purposes
-		try {
-			TimeUnit.SECONDS.sleep(5);
-		} catch (InterruptedException e) {				
-		}
-
 		endMessage = message;
 		DialogFragment newFragment = new StopModuleDialog();
 		newFragment.show(getFragmentManager(), "endGame");	    
@@ -454,10 +451,29 @@ public class GameActivity extends Activity {
 			String location = getElementLocation(modulenumber, element.getName() + "Reward"); 
 			// display
 			displayPictureElement((ElementPicture) element, getImageButton(location));
+			int time = getElementDuration(modulenumber, currentReward.getName() + "Reward");
+			if(time != 0)
+			{
+				Timer nextRoundtimer = new Timer();				
+				nextRoundtimer.schedule(new TimerTask() {
+					public void run() {
+
+						runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								nextStage();
+							}
+						});
+					}
+				}, time*1000);
+			}
 		}
 		else if(element instanceof ElementSound)
 		{
 			displaySoundReward((ElementSound) element);
+			nextStage();
+
 		}
 		else if(element instanceof ElementVideo)
 		{
@@ -487,8 +503,9 @@ public class GameActivity extends Activity {
 
 	public void displaySoundReward(ElementSound mySound)
 	{
+		//TODO something
 		MediaPlayer mPlayer = new MediaPlayer();
-		File file = new File(mySound.getPath());
+		File file = new File(mySound.getPath());		
 
 		if(mPlayer != null) {
 			mPlayer.stop();
@@ -496,8 +513,10 @@ public class GameActivity extends Activity {
 		}
 		mPlayer = MediaPlayer.create(this, Uri.parse(mySound.getPath()));
 		mPlayer.start();
+
 	}
 
+	/* OBSOLETE
 	public void displayPictureReward(ElementPicture myPicture)
 	{
 		ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
@@ -519,6 +538,7 @@ public class GameActivity extends Activity {
 			}
 		});
 	}
+
 	public void displayPictureReward(ElementPicture myPicture, final int time)
 	{
 		ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
@@ -540,6 +560,7 @@ public class GameActivity extends Activity {
 			}
 		});
 	}
+	 */
 
 	public void displayPictureElement(ElementPicture myPicture, ImageButton myButton)
 	{
@@ -587,7 +608,7 @@ public class GameActivity extends Activity {
 
 	private String getImageButton(int ID)
 	{
-		String button = "";
+		String button = "";		
 		if(ID == topleft.getId())
 			button = "topleft";
 		else if(ID == topmid.getId())
@@ -608,6 +629,31 @@ public class GameActivity extends Activity {
 			button = "bottomright";
 		return button;		
 	}
+
+	/* TODO get Imagebutton image uri
+	private String getImagePath(String location) {
+		String path = "";
+		if(location.equals("topleft"))
+			path = topleft.;
+		else if(location.equals("topmid"))
+			path = topmid;
+		else if(location.equals("topright"))
+			path = topright;
+		else if(location.equals("midleft"))
+			path = midleft;
+		else if(location.equals("midmid"))
+			path = midmid;
+		else if(location.equals("midright"))
+			path = midright;
+		else if(location.equals("bottomleft"))
+			path = bottomleft;
+		else if(location.equals("bottommid"))
+			path = bottommid;
+		else if(location.equals("bottomright"))
+			path = bottomright;
+		return path;		
+	}
+	 */
 
 	public String getNameOfLastEditedModule()
 	{	
