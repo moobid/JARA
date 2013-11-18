@@ -28,7 +28,12 @@ public class Module{
 
 	public Element getRandomRewardElement()
 	{
-		return myRewards.get((int)(Math.random() * (myRewards.size()-1)));
+		Element element = null;
+		if(!myRewards.isEmpty())
+		{
+			element = myRewards.get((int)(Math.random() * (myRewards.size()-1)));
+		}
+		return element;
 	}
 
 	public String getName()

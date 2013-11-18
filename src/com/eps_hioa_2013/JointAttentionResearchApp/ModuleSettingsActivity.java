@@ -339,16 +339,6 @@ public class ModuleSettingsActivity extends Activity {
 				else editor.putString(buttonPreactions.get(i).getTag() + "location", buttontext);
 			}
 			
-			//saving duration for preactions	
-			for(int i = 0; i < buttonPreactions2.size(); i++)
-			{
-				String buttontext = buttonPreactions2.get(i).getText().toString();
-				if(buttontext.equals("duration")) ;//do nothing
-				else editor.putString(buttonPreactions2.get(i).getTag() + "duration", buttontext);
-			}
-
-			
-			
 			//saving location for signals			
 			for(int i = 0; i < buttonSignals.size(); i++)
 			{
@@ -360,7 +350,7 @@ public class ModuleSettingsActivity extends Activity {
 			//saving duration for signals	
 			for(int i = 0; i < buttonSignals2.size(); i++)
 			{
-				String buttontext = buttonSignals2.get(i).getText().toString();
+				String buttontext = buttonSignals2.get(i).getText().toString();				
 				if(buttontext.equals("duration")) ;//do nothing
 				else editor.putString(buttonSignals2.get(i).getTag() + "duration", buttontext);
 			}
@@ -513,62 +503,13 @@ public class ModuleSettingsActivity extends Activity {
 			newTablerow.addView(buttonPreactions2.get(preactionsCounter));		
 		}
 
-		if(elementType == "Signals"){
-			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Signal");
-			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Signal2");
-			table = (TableLayout) findViewById(R.id.Signals);
-			//creates new Tablerow and sets it into the new Tablelayout
-			TableRow newTablerow = new TableRow(this);
-			table.addView(newTablerow);
-
-			//creates new Checkbox with the name of the element and sets it into the Tablerow
-			checkboxSignals.add(signalsCounter, new CheckBox(this));
-			checkboxSignals.get(signalsCounter).setText(elementName);
-			//	checkboxPreactions.add(preactionsCounter, (checkboxPreactions.get(preactionsCounter)));
-
-			newTablerow.addView(checkboxSignals.get(signalsCounter));
-
-				//creates new Button and sets it also into the Tablerow
-			buttonSignals.add(signalsCounter, new Button(this));	
-			buttonSignals.get(signalsCounter).setTag( elementName + "Signal");
-			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
-			buttonSignals2.add(signalsCounter, new Button(this));
-			buttonSignals2.get(signalsCounter).setTag( elementName + "Signal2");
-			if(buttonNeeded == true)
-			{
-				buttonSignals.get(signalsCounter).setText(currentLocation);
-				buttonSignals.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						currentElement = (String) v.getTag();
-						popupMode = "signalLocation"; //determines the popupMode;
-						showElementLocationDialog();
-					}
-				});		
-				buttonSignals2.get(signalsCounter).setText(currentDuration);
-				buttonSignals2.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
-					popupMode = "signalDuration"; //determines the popupMode;
-					showElementDurationDialog(); //shows Popup
-					}
-				});	
-			}
-			
-			else
-			{
-				buttonSignals.get(signalsCounter).setVisibility(View.GONE);
-				buttonSignals2.get(signalsCounter).setVisibility(View.GONE);
-			}
-			newTablerow.addView(buttonSignals.get(signalsCounter)); 
-			newTablerow.addView(buttonSignals2.get(signalsCounter));	
 		
-		}
 
 		if(elementType == "Actions"){
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Action");
 			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Action2");
 			currentStartModule = getElementStartModule(Integer.toString(currentModuleNumber), elementName + "Action3");
-			table = (TableLayout) findViewById(R.id.Actions);
+			table = (TableLayout) findViewById(R.id.Signals);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
 			table.addView(newTablerow);
@@ -626,6 +567,57 @@ public class ModuleSettingsActivity extends Activity {
 			newTablerow.addView(buttonActions2.get(actionsCounter));	
 			newTablerow.addView(buttonActions3.get(actionsCounter));	
 			
+		}
+		
+		if(elementType == "Signals"){
+			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Signal");
+			currentDuration = getElementDuration(Integer.toString(currentModuleNumber), elementName + "Signal2");
+			table = (TableLayout) findViewById(R.id.Actions);
+			//creates new Tablerow and sets it into the new Tablelayout
+			TableRow newTablerow = new TableRow(this);
+			table.addView(newTablerow);
+
+			//creates new Checkbox with the name of the element and sets it into the Tablerow
+			checkboxSignals.add(signalsCounter, new CheckBox(this));
+			checkboxSignals.get(signalsCounter).setText(elementName);
+			//	checkboxPreactions.add(preactionsCounter, (checkboxPreactions.get(preactionsCounter)));
+
+			newTablerow.addView(checkboxSignals.get(signalsCounter));
+
+				//creates new Button and sets it also into the Tablerow
+			buttonSignals.add(signalsCounter, new Button(this));	
+			buttonSignals.get(signalsCounter).setTag( elementName + "Signal");
+			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
+			buttonSignals2.add(signalsCounter, new Button(this));
+			buttonSignals2.get(signalsCounter).setTag( elementName + "Signal2");
+			if(buttonNeeded == true)
+			{
+				buttonSignals.get(signalsCounter).setText(currentLocation);
+				buttonSignals.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						currentElement = (String) v.getTag();
+						popupMode = "signalLocation"; //determines the popupMode;
+						showElementLocationDialog();
+					}
+				});		
+				buttonSignals2.get(signalsCounter).setText(currentDuration);
+				buttonSignals2.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+					popupMode = "signalDuration"; //determines the popupMode;
+					showElementDurationDialog(); //shows Popup
+					}
+				});	
+			}
+			
+			else
+			{
+				buttonSignals.get(signalsCounter).setVisibility(View.GONE);
+				buttonSignals2.get(signalsCounter).setVisibility(View.GONE);
+			}
+			newTablerow.addView(buttonSignals.get(signalsCounter)); 
+			newTablerow.addView(buttonSignals2.get(signalsCounter));	
+		
 		}
 
 		if(elementType == "Rewards"){

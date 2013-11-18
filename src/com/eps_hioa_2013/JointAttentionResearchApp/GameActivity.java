@@ -3,6 +3,7 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -66,6 +67,7 @@ public class GameActivity extends Activity {
 	private String timedLocation;
 	private Element timedElement;
 	private Timer SignalAppearTimer;
+	private Element currentReward;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -115,6 +117,11 @@ public class GameActivity extends Activity {
 		switch(stagecounter)
 		{
 		case 0:
+			//Load a random reward to be shown at the end of this round
+			currentReward = mymodule.getRandomRewardElement();
+			if(currentReward == null) // stop game if there are no rewards
+				stopGame("No reward is selected");
+			
 			//=0, check if preactionElements exist,
 			if(!mymodule.getPreactions().isEmpty())
 			{
@@ -165,11 +172,11 @@ public class GameActivity extends Activity {
 			//Show reward reward will change depending on options.		
 			LoadRewardStage();
 			stagecounter++;
-			nextStage();
+			
 			break;
 
 		case 3:
-			//exit game if number of round are met else go back to stage 0			
+			//exit game if number of round are met else go back to stage 0		
 			if(roundcounter == roundcounterlimit)
 			{
 				//exit
@@ -177,15 +184,20 @@ public class GameActivity extends Activity {
 			}
 			else
 			{
-				stagecounter = 0;
-				roundcounter++;
-				resetScreen();
-				nextStage();
+				nextRound();				
 			}
 			break;
 		}
 	}
 
+
+	private void nextRound() {
+		// TODO expand for new settings
+		roundcounter++;
+		stagecounter = 0;
+		resetScreen();
+		nextStage();
+	}
 
 	//Load elements belonging to this module and put them in the appropriate arrays.
 	private void loadGameInfo(Session mysession) {
@@ -236,8 +248,7 @@ public class GameActivity extends Activity {
 				buttonWorks = false;
 				stagecounter++;
 				nextStage();
-			}	
-			stagecounter++;
+			}
 			break;
 		default:
 			break;
@@ -251,10 +262,23 @@ public class GameActivity extends Activity {
 
 
 	//Loads a random reward
-	private void LoadRewardStage() {
-		Element element = null;		
-		element = mymodule.getRandomRewardElement();
-		loadReward(element);
+	private void LoadRewardStage() {		
+		loadReward(currentReward);	
+
+		Timer nextRoundtimer = new Timer();				
+		nextRoundtimer.schedule(new TimerTask() {
+			public void run() {
+
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						nextStage();
+					}
+				});
+			}
+		}, getElementDuration(modulenumber, currentReward.getName() + "Reward")*1000);
+
 	}
 
 	//Loads the signal(s) starts timer for signal
@@ -280,8 +304,7 @@ public class GameActivity extends Activity {
 			}	
 
 			if(actionAvailable)
-			{
-				//TODO load real time
+			{				
 				SignalAppearTimer = new Timer();				
 				SignalAppearTimer.schedule(new TimerTask() {
 					public void run() {
@@ -299,7 +322,7 @@ public class GameActivity extends Activity {
 					            }
 					    });
 					        }
-					    },  5*1000);
+					    },  getElementDuration(modulenumber, element.getName() + "Signal")*1000);
 			}
 			else
 			{
@@ -315,12 +338,13 @@ public class GameActivity extends Activity {
 								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));							
 							else
 								displaySoundReward((ElementSound)timedElement);
-
+					    	
+					    	stagecounter++;
 							nextStage();
 					            }
 					    });
 					        }
-					    },  5*1000);//TODO load real time
+					    },  getElementDuration(modulenumber, element.getName() + "Signal")*1000);
 			}
 		}
 
@@ -357,6 +381,27 @@ public class GameActivity extends Activity {
 			// add valid ID
 			validPreactionID.add(getImageButton(location).getId());	
 		}
+	}
+	
+	private int getElementDuration(String i, String elementName)
+	{
+		int time = 0;
+		
+		String nameOfModulePref = "MODULE" + i;
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		String duration = pref_modulesettings.getString(elementName + "2duration", "0");
+		
+		if(duration.contains("-"))
+		{ //Get random number between 2 numbers
+			Random r = new Random();
+			int loc = duration.indexOf("-");
+			int a = Integer.parseInt(duration.substring(0, loc));
+			int b = Integer.parseInt(duration.substring(loc));
+			time = r.nextInt(a-b) + a;
+		}
+		else
+			time = Integer.parseInt(duration);
+		return time;		
 	}
 
 	//stops the game
@@ -406,7 +451,9 @@ public class GameActivity extends Activity {
 	private void loadReward(Element element) {
 		if(element instanceof ElementPicture)
 		{
-			displayPictureReward((ElementPicture) element);
+			String location = getElementLocation(modulenumber, element.getName() + "Reward"); 
+			// display
+			displayPictureElement((ElementPicture) element, getImageButton(location));
 		}
 		else if(element instanceof ElementSound)
 		{
@@ -496,6 +543,8 @@ public class GameActivity extends Activity {
 
 	public void displayPictureElement(ElementPicture myPicture, ImageButton myButton)
 	{
+		if(myButton == null)
+			stopGame("An picture has no location set");
 		myButton.setImageURI(Uri.parse(myPicture.getPath()));		
 	}
 
