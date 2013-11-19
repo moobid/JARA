@@ -522,6 +522,14 @@ public class GameActivity extends Activity {
 		}
 		mPlayer = MediaPlayer.create(this, Uri.parse(mySound.getPath()));
 		mPlayer.start();
+		mPlayer.setOnCompletionListener(new OnCompletionListener(){
+
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				// TODO Auto-generated method stub
+				nextStage();
+			}
+		});
 	}
 
 	public void displayPictureReward(ElementPicture myPicture)
