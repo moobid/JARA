@@ -69,6 +69,7 @@ public class GameActivity extends Activity {
 	private Timer SignalAppearTimer;
 	private Element currentReward;
 	private Element currentSignal;
+	private Timer nextRoundtimer;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -172,8 +173,6 @@ public class GameActivity extends Activity {
 		switch(stagecounter)
 		{
 		case 0:
-			//Load a random reward to be shown at the end of this round
-			
 			//=0, check if preactionElements exist,
 			if(!mymodule.getPreactions().isEmpty())
 			{
@@ -304,7 +303,7 @@ public class GameActivity extends Activity {
 	//Check if an action is required and updates the statistics file for press location and time.
 	public void onclick_touched(View view)
 	{		
-		
+
 		String extraMessage = "";
 		switch(stagecounter)
 		{
@@ -328,7 +327,7 @@ public class GameActivity extends Activity {
 		default:
 			break;
 		}		
-		
+
 		String currentTime = convertTime(stopWatch.getTime());
 		String buttonName = getImageButton(view.getId());
 		mysession.updateStatistics(currentTime + ", " +  buttonName + extraMessage);
@@ -390,10 +389,6 @@ public class GameActivity extends Activity {
 								stagecounter++;
 								nextStage();
 							}
-							else
-							{
-								loadSignalSound((ElementSound)timedElement);									
-							}
 						}	
 					});
 				}
@@ -404,28 +399,24 @@ public class GameActivity extends Activity {
 
 	private void startRemoveTimer() {
 		int time = getElementDuration(modulenumber, currentSignal.getName() + "Signal", false);
-		Timer nextRoundtimer = new Timer();				
-		nextRoundtimer.schedule(new TimerTask() {
-			public void run() {
+		if(time > 0)
+		{
+			nextRoundtimer = new Timer();				
+			nextRoundtimer.schedule(new TimerTask() {
+				public void run() {
 
-				runOnUiThread(new Runnable() {
+					runOnUiThread(new Runnable() {
 
-					@Override
-					public void run() {
-						stagecounter = 3;
-						nextStage();
-					}
-				});
-			}
-		}, time*1000);
+						@Override
+						public void run() {
+							stagecounter = 3;
+							nextStage();
+						}
+					});
+				}
+			}, time*1000);
+		}
 	}
-
-	private void loadSignalSound(ElementSound timedElement) {
-		displaySoundReward((ElementSound)timedElement);	
-		stagecounter++;
-		nextStage();
-	}
-
 
 
 	private void LoadActionStage(boolean buttenActive) {
@@ -498,6 +489,8 @@ public class GameActivity extends Activity {
 
 	//Checks which type of element must be loaded
 	private void loadReward(Element element) {
+
+		nextRoundtimer.cancel();
 		if(element instanceof ElementPicture)
 		{
 			String location = getElementLocation(modulenumber, element.getName() + "Reward"); 
@@ -536,7 +529,7 @@ public class GameActivity extends Activity {
 	public void displayVideoReward(ElementVideo myVideo)
 	{
 		//Manage Sreen
-		String location= getElementLocation(modulenumber,  myVideo.getName() + "Reward");
+		String location = getElementLocation(modulenumber,  myVideo.getName() + "Reward");
 
 		ImageButton myButton = getImageButton(location);
 		myButton.setVisibility(View.GONE);
