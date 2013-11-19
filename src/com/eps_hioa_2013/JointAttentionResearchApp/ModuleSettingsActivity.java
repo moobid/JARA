@@ -162,6 +162,8 @@ public class ModuleSettingsActivity extends Activity {
 		{
 			EditText editText2 = (EditText) findViewById(R.id.editText2); //name gets loaded
 			editText2.setText(getNameOfModule(modulenumber));
+			
+			nameInTheBeginning = getNameOfModule(modulenumber);
 
 			EditText editText1 = (EditText) findViewById(R.id.editText1); //descrition gets loaded
 			editText1.setText(getDescriptionOfModule(modulenumber));
@@ -200,7 +202,7 @@ public class ModuleSettingsActivity extends Activity {
 				checkboxRewards.get(i).setChecked(b);
 			}
 			
-			Toast.makeText(getApplicationContext(), "MODULE" + this.currentModuleNumber + " loaded", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Module" + this.currentModuleNumber + ": " + getNameOfModule(modulenumber) + " loaded", Toast.LENGTH_SHORT).show();
 
 		}
 		else {/*nothing to do here*/}
@@ -223,7 +225,7 @@ public class ModuleSettingsActivity extends Activity {
 			if (ElementHasLocation == false); //do nothing	 		
 			else
 			{	
-				mysession.updateStatistics("Clicked on Start Module");
+				mysession.updateStatistics("Clicked on Save & Start Module");
 				Intent intent = new Intent(this, GameActivity.class);
 				intent.putExtra(MODULENUMBER, Integer.toString(currentModuleNumber));
 				intent.putExtra(EXTRA_ROUNDSTOPLAY, npRoundsToPlay.getValue());
@@ -440,7 +442,7 @@ public class ModuleSettingsActivity extends Activity {
 			if(ElementHasLocation == true)
 			{
 				editor.commit();
-				Toast.makeText(getApplicationContext(), "Saved as MODULE" + this.currentModuleNumber, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "Saved as Module" + this.currentModuleNumber + ": " + getNameOfModule(Integer.toString(currentModuleNumber)), Toast.LENGTH_SHORT).show();
 				finish();
 				//goes back to last Activity (ModuleActivity)
 			}
@@ -1064,7 +1066,6 @@ public class ModuleSettingsActivity extends Activity {
 			// add new Module object to container
 			moduleContainer.add(currentModule);
 		}
-
 		// Return Container
 		return moduleContainer;		
 	}
