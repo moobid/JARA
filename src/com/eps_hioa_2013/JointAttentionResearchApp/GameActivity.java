@@ -657,7 +657,7 @@ public class GameActivity extends Activity {
 	{	
 		String nameOfModulePref = "MODULE" + i;
 		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-		String nameOfDescrition = pref_modulesettings.getString("descrition", ACCESSIBILITY_SERVICE);
+		String nameOfDescrition = pref_modulesettings.getString("module_description", ACCESSIBILITY_SERVICE);
 		return nameOfDescrition;		
 	}
 
