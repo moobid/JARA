@@ -214,7 +214,6 @@ public class GameActivity extends Activity {
 				}
 			}
 		}
-
 	}
 
 	//Will create a timer that stops the game when the time has passed.
@@ -475,7 +474,8 @@ public class GameActivity extends Activity {
 	public void displayVideoReward(ElementVideo myVideo)
 	{
 		//Manage Sreen
-		String location = getElementLocation(modulenumber,  myVideo.getName() + "Reward"); 
+		String location= getElementLocation(modulenumber,  myVideo.getName() + "Reward");
+		
 		ImageButton myButton = getImageButton(location);
 		myButton.setVisibility(View.GONE);
 		
@@ -502,6 +502,7 @@ public class GameActivity extends Activity {
 				bottomleft.setVisibility(View.VISIBLE);
 				bottommid.setVisibility(View.VISIBLE);
 				bottomright.setVisibility(View.VISIBLE);
+				nextStage();
 			}
 		});
 
@@ -515,8 +516,6 @@ public class GameActivity extends Activity {
 	public void displaySoundReward(ElementSound mySound)
 	{
 		MediaPlayer mPlayer = new MediaPlayer();
-		File file = new File(mySound.getPath());
-
 		if(mPlayer != null) {
 			mPlayer.stop();
 			mPlayer.release();
@@ -532,27 +531,7 @@ public class GameActivity extends Activity {
 		myButton.setImageURI(Uri.parse(myPicture.getPath()));
 		myButton.setVisibility(View.VISIBLE);
 	}
-	/*public void displayPictureReward(ElementPicture myPicture, final int time)
-	{
-		ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
-		myPhoto.setImageURI(Uri.parse(myPicture.getPath()));
-		myPhoto.setVisibility(View.VISIBLE);
-		Chronometer myChrono = ((Chronometer)findViewById(R.id.chronometer1));
-		myChrono.setBase(0);
-		myChrono.start();
-		myChrono.setOnChronometerTickListener(new OnChronometerTickListener(){
-			@Override
-			public void onChronometerTick(Chronometer c)
-			{
-				if(c.getBase()>time)
-				{
-					c.stop();
-					ImageView myPhoto = ((ImageView)findViewById(R.id.imageViewReward));
-					myPhoto.setVisibility(View.VISIBLE); 
-				}
-			}
-		});
-	}*/
+	
 	public void displayPictureElement(ElementPicture myPicture, ImageButton myButton)
 	{
 		if(myButton == null)

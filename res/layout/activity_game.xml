@@ -2,6 +2,7 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/withe"
     android:orientation="vertical" >
 
     <ImageView
@@ -29,7 +30,8 @@
         <TableRow
             android:id="@+id/tableRow1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp" >
 
         <LinearLayout
             android:id="@+id/topleftlay"
@@ -40,7 +42,7 @@
             <ImageButton
                 android:id="@+id/topleft"
                 android:layout_width="423dp"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 android:background="@drawable/withe"
                 android:cropToPadding="true"
                 android:onClick="onclick_touched"
@@ -63,7 +65,7 @@
             <ImageButton
                 android:id="@+id/topmid"
                 android:layout_width="423dp"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 android:background="@drawable/withe"
                 android:onClick="onclick_touched"
                 android:scaleType="centerInside" />
@@ -85,7 +87,7 @@
             <ImageButton
                 android:id="@+id/topright"
                 android:layout_width="423dp"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 android:background="@drawable/withe"
                 android:onClick="onclick_touched"
                 android:scaleType="centerInside" />
@@ -103,7 +105,8 @@
         <TableRow
             android:id="@+id/tableRow2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp" >
 
         <LinearLayout
             android:id="@+id/midleftlay"
@@ -114,7 +117,7 @@
             <ImageButton
                 android:id="@+id/midleft"
                 android:layout_width="423dp"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 android:background="@drawable/withe"
                 android:onClick="onclick_touched"
                 android:scaleType="centerInside" />
@@ -122,7 +125,8 @@
             <VideoView
                 android:id="@+id/videoMidLeft"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="45dp"
                 android:visibility="gone" />
 
         </LinearLayout>
@@ -136,7 +140,8 @@
             <ImageButton
                 android:id="@+id/midmid"
                 android:layout_width="426dp"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/withe"
                 android:maxHeight="@dimen/activity_vertical_margin"
                 android:maxWidth="@dimen/activity_horizontal_margin"
@@ -160,7 +165,7 @@
             <ImageButton
                 android:id="@+id/midright"
                 android:layout_width="423dp"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 android:background="@drawable/withe"
                 android:onClick="onclick_touched"
                 android:scaleType="centerInside" />
@@ -189,7 +194,7 @@
             <ImageButton
                 android:id="@+id/bottomleft"
                 android:layout_width="423dp"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 android:background="@drawable/withe"
                 android:onClick="onclick_touched"
                 android:scaleType="centerInside" />
@@ -211,7 +216,7 @@
             <ImageButton
                 android:id="@+id/bottommid"
                 android:layout_width="423dp"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 android:background="@drawable/withe"
                 android:onClick="onclick_touched"
                 android:scaleType="centerInside" />
@@ -233,7 +238,7 @@
             <ImageButton
                 android:id="@+id/bottomright"
                 android:layout_width="423dp"
-                android:layout_height="250dp"
+                android:layout_height="240dp"
                 android:background="@drawable/withe"
                 android:onClick="onclick_touched"
                 android:scaleType="centerInside" />
