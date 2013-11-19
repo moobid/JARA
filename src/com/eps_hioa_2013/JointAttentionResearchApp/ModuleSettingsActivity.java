@@ -116,7 +116,7 @@ public class ModuleSettingsActivity extends Activity {
 		if((module_name == null) || (module_name.equals("")) || module_name.equals("accessibility")) module_name = "NEW MODULE";
 		title.setText("Settings of Module: " + module_name);
 	}
-	
+
 	protected void onResume() {
 		refreshModulelist();
 		super.onResume();
@@ -131,11 +131,11 @@ public class ModuleSettingsActivity extends Activity {
 		{
 			modulenames.add(i, myModules.get(i).getName());
 		}
-		mysession.setModulenames(modulenames);		
+		mysession.setModulenames(modulenames);
 		
 		for(int i = 0; i < modulenames.size()-1; i++)
 		{
-			modulenamesArray[i] = modulenames.get(i+1);
+			modulenamesArray[i] = i + ": " + modulenames.get(i+1); //the i is the Number of the SharedPreferences; hopefully
 		}
 	}
 	
@@ -861,9 +861,7 @@ public class ModuleSettingsActivity extends Activity {
 		String duration = pref_modulesettings.getString(elementName + "duration1", "duration1");
 		return duration;
 	}
-	
-	
-	
+		
 	public String getElementStartModule(String i, String elementName)
 	{
 		String nameOfModulePref = "MODULE" + i;
