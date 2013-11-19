@@ -54,7 +54,7 @@ public class GameActivity extends Activity {
 
 	private boolean PreactionPresent = true;
 
-	private Module mymodule;
+	
 	private String modulenumber;
 	private Session mysession;	
 	private String[] stages = {"preaction", "signal", "action", "reward"};
@@ -70,6 +70,10 @@ public class GameActivity extends Activity {
 	private Element currentReward;
 	private Element currentSignal;
 	private Timer nextRoundtimer;
+	
+	private Module mymodule;//Module used in all the code
+	private Module mainModule; //The parent module, starting point after new round
+	private ArrayList<Module> extraModules;//Container for all child modules
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -91,9 +95,11 @@ public class GameActivity extends Activity {
 		roundcounterlimit = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_ROUNDSTOPLAY, 0);
 		timeToPlayInSeconds = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_TIME, 0); 
 		DateStartedPlaying = new Date();
-		mymodule = new Module();	
+		mymodule = new Module();
+		mainModule = mymodule;
 		stopWatch = new StopWatch();
-
+		extraModules = new ArrayList<Module>();
+		
 		initializeViews(); //initializes the views (Imagebuttons)
 
 		mysession.updateStatistics("\n\n" +
@@ -105,14 +111,40 @@ public class GameActivity extends Activity {
 				"Rounds to play: " + roundcounterlimit + "\n"			
 				);
 
-		loadGameInfo(mysession);		
+		loadGameInfo(mysession, mymodule);		
 		nextRound();				
 		stopWatch.start();	
 		if(timeToPlayInSeconds > 0)
 			startDurationTimer();
 	}
 
-	private void elementsToStatistics() {
+	//Load elements belonging to this module and put them in the appropriate arrays.
+	private void loadGameInfo(Session mysession, Module mymodule) {
+		int size = mysession.getElementlist().size();
+		String currentStage = "";
+		for(int o = 0; o < 4; o++)
+		{
+			currentStage = stages[o];
+			for(int i = 0; i < size; i++)
+			{
+				Element gameElement = mysession.getElementlist().get(i);
+				if(getBooleanOfModule(modulenumber, gameElement.getName() + currentStage))
+				{
+					mymodule.addElement(o, gameElement);					
+				}
+			}
+		}
+		elementsToStatistics(mymodule);
+		//Extra modules
+		for(int i = 0; i < mymodule.getPreactions().size(); i++)
+		{
+			Element currentPreaction = mymodule.getPreactions().get(i);
+			// TODO getElementNextModule();
+			
+		}
+	}
+
+	private void elementsToStatistics(Module mymodule) {
 		if(!mymodule.getPreactions().isEmpty())
 		{
 			mysession.updateStatistics("Preactions:");
@@ -269,24 +301,7 @@ public class GameActivity extends Activity {
 		nextStage();
 	}
 
-	//Load elements belonging to this module and put them in the appropriate arrays.
-	private void loadGameInfo(Session mysession) {
-		int size = mysession.getElementlist().size();
-		String currentStage = "";
-		for(int o = 0; o < 4; o++)
-		{
-			currentStage = stages[o];
-			for(int i = 0; i < size; i++)
-			{
-				Element gameElement = mysession.getElementlist().get(i);
-				if(getBooleanOfModule(modulenumber, gameElement.getName() + currentStage))
-				{
-					mymodule.addElement(o, gameElement);					
-				}
-			}
-		}
-		elementsToStatistics();
-	}
+
 
 	//Will create a timer that stops the game when the time has passed.
 	private void startDurationTimer() {
