@@ -95,4 +95,13 @@ public class Module{
 		return myRewards;
 	}
 
+	public Element getRandomSignalElement() {
+		Element element = null;
+		if(!mySignals.isEmpty())
+		{
+			element = mySignals.get((int)(Math.random() * (mySignals.size()-1)));
+		}
+		return element;
+	}
+
 }
