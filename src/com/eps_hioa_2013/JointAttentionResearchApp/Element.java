@@ -9,7 +9,9 @@ public class Element implements Serializable {
 	private String path;
 	private File file;
 	
+	private int moduleNumber;
 	private int type;
+	private int imageButtonID;
 	
 	public Element(String myPath, int myType)
 	{
@@ -17,11 +19,26 @@ public class Element implements Serializable {
 		setPath(myPath);
 	}
 	
-	public void showElement()
+	public int getModuleNumber()
 	{
-		//todo
+		return moduleNumber;
 	}
+	public int getImageButtonID()
+	{
+		return imageButtonID;
+	}
+	
+	public void setImageButtonID(int id)
+	{
+		imageButtonID = id;
+	}
+	
 
+	public void setModuleNumber(int number)
+	{
+		moduleNumber = number;
+	}
+	
 	public String getName() {
 		return name;
 	}

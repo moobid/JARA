@@ -7,6 +7,7 @@ public class Module{
 	//private File Settingsfile; //should be the txt file, where the settings of the module are saved //not used anymore
 
 	private static int number; //number of the module
+	private static String numberString;
 	private String name;
 	private String description;
 	private List<Element> myPreactions = new ArrayList<Element>();
@@ -18,12 +19,22 @@ public class Module{
 	public Module()
 	{}
 	
+	public Module(String myNumber)
+	{
+		numberString = myNumber;
+	}
+	
 	public Module(int myNumber, String myName, String myDescription)
 	{
 		number = myNumber;
 		name = myName;
 		description = myDescription;
 
+	}
+	
+	public String getNumberString()
+	{
+		return numberString;
 	}
 
 	public Element getRandomRewardElement()

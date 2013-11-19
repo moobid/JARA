@@ -54,7 +54,7 @@ public class GameActivity extends Activity {
 
 	private boolean PreactionPresent = true;
 
-	
+
 	private String modulenumber;
 	private Session mysession;	
 	private String[] stages = {"preaction", "signal", "action", "reward"};
@@ -70,7 +70,7 @@ public class GameActivity extends Activity {
 	private Element currentReward;
 	private Element currentSignal;
 	private Timer nextRoundtimer;
-	
+
 	private Module mymodule;//Module used in all the code
 	private Module mainModule; //The parent module, starting point after new round
 	private ArrayList<Module> extraModules;//Container for all child modules
@@ -95,11 +95,11 @@ public class GameActivity extends Activity {
 		roundcounterlimit = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_ROUNDSTOPLAY, 0);
 		timeToPlayInSeconds = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_TIME, 0); 
 		DateStartedPlaying = new Date();
-		mymodule = new Module();
+		mymodule = new Module(modulenumber);
 		mainModule = mymodule;
 		stopWatch = new StopWatch();
 		extraModules = new ArrayList<Module>();
-		
+
 		initializeViews(); //initializes the views (Imagebuttons)
 
 		mysession.updateStatistics("\n\n" +
@@ -111,7 +111,7 @@ public class GameActivity extends Activity {
 				"Rounds to play: " + roundcounterlimit + "\n"			
 				);
 
-		loadGameInfo(mysession, mymodule);		
+		loadGameInfo(mymodule, modulenumber);		
 		nextRound();				
 		stopWatch.start();	
 		if(timeToPlayInSeconds > 0)
@@ -119,7 +119,7 @@ public class GameActivity extends Activity {
 	}
 
 	//Load elements belonging to this module and put them in the appropriate arrays.
-	private void loadGameInfo(Session mysession, Module mymodule) {
+	private void loadGameInfo( Module mymodule, String modulenumber) {
 		int size = mysession.getElementlist().size();
 		String currentStage = "";
 		for(int o = 0; o < 4; o++)
@@ -134,17 +134,24 @@ public class GameActivity extends Activity {
 				}
 			}
 		}
-		elementsToStatistics(mymodule);
-		//Extra modules
+		elementsToStatistics(mymodule, modulenumber);
+		//Extra modules loading.
 		for(int i = 0; i < mymodule.getPreactions().size(); i++)
 		{
-			Element currentPreaction = mymodule.getPreactions().get(i);
-			// TODO getElementNextModule();
-			
+			Element currentPreaction = mymodule.getPreactions().get(i);			
+			String nextModuleNumber = getElementNextModuleNumber(modulenumber, currentPreaction.getName());
+			currentPreaction.setModuleNumber(Integer.valueOf(nextModuleNumber));
+			if(!nextModuleNumber.isEmpty())
+			{
+				Module currentModule = new Module(nextModuleNumber);
+				extraModules.add(currentModule);
+				loadGameInfo( currentModule, currentModule.getNumberString());
+			}
 		}
 	}
 
-	private void elementsToStatistics(Module mymodule) {
+
+	private void elementsToStatistics(Module mymodule, String modulenumber) {
 		if(!mymodule.getPreactions().isEmpty())
 		{
 			mysession.updateStatistics("Preactions:");
@@ -282,8 +289,8 @@ public class GameActivity extends Activity {
 		}
 	}
 
-	private void nextRound() {
-		// TODO expand for new settings, maybe
+	private void nextRound() {		
+		mymodule = mainModule;
 		currentSignal = mymodule.getRandomSignalElement();
 		currentReward = mymodule.getRandomRewardElement();
 		String signal = "";
@@ -326,8 +333,22 @@ public class GameActivity extends Activity {
 			if(validPreactionID.contains(view.getId()))
 			{
 				extraMessage = ", Valid preaction got pressed";
+				Boolean checker = false;
+				for(int i = 0; i < mymodule.getPreactions().size(); i++)
+				{
+					if(mymodule.getPreactions().get(i).getImageButtonID() == view.getId())
+					{
+						checker = true;						
+						mymodule = extraModules.get(mymodule.getPreactions().get(i).getModuleNumber());
+						stagecounter = 0;
+					}
+				}
+				if(checker == false)
+				{			
 				stagecounter++;
+				}
 				nextStage();
+				
 			}	
 			break;
 		case 1: //1 = Action
@@ -424,7 +445,7 @@ public class GameActivity extends Activity {
 
 						@Override
 						public void run() {
-							stagecounter = 3;
+							stagecounter = 1;
 							nextStage();
 						}
 					});
@@ -460,6 +481,7 @@ public class GameActivity extends Activity {
 			displayPictureElement((ElementPicture) element, getImageButton(location));
 			// add valid ID
 			validPreactionID.add(getImageButton(location).getId());	
+			element.setImageButtonID(getImageButton(location).getId());
 		}
 	}
 
@@ -749,6 +771,12 @@ public class GameActivity extends Activity {
 		else
 			duration = pref_modulesettings.getString(elementName + "4duration1", "0");
 		return duration;
+	}
+
+
+	private String getElementNextModuleNumber(String modulenumber2, String name) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private String convertTime(long millis)
