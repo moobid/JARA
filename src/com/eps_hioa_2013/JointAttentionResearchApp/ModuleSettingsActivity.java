@@ -38,6 +38,8 @@ public class ModuleSettingsActivity extends Activity {
 	NumberPicker npMinutes;
 	NumberPicker npSeconds;
 	NumberPicker npRoundsToPlay;
+	
+	String nameInTheBeginning = "";
 
 	//Example to explain the oncoming 4 lines: When you have an donald.jpg in the Elementsfolder on your tablet:
 	//	There will be an Element on position 0 with the name donald in preactions
@@ -96,16 +98,8 @@ public class ModuleSettingsActivity extends Activity {
 		String modulenumber = (intent.getStringExtra(ModuleActivity.MODULENUMBER));
 		this.currentModuleNumber = Integer.parseInt(modulenumber);
 		
-		
-		List<String> modulenames = new ArrayList<String>();
-		modulenames = mysession.getModulenames();
-		for(int i = 0; i < modulenames.size()-1; i++)
-		{
-			modulenamesArray[i] = modulenames.get(i+1);
-		}
-		mysession.setModulenames(modulenames);
-
-		
+		refreshModulelist();
+				
 		//shows the Elements at the right place and saves them in the Membervariables
 		setupDynamicElementList(mysession.getElementlist());
 
@@ -122,10 +116,48 @@ public class ModuleSettingsActivity extends Activity {
 		if((module_name == null) || (module_name.equals("")) || module_name.equals("accessibility")) module_name = "NEW MODULE";
 		title.setText("Settings of Module: " + module_name);
 	}
+	
+	protected void onResume() {
+		refreshModulelist();
+		super.onResume();
+	}
 
+	//Refreshes the modulenames in mysession and the ModuleArrayList
+	private void refreshModulelist() {
+		//refresh modulenames in mysession
+		List<Module> myModules = createModules();
+		List<String> modulenames = new ArrayList<String>();
+		for(int i = 0; i < myModules.size(); i++)
+		{
+			modulenames.add(i, myModules.get(i).getName());
+		}
+		mysession.setModulenames(modulenames);		
+		
+		for(int i = 0; i < modulenames.size()-1; i++)
+		{
+			modulenamesArray[i] = modulenames.get(i+1);
+		}
+	}
+	
+	public boolean modulenameTaken(String modulename)
+	{		
+		if(nameInTheBeginning == modulename) return false;
+		List<String> modulenames = new ArrayList<String>();
+		modulenames = mysession.getModulenames();
+		
+		for(int i = 0; i < modulenames.size(); i++)
+		{
+			if(modulenames.get(i).equals(modulename))
+			{
+			return true;
+			}
+		}
+		return false;
+	}
 
 	public void loadModuleSettings(String modulenumber) {
 
+		refreshModulelist();
 		if(Integer.parseInt(modulenumber) != -1) 
 		{
 			EditText editText2 = (EditText) findViewById(R.id.editText2); //name gets loaded
@@ -179,7 +211,12 @@ public class ModuleSettingsActivity extends Activity {
 		EditText editText2 = (EditText) findViewById(R.id.editText2);
 		String module_name = editText2.getText().toString();
 
-		if((module_name == null) || (module_name.equals(""))) Toast.makeText(getApplicationContext(), "Modulename empty", Toast.LENGTH_SHORT).show();
+		refreshModulelist();
+		if((module_name == null) || (module_name.equals("")) || (modulenameTaken(module_name)))
+		{
+			if((module_name == null) || (module_name.equals(""))) Toast.makeText(getApplicationContext(), "Modulename empty", Toast.LENGTH_SHORT).show();
+			if(modulenameTaken(module_name)) Toast.makeText(getApplicationContext(), "Modulename already taken", Toast.LENGTH_SHORT).show();
+		}
 		else 
 		{
 			onclick_save(view);
@@ -207,18 +244,24 @@ public class ModuleSettingsActivity extends Activity {
 	
 	public void onclick_save(View view)
 	{	
-		
+
 		EditText editText2 = (EditText) findViewById(R.id.editText2);
 		String module_name = editText2.getText().toString();
 
 		EditText editText1 = (EditText) findViewById(R.id.editText1);
 		String module_description = editText1.getText().toString();
+		if((module_description == null) || (module_description.equals(""))) module_description = "empty";
 		
 		int roundsToPlay = npRoundsToPlay.getValue();
 		int timeToPlay = calculateTimeToPlayInSeconds();
+		
 		//checking if Settings are ok to start the game
-		//TODO: expand this!
-		if((module_name == null) || (module_name.equals(""))) Toast.makeText(getApplicationContext(), "Modulename empty", Toast.LENGTH_SHORT).show();
+		refreshModulelist();
+		if((module_name == null) || (module_name.equals("")) || (modulenameTaken(module_name)))
+		{
+			if((module_name == null) || (module_name.equals(""))) Toast.makeText(getApplicationContext(), "Modulename empty", Toast.LENGTH_SHORT).show();
+			if(modulenameTaken(module_name)) Toast.makeText(getApplicationContext(), "Modulename already taken", Toast.LENGTH_SHORT).show();
+		}
 		else
 		{	
 			//if the modulecounter is smaller than -1 it gets set to -1
@@ -993,5 +1036,36 @@ public class ModuleSettingsActivity extends Activity {
 			});
 			return builder.create();
 		}
+	}
+	
+	private List<Module> createModules() {
+		// create container for new modules
+		List<Module> moduleContainer = new ArrayList<Module>();
+		
+		// loop through preference file for all module names
+		for(int i = 0; i <= getModulecounterOutOfPreferences(); i++)
+		{
+			//start values for error checking
+			Module currentModule = null;
+			String name = "";
+			String description = "";
+			int number = -1;
+			
+			//get the preference with currentModule information
+			String nameOfModulePref = "MODULE" + i;
+	    	SharedPreferences pref_currentModule = getSharedPreferences(nameOfModulePref, 0);  
+	        
+			// for each name found create new Module object with preference name and description name and number
+			name = pref_currentModule.getString("module_name", ACCESSIBILITY_SERVICE);
+			description = pref_currentModule.getString("module_description", ACCESSIBILITY_SERVICE);
+			number = i;
+			currentModule = new Module(number, name, description);
+			
+			// add new Module object to container
+			moduleContainer.add(currentModule);
+		}
+
+		// Return Container
+		return moduleContainer;		
 	}
 }

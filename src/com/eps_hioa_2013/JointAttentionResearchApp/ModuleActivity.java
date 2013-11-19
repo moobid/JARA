@@ -63,7 +63,7 @@ public class ModuleActivity extends ListActivity {
 		setupOnModuleClick();
 		
 	}
-	
+
 	protected void onResume() {		
 		myModules = createModules();
 		setupModuleList();
