@@ -141,7 +141,7 @@ public class ModuleSettingsActivity extends Activity {
 	
 	public boolean modulenameTaken(String modulename)
 	{		
-		if(nameInTheBeginning == modulename) return false;
+		if(nameInTheBeginning.equals(modulename)) return false;
 		List<String> modulenames = new ArrayList<String>();
 		modulenames = mysession.getModulenames();
 		
@@ -164,6 +164,7 @@ public class ModuleSettingsActivity extends Activity {
 			editText2.setText(getNameOfModule(modulenumber));
 			
 			nameInTheBeginning = getNameOfModule(modulenumber);
+			
 
 			EditText editText1 = (EditText) findViewById(R.id.editText1); //descrition gets loaded
 			editText1.setText(getDescriptionOfModule(modulenumber));
