@@ -81,7 +81,7 @@ public class ModuleSettingsActivity extends Activity {
 	private String popupMode;
 	private String[] locationArray = {"topleft", "topmid", "topright", "midleft", "midmid", "midright", "bottomleft", "bottommid", "bottomright"};
 	private String[] durationArray = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "2-10", "4-8", "1-5", "3-6", "6-10"};
-	private String[] modulenamesArray = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
+	private String[] modulenamesArray;
 	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println("ModuleSettingsActivity started");
 		super.onCreate(savedInstanceState);
@@ -131,11 +131,15 @@ public class ModuleSettingsActivity extends Activity {
 		{
 			modulenames.add(i, myModules.get(i).getName());
 		}
+		modulenames.add("startModule");
 		mysession.setModulenames(modulenames);
-		
-		for(int i = 0; i < modulenames.size()-1; i++)
+		modulenamesArray = new String[(myModules.size() + 1)];
+		for(int i = 0; i < modulenames.size(); i++)
 		{
-			modulenamesArray[i] = i + ": " + modulenames.get(i+1); //the i is the Number of the SharedPreferences; hopefully
+			if(i < (modulenames.size() - 1))
+				modulenamesArray[i] = i + ": " + modulenames.get(i); //the i is the Number of the SharedPreferences; hopefully
+			else
+				modulenamesArray[i] = modulenames.get(i); 
 		}
 	}
 	

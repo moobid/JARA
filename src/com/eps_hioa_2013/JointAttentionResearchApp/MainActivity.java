@@ -74,11 +74,11 @@ public class MainActivity extends Activity {
     	EditText editText2 = (EditText) findViewById(R.id.researcher);
     	String string_researcher = editText2.getText().toString();
 
-    	//this is here as a comment to deactivate the check if the fields are not empty
+
     	//to not get annoyed everytime you start the programm to test it
-    	if(/*((string_password == null) || (string_password.equals("")))
+    	if(((string_password == null) || (string_password.equals("")))
     	|| ((string_participant == null) || (string_participant.equals("")))
-    	|| ((string_researcher == null) || (string_researcher.equals("")))*/false)
+    	|| ((string_researcher == null) || (string_researcher.equals(""))))
     	{
     		//shows error if one field is empty
     		Toast.makeText(getApplicationContext(), "One of the fields is empty", Toast.LENGTH_SHORT).show();
@@ -94,20 +94,17 @@ public class MainActivity extends Activity {
     		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
         	intent.putExtras(bundle);
         	
-        	
-        	
-        	
-        	//some code as comments due to testfriendlieness
+
         	//following two lines: The password gets checked if it is correct        	
-        	/*if(checkpassword(string_password) == true)*/ startActivity(intent);
-        	//else Toast.makeText(getApplicationContext(), "Wrong password", Toast.LENGTH_SHORT).show();
+        	if(checkpassword(string_password) == true) startActivity(intent);
+        	else Toast.makeText(getApplicationContext(), "Invalid password", Toast.LENGTH_SHORT).show();
     	}
     	
     }
 	
 	public Boolean checkpassword(String password)
 	{
-		if(password == "admin") return true;
+		if(password.equals("admin")) return true;
 		else return false;
 	}
 	
