@@ -67,11 +67,11 @@ public class GameActivity extends Activity {
 
 	private String timedLocation;
 	private Element timedElement;
-	private Timer SignalAppearTimer;
-	private Timer timerduration;
 	private Element currentReward;
 	private Element currentSignal;
 	private Timer nextRoundtimer;
+	private Timer SignalAppearTimer;
+	private Timer timerduration;
 	private int moduleCounter;
 
 	private Module mymodule;//Module used in all the code
@@ -138,8 +138,7 @@ public class GameActivity extends Activity {
 				}
 			}
 		}
-		elementsToStatistics(mymodule, modulenumber);
-		//Extra modules loading.
+		
 		for(int i = 0; i < mymodule.getPreactions().size(); i++)
 		{
 			Element currentPreaction = mymodule.getPreactions().get(i);			
@@ -154,6 +153,9 @@ public class GameActivity extends Activity {
 				moduleCounter ++;
 			}
 		}
+		
+		elementsToStatistics(mymodule, modulenumber);
+		//Extra modules loading.
 	}
 
 
@@ -166,7 +168,8 @@ public class GameActivity extends Activity {
 				Element e = mymodule.getPreactions().get(i);
 				String name = e.getName();
 				String location = getElementLocation(modulenumber, name + "Preaction");
-				String startModule = ""; 
+				String nextModuleNumber = getElementNextModuleNumber(modulenumber, e.getName() + "Preaction3");
+				String startModule = getNameOfModule(nextModuleNumber); 
 				mysession.updateStatistics(name + ", " + location + ", " + startModule);
 			}
 			mysession.updateStatistics("");
