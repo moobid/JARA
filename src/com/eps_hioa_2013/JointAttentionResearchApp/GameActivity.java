@@ -110,6 +110,7 @@ public class GameActivity extends Activity {
 			startDurationTimer();
 	}
 
+
 	//Load elements belonging to this module and put them in the appropriate arrays.
 	private void loadGameInfo( Module mymodule, String modulenumber, String moduleName) {
 		int size = mysession.getElementlist().size();
@@ -239,6 +240,7 @@ public class GameActivity extends Activity {
 				}
 				else
 				{
+					mysession.updateStatistics(currentTime + ", Signal only stage got loaded");	
 					LoadSignalStage(false); //false because no action. time option is for how long signal appears until reward.
 					//no action but signal ? show signal for specified time
 				}
@@ -379,6 +381,8 @@ public class GameActivity extends Activity {
 				stagecounter++;
 				nextStage();
 			}	
+			else 
+				extraMessage = ", Invalid action got pressed";
 			break;
 		default:
 			break;
