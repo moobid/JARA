@@ -348,7 +348,7 @@ public class GameActivity extends Activity {
 						{
 							checker = true;	
 							mymodule = extraModules.get(mymodule.getPreactions().get(i).getModuleNumber());
-							modulenumber = mymodule.getNumberString();
+							modulenumber = mymodule.getNumberString();												
 							stagecounter = 0;
 							
 							currentSignal = mymodule.getRandomSignalElement();

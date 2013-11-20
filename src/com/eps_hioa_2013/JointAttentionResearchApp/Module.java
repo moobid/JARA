@@ -6,8 +6,8 @@ import java.util.List;
 public class Module{
 	//private File Settingsfile; //should be the txt file, where the settings of the module are saved //not used anymore
 
-	private static int number; //number of the module
-	private static String numberString;
+	private int number; //number of the module
+	private String numberString;
 	private String name;
 	private String description;
 	private List<Element> myPreactions = new ArrayList<Element>();
@@ -57,12 +57,12 @@ public class Module{
 		return description;
 	}
 
-	public static int getNumber() {
+	public int getNumber() {
 		return number;
 	}
 
-	public static void setNumber(int number) {
-		Module.number = number;
+	public void setNumber(int number) {
+		this.number = number;
 	}
 
 	public void addElement(int stage, Element gameElement)
