@@ -79,6 +79,7 @@ public class ModuleSettingsActivity extends Activity {
 	private String currentDurationForPopUp;
 	private String currentStartModule;
 	private String popupMode;
+	private String durationDialogTitle = "Select the duration the Element should appear on the screen";
 	private String[] locationArray = {"topleft", "topmid", "topright", "midleft", "midmid", "midright", "bottomleft", "bottommid", "bottomright"};
 	private String[] durationArray = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "2-10", "4-8", "1-5", "3-6", "6-10"};
 	private String[] modulenamesArray;
@@ -644,6 +645,7 @@ public class ModuleSettingsActivity extends Activity {
 				buttonSignals2.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+					durationDialogTitle = "Select the duration after which the Signal should appear";
 					popupMode = "signalDuration0"; //determines the popupMode;
 					showElementDurationDialog(); //shows Popup
 					}
@@ -663,6 +665,7 @@ public class ModuleSettingsActivity extends Activity {
 				buttonSignals4.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+					durationDialogTitle = "Select the duration after which the Signal should disappear again";
 					popupMode = "signalDuration1"; //determines the popupMode
 					showElementDurationDialog(); //shows Popup
 					}
@@ -723,6 +726,7 @@ public class ModuleSettingsActivity extends Activity {
 				buttonRewards2.get(rewardsCounter).setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+					durationDialogTitle = "Select the duration for the Reward so be visible";
 					popupMode = "rewardDuration"; //determines the popupMode;
 					showElementDurationDialog(); //shows Popup
 					}
@@ -961,7 +965,7 @@ public class ModuleSettingsActivity extends Activity {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle("Select the duration the Element should appear on the screen")
+			builder.setTitle(durationDialogTitle)
 			.setItems(durationArray, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// The 'which' argument contains the index position
