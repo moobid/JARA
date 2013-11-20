@@ -78,7 +78,6 @@ public class ModuleActivity extends ListActivity {
 		bundle = new Bundle();    		
 		bundle.putSerializable(EXTRA_SESSION, (Serializable) mysession);
     	intent.putExtras(bundle);
-		mysession.updateStatistics("Settings of a Module got loaded");
 		startActivity(intent);
 	}
 	

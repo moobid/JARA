@@ -226,7 +226,6 @@ public class ModuleSettingsActivity extends Activity {
 			if (ElementHasLocation == false); //do nothing	 		
 			else
 			{	
-				mysession.updateStatistics("Clicked on Save & Start Module");
 				Intent intent = new Intent(this, GameActivity.class);
 				intent.putExtra(MODULENUMBER, Integer.toString(currentModuleNumber));
 				intent.putExtra(EXTRA_ROUNDSTOPLAY, npRoundsToPlay.getValue());
@@ -385,7 +384,6 @@ public class ModuleSettingsActivity extends Activity {
 			for(int i = 0; i < buttonPreactions3.size(); i++)
 			{
 				String buttontext = buttonPreactions3.get(i).getText().toString();
-				String test = buttonPreactions3.get(i).getTag() + "startModule " +  buttontext;
 				if(buttontext.equals("startModule")) ;//do nothing
 				else editor.putString(buttonPreactions3.get(i).getTag() + "startModule", buttontext);
 			}

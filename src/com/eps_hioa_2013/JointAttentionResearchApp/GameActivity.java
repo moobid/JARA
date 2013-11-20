@@ -1,6 +1,5 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
@@ -22,16 +21,10 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Chronometer;
-import android.widget.Chronometer.OnChronometerTickListener;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.VideoView;
 
 @SuppressLint("ValidFragment")
@@ -50,10 +43,6 @@ public class GameActivity extends Activity {
 	private int roundcounterlimit;
 	private Date DateStartedPlaying = null;
 	private int timeToPlayInSeconds;
-	//private Timecounter timecounter;
-
-	private boolean PreactionPresent = true;
-
 
 	private String modulenumber;
 	private String mainModulenumber;
@@ -107,7 +96,6 @@ public class GameActivity extends Activity {
 		initializeViews(); //initializes the views (Imagebuttons)
 
 		mysession.updateStatistics("\n\n" +
-				"Started Playing a module\n" +
 				"Started playing: " + DateStartedPlaying + "\n" +
 				"Modulename: " + getNameOfModule(modulenumber) + "\n" +
 				"Moduledescription: " + getDescriptionOfModule(modulenumber) + "\n" +
@@ -115,7 +103,7 @@ public class GameActivity extends Activity {
 				"Rounds to play: " + roundcounterlimit + "\n"			
 				);
 
-		loadGameInfo(mymodule, modulenumber);		
+		loadGameInfo(mymodule, modulenumber, "MainModule");		
 		nextRound();				
 		stopWatch.start();	
 		if(timeToPlayInSeconds > 0)
@@ -123,9 +111,11 @@ public class GameActivity extends Activity {
 	}
 
 	//Load elements belonging to this module and put them in the appropriate arrays.
-	private void loadGameInfo( Module mymodule, String modulenumber) {
+	private void loadGameInfo( Module mymodule, String modulenumber, String moduleName) {
 		int size = mysession.getElementlist().size();
+		String currentModuleName =  moduleName + ":";
 		String currentStage = "";
+		mysession.updateStatistics(currentModuleName);
 		for(int o = 0; o < 4; o++)
 		{
 			currentStage = stages[o];
@@ -138,7 +128,8 @@ public class GameActivity extends Activity {
 				}
 			}
 		}
-		
+		elementsToStatistics(mymodule, modulenumber);
+		//Extra modules loading.
 		for(int i = 0; i < mymodule.getPreactions().size(); i++)
 		{
 			Element currentPreaction = mymodule.getPreactions().get(i);			
@@ -149,13 +140,13 @@ public class GameActivity extends Activity {
 				currentPreaction.setModuleNumber(moduleCounter);
 				Module currentModule = new Module(nextModuleNumber);
 				extraModules.add(currentModule);
-				loadGameInfo( currentModule, currentModule.getNumberString());
+				loadGameInfo( currentModule, currentModule.getNumberString(), "SubModule " + getNameOfModule(nextModuleNumber));
 				moduleCounter ++;
 			}
 		}
 		
-		elementsToStatistics(mymodule, modulenumber);
-		//Extra modules loading.
+		
+		
 	}
 
 
@@ -752,7 +743,7 @@ public class GameActivity extends Activity {
 	{	
 		String nameOfModulePref = "MODULE" + i;
 		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
-		String nameOfModule = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
+		String nameOfModule = pref_modulesettings.getString("module_name", "");
 		return nameOfModule;				
 	}
 
@@ -831,6 +822,7 @@ public class GameActivity extends Activity {
 		//Button.pngPreaction3startModule 0: kdl
 		return moduleNumber;
 	}
+
 
 	private String convertTime(long millis)
 	{

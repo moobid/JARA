@@ -1,6 +1,5 @@
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -9,11 +8,11 @@ import java.util.Date;
 import java.util.List;
 
 import android.os.Environment;
-import android.widget.CheckBox;
 
 //must implement Serializable to be able to get passed from one activity to another
 public class Session implements Serializable {
 	
+	private static final long serialVersionUID = 4308126669324020168L; //Generated because of Serializable
 	private String password;
 	private String participant;
 	private String researcher;
@@ -21,16 +20,8 @@ public class Session implements Serializable {
 	private Date currentDate;
 	private Date deadlineDate = null;
 	
-	private String sessionInfo; //Simon: not sure what this is for:(
-	
 	private String filename;
-	private String pathname ="/sdcard/";
-	private File statisticsPath;
-	private File statisticsFile;
-	
 	PrintWriter pw = null;
-	
-    private int mData;
 
     private List<Element> elementlist = new ArrayList<Element>();
     
