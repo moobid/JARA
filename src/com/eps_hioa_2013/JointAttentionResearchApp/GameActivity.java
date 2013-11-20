@@ -56,6 +56,7 @@ public class GameActivity extends Activity {
 
 
 	private String modulenumber;
+	private String mainModulenumber;
 	private Session mysession;	
 	private String[] stages = {"preaction", "signal", "action", "reward"};
 	private ArrayList<Integer> validPreactionID;
@@ -67,9 +68,11 @@ public class GameActivity extends Activity {
 	private String timedLocation;
 	private Element timedElement;
 	private Timer SignalAppearTimer;
+	private Timer timerduration;
 	private Element currentReward;
 	private Element currentSignal;
 	private Timer nextRoundtimer;
+	private int moduleCounter;
 
 	private Module mymodule;//Module used in all the code
 	private Module mainModule; //The parent module, starting point after new round
@@ -97,6 +100,7 @@ public class GameActivity extends Activity {
 		DateStartedPlaying = new Date();
 		mymodule = new Module(modulenumber);
 		mainModule = mymodule;
+		mainModulenumber = modulenumber;
 		stopWatch = new StopWatch();
 		extraModules = new ArrayList<Module>();
 
@@ -139,13 +143,15 @@ public class GameActivity extends Activity {
 		for(int i = 0; i < mymodule.getPreactions().size(); i++)
 		{
 			Element currentPreaction = mymodule.getPreactions().get(i);			
-			String nextModuleNumber = getElementNextModuleNumber(modulenumber, currentPreaction.getName());
-			currentPreaction.setModuleNumber(Integer.valueOf(nextModuleNumber));
+			String nextModuleNumber = getElementNextModuleNumber(modulenumber, currentPreaction.getName() + "Preaction3");
 			if(!nextModuleNumber.isEmpty())
 			{
+				
+				currentPreaction.setModuleNumber(moduleCounter);
 				Module currentModule = new Module(nextModuleNumber);
 				extraModules.add(currentModule);
 				loadGameInfo( currentModule, currentModule.getNumberString());
+				moduleCounter ++;
 			}
 		}
 	}
@@ -290,7 +296,11 @@ public class GameActivity extends Activity {
 	}
 
 	private void nextRound() {		
-		mymodule = mainModule;
+		if(mymodule != mainModule)
+			mymodule = mainModule;	
+		if(modulenumber != mainModulenumber)
+			modulenumber = mainModulenumber;
+		
 		currentSignal = mymodule.getRandomSignalElement();
 		currentReward = mymodule.getRandomRewardElement();
 		String signal = "";
@@ -309,11 +319,10 @@ public class GameActivity extends Activity {
 	}
 
 
-
 	//Will create a timer that stops the game when the time has passed.
 	private void startDurationTimer() {
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
+		timerduration = new Timer();
+		timerduration.schedule(new TimerTask() {
 			@Override
 			public void run() {
 				stopGame("The set duration has been reached"); 
@@ -338,17 +347,34 @@ public class GameActivity extends Activity {
 				{
 					if(mymodule.getPreactions().get(i).getImageButtonID() == view.getId())
 					{
-						checker = true;						
-						mymodule = extraModules.get(mymodule.getPreactions().get(i).getModuleNumber());
-						stagecounter = 0;
+
+						if(mymodule.getPreactions().get(i).getModuleNumber() != -1)
+						{
+							checker = true;	
+							mymodule = extraModules.get(mymodule.getPreactions().get(i).getModuleNumber());
+							modulenumber = mymodule.getNumberString();
+							stagecounter = 0;
+							
+							currentSignal = mymodule.getRandomSignalElement();
+							currentReward = mymodule.getRandomRewardElement();
+							String signal = "";
+							String reward = "";
+							if(currentSignal != null)
+								signal = (", signal set: " + currentSignal.getName());
+							if(currentReward != null) 
+								reward = (", reward set: " + currentReward.getName());	
+							String currentTime = convertTime(stopWatch.getTime());
+							mysession.updateStatistics(currentTime +  ", " + signal + reward);
+						}
+
 					}
 				}
 				if(checker == false)
 				{			
-				stagecounter++;
+					stagecounter++;
 				}
 				nextStage();
-				
+
 			}	
 			break;
 		case 1: //1 = Action
@@ -445,6 +471,7 @@ public class GameActivity extends Activity {
 
 						@Override
 						public void run() {
+							getImageButton(timedLocation).setImageURI(null);
 							stagecounter = 1;
 							nextStage();
 						}
@@ -490,8 +517,19 @@ public class GameActivity extends Activity {
 		String currentTime = convertTime(stopWatch.getTime());
 		mysession.updateStatistics(currentTime + ", Game ended, " + message);
 		endMessage = message;
+		stopTimers();
 		DialogFragment newFragment = new StopModuleDialog();
 		newFragment.show(getFragmentManager(), "endGame");	    
+	}
+
+	public void stopTimers()
+	{
+		if(SignalAppearTimer != null)
+			SignalAppearTimer.cancel();
+		if(nextRoundtimer != null)
+			nextRoundtimer.cancel();
+		if(timerduration != null)
+			timerduration.cancel();
 	}
 
 	public class StopModuleDialog extends DialogFragment {		
@@ -500,7 +538,7 @@ public class GameActivity extends Activity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setMessage(endMessage)
 			.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
+				public void onClick(DialogInterface dialog, int id) {					
 					finish();
 				}
 			});
@@ -508,6 +546,7 @@ public class GameActivity extends Activity {
 			return builder.create();
 		}
 	}
+
 
 	//removes everything on screen
 	private void resetScreen() {
@@ -527,7 +566,8 @@ public class GameActivity extends Activity {
 	//Checks which type of element must be loaded
 	private void loadReward(Element element) {
 
-		nextRoundtimer.cancel();
+		if(nextRoundtimer != null)
+			nextRoundtimer.cancel();
 		if(element instanceof ElementPicture)
 		{
 			String location = getElementLocation(modulenumber, element.getName() + "Reward"); 
@@ -627,6 +667,7 @@ public class GameActivity extends Activity {
 	{
 		if(myButton == null)
 			stopGame("An picture has no location set");
+		else
 		myButton.setImageURI(Uri.parse(myPicture.getPath()));		
 	}
 
@@ -774,9 +815,18 @@ public class GameActivity extends Activity {
 	}
 
 
-	private String getElementNextModuleNumber(String modulenumber2, String name) {
-		// TODO Auto-generated method stub
-		return null;
+	private String getElementNextModuleNumber(String i, String elementName) {
+		String nameOfModulePref = "MODULE" + i;
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);
+		String moduleNumber = "";
+		String info =  pref_modulesettings.getString(elementName + "startModule", "");
+		if(!info.isEmpty())
+		{
+			int loc = info.indexOf(':');
+			moduleNumber = info.substring(0, loc);
+		}
+		//Button.pngPreaction3startModule 0: kdl
+		return moduleNumber;
 	}
 
 	private String convertTime(long millis)
@@ -788,5 +838,12 @@ public class GameActivity extends Activity {
 				TimeUnit.MILLISECONDS.toSeconds(millis) - 
 				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))); 
 		return time;
+	}
+
+
+	@Override // TODO you can override this button O.o
+	public void onBackPressed() {
+		stopTimers();
+		finish();
 	}
 }

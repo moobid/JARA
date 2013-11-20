@@ -385,6 +385,7 @@ public class ModuleSettingsActivity extends Activity {
 			for(int i = 0; i < buttonPreactions3.size(); i++)
 			{
 				String buttontext = buttonPreactions3.get(i).getText().toString();
+				String test = buttonPreactions3.get(i).getTag() + "startModule " +  buttontext;
 				if(buttontext.equals("startModule")) ;//do nothing
 				else editor.putString(buttonPreactions3.get(i).getTag() + "startModule", buttontext);
 			}

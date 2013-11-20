@@ -17,6 +17,7 @@ public class Element implements Serializable {
 	{
 		setType(myType);
 		setPath(myPath);
+		moduleNumber = -1;
 	}
 	
 	public int getModuleNumber()

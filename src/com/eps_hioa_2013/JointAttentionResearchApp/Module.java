@@ -42,7 +42,7 @@ public class Module{
 		Element element = null;
 		if(!myRewards.isEmpty())
 		{
-			element = myRewards.get((int)(Math.random() * (myRewards.size()-1)));
+			element = myRewards.get((int)(Math.random() * (myRewards.size())));
 		}
 		return element;
 	}
@@ -110,7 +110,7 @@ public class Module{
 		Element element = null;
 		if(!mySignals.isEmpty())
 		{
-			element = mySignals.get((int)(Math.random() * (mySignals.size()-1)));
+			element = mySignals.get((int)(Math.random() * (mySignals.size())));
 		}
 		return element;
 	}
