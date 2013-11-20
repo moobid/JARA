@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
 	//valid extensions
 	private String[] videoExtensions  = {"wav", "vlc", "gif", "wmv"};
 	private String[] soundExtensions  = {"mp3"};
-	private String[] pictureExtensions  = {"jpg", "png"};
+	private String[] pictureExtensions  = {"jpg", "png", "gif"};
 	
 	Bundle bundle;
 	
