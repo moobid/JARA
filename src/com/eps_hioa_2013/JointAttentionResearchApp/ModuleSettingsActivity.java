@@ -81,7 +81,8 @@ public class ModuleSettingsActivity extends Activity {
 	private String popupMode;
 	private String durationDialogTitle = "Select the duration the Element should appear on the screen";
 	private String[] locationArray = {"topleft", "topmid", "topright", "midleft", "midmid", "midright", "bottomleft", "bottommid", "bottomright"};
-	private String[] durationArray = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "2-10", "4-8", "1-5", "3-6", "6-10"};
+	private String[] durationArray0 = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "2-10", "4-8", "1-5", "3-6", "6-10"};
+	private String[] durationArray1 = {"0", "0.1", "0.2", "0.3", "0.4", "0.6", "0.8", "0.1-0.3", "0.2-0.4", "0.3-0.6", "0.5-1", "0.8-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "2-10", "4-8", "1-5", "3-6", "6-10"};
 	private String[] modulenamesArray;
 	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println("ModuleSettingsActivity started");
@@ -132,12 +133,13 @@ public class ModuleSettingsActivity extends Activity {
 		{
 			modulenames.add(i, myModules.get(i).getName());
 		}
+		modulenames.add("use as Placeholder");
 		modulenames.add("startModule");
 		mysession.setModulenames(modulenames);
-		modulenamesArray = new String[(myModules.size() + 1)];
+		modulenamesArray = new String[(myModules.size() + 2)];	//+2 because of the two Elements which got added
 		for(int i = 0; i < modulenames.size(); i++)
 		{
-			if(i < (modulenames.size() - 1))
+			if(i < (modulenames.size() - 2)) //-2 because of the two Elements which got added
 				modulenamesArray[i] = i + ": " + modulenames.get(i); //the i is the Number of the SharedPreferences; hopefully
 			else
 				modulenamesArray[i] = modulenames.get(i); 
@@ -647,7 +649,7 @@ public class ModuleSettingsActivity extends Activity {
 					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
 					durationDialogTitle = "Select the duration after which the Signal should appear";
 					popupMode = "signalDuration0"; //determines the popupMode;
-					showElementDurationDialog(); //shows Popup
+					showElementDuration0Dialog(); //shows Popup
 					}
 				});	
 
@@ -665,9 +667,9 @@ public class ModuleSettingsActivity extends Activity {
 				buttonSignals4.get(signalsCounter).setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
-					durationDialogTitle = "Select the duration after which the Signal should disappear again";
+					durationDialogTitle = "Action selected: Duration of the Signal to be visible OR No Action sel.: Duration of the delay to show the reward";
 					popupMode = "signalDuration1"; //determines the popupMode
-					showElementDurationDialog(); //shows Popup
+					showElementDuration1Dialog(); //shows Popup
 					}
 				});
 				System.out.println("1");
@@ -728,7 +730,7 @@ public class ModuleSettingsActivity extends Activity {
 					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
 					durationDialogTitle = "Select the duration for the Reward so be visible";
 					popupMode = "rewardDuration"; //determines the popupMode;
-					showElementDurationDialog(); //shows Popup
+					showElementDuration0Dialog(); //shows Popup
 					}
 				});
 			}
@@ -884,8 +886,12 @@ public class ModuleSettingsActivity extends Activity {
 		newFragment.show(getFragmentManager(), "dialogsettings");
 	}
 	
-	public void showElementDurationDialog() {
-		DialogFragment newFragment = new ElementDurationDialog();
+	public void showElementDuration0Dialog() {
+		DialogFragment newFragment = new ElementDuration0Dialog();
+		newFragment.show(getFragmentManager(), "dialogsettings");
+	}
+	public void showElementDuration1Dialog() {
+		DialogFragment newFragment = new ElementDuration1Dialog();
 		newFragment.show(getFragmentManager(), "dialogsettings");
 	}
 	
@@ -961,18 +967,18 @@ public class ModuleSettingsActivity extends Activity {
 	
 	@SuppressLint("ValidFragment")
 	//Duration of an Element Popup
-	public class ElementDurationDialog extends DialogFragment {
+	public class ElementDuration0Dialog extends DialogFragment {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setTitle(durationDialogTitle)
-			.setItems(durationArray, new DialogInterface.OnClickListener() {
+			.setItems(durationArray0, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// The 'which' argument contains the index position
 					// of the selected item					
-					currentDurationForPopUp = durationArray[which];
+					currentDurationForPopUp = durationArray0[which];
 					if(popupMode.equals("signalDuration0")) SetDuration0ButtonTextSignal();
-					if(popupMode.equals("signalDuration1")) SetDuration1ButtonTextSignal();
+					
 					if(popupMode.equals("rewardDuration")) SetDurationButtonTextReward();
 				}
 			});
@@ -995,16 +1001,6 @@ public class ModuleSettingsActivity extends Activity {
 		}
 		buttonSignals2.get(i).setText(currentDurationForPopUp); //refreshes buttontext at once!
 	}
-	
-	void SetDuration1ButtonTextSignal()
-	{
-		int i = 0;
-		for(; i < signalsCounter; i++)
-		{
-			if((signals.get(i).getName() + "Signal4").equals(currentElement)) break;
-		}
-		buttonSignals4.get(i).setText(currentDurationForPopUp); //refreshes buttontext at once!
-	}
 
 	void SetDurationButtonTextReward()
 	{
@@ -1016,6 +1012,34 @@ public class ModuleSettingsActivity extends Activity {
 		buttonRewards2.get(i).setText(currentDurationForPopUp); //refreshes buttontext at once!
 	}
 	
+	@SuppressLint("ValidFragment")
+	//Duration of an Element Popup
+	public class ElementDuration1Dialog extends DialogFragment {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(durationDialogTitle)
+			.setItems(durationArray1, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					// The 'which' argument contains the index position
+					// of the selected item					
+					currentDurationForPopUp = durationArray1[which];
+					int i = 0;
+					for(; i < signalsCounter; i++)
+					{
+						if((signals.get(i).getName() + "Signal4").equals(currentElement)) break;
+					}
+					buttonSignals4.get(i).setText(currentDurationForPopUp); //refreshes buttontext at once!
+				}
+			});
+			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					// User cancelled the dialog
+				}
+			});
+			return builder.create();
+		}
+	}
 	
 	@SuppressLint("ValidFragment")
 	//Duration of an Element Popup	

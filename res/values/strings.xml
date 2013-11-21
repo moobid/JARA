@@ -13,7 +13,7 @@
     <string name="participant">Participant</string>
     <string name="researcher">Researcher</string>
     <string name="date">Date</string>
-    <string name="password_text">Type in Password</string>
+    <string name="password_text">Type in correct Password</string>
     <string name="participant_text">Type in Participant</string>
     <string name="researcher_text">Type in Researcher</string>
     <string name="select_module">Select module</string>

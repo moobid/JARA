@@ -68,7 +68,7 @@ public class GameActivity extends Activity {
 	private ArrayList<Module> extraModules;//Container for all child modules
 
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);
 
 		//set full screen
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -82,7 +82,7 @@ public class GameActivity extends Activity {
 		Intent intent = getIntent();
 		validPreactionID = new ArrayList<Integer>();
 		validActionID = new ArrayList<Integer>();
-		mysession = (Session) intent.getSerializableExtra(ModuleSettingsActivity.EXTRA_SESSION);		
+		mysession = (Session) intent.getSerializableExtra(ModuleSettingsActivity.EXTRA_SESSION);
 		modulenumber = (intent.getStringExtra(ModuleSettingsActivity.MODULENUMBER));
 		roundcounterlimit = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_ROUNDSTOPLAY, 0);
 		timeToPlayInSeconds = (int) intent.getIntExtra(ModuleSettingsActivity.EXTRA_TIME, 0); 
