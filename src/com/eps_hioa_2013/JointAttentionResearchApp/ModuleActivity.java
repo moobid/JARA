@@ -55,11 +55,9 @@ public class ModuleActivity extends ListActivity {
 			modulenames.add(i, myModules.get(i).getName());
 		}
 		mysession.setModulenames(modulenames);
-		
-		
+				
 		setupModuleList(); //for the list 
 		setupOnModuleClick();
-		
 	}
 
 	protected void onResume() {		
@@ -90,8 +88,7 @@ public class ModuleActivity extends ListActivity {
 	                long id) {
 	            
 	            String modulename = ((TextView)view).getText().toString();
-	            
-	            
+	            	            
 	            for(int i = 0; i <= getModulecounterOutOfPreferences(); i++)
 	    		{
 //	            	String nameOfModulePref = "MODULE"+Integer.toString(i);
@@ -100,16 +97,15 @@ public class ModuleActivity extends ListActivity {
 	            	
 	            	Module currentmodule = myModules.get(i);
 		            String name = currentmodule.getName();
-
 		            
-	            	if(name.equals(modulename))
+		            if(name.equals(modulename))
 	            	{
 	            		loadSettingsOfModule(i);
 	            		i = getModulecounterOutOfPreferences();
 	            	}
-	    		}           	            
+	    		}
 	        }
-	    });		
+	    });
 	}
 	
 	//sends the user to the settings of each module (to ModuleSettingsActivity)

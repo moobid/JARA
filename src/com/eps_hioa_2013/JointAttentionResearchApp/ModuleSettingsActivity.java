@@ -45,8 +45,8 @@ public class ModuleSettingsActivity extends Activity {
 	//	There will be an Element on position 0 with the name donald in preactions
 	//	The appropriate Button is in buttonPreactions on position 0
 	//	The appropriate Checkbox is in checkboxPreactions also on position 0
-	//In that way, the Element, Button and the CheckBox can be connected to each other.
-	//The donald Element will of course also be in Signals and Actions because its a picture
+	//  In that way, the Element, Button and the CheckBox can be connected to each other.
+	//  The donald Element will of course also be in Signals and Actions because its a picture
 	private List<CheckBox> checkboxPreactions = new ArrayList<CheckBox>();
 	private List<Button> buttonPreactions = new ArrayList<Button>();	//locationbutton
 	private List<Button> buttonPreactions3 = new ArrayList<Button>(); //modulestarterbutton
@@ -99,9 +99,9 @@ public class ModuleSettingsActivity extends Activity {
 		mysession = (Session) intent.getSerializableExtra(ModuleActivity.EXTRA_SESSION);
 		String modulenumber = (intent.getStringExtra(ModuleActivity.MODULENUMBER));
 		this.currentModuleNumber = Integer.parseInt(modulenumber);
-		
+
 		refreshModulelist();
-				
+
 		//shows the Elements at the right place and saves them in the Membervariables
 		setupDynamicElementList(mysession.getElementlist());
 
@@ -154,16 +154,12 @@ public class ModuleSettingsActivity extends Activity {
 		
 		for(int i = 0; i < modulenames.size(); i++)
 		{
-			if(modulenames.get(i).equals(modulename))
-			{
-			return true;
-			}
+			if(modulenames.get(i).equals(modulename)) return true;
 		}
 		return false;
 	}
 
 	public void loadModuleSettings(String modulenumber) {
-
 		refreshModulelist();
 		if(Integer.parseInt(modulenumber) != -1) 
 		{
@@ -172,7 +168,6 @@ public class ModuleSettingsActivity extends Activity {
 			
 			nameInTheBeginning = getNameOfModule(modulenumber);
 			
-
 			EditText editText1 = (EditText) findViewById(R.id.editText1); //descrition gets loaded
 			editText1.setText(getDescriptionOfModule(modulenumber));
 			
@@ -185,7 +180,6 @@ public class ModuleSettingsActivity extends Activity {
 			npSeconds.setValue(seconds);
 			
 			
-
 			for(int i = 0; i < preactionsCounter; i++) //the states of all checkboxes get loaded
 			{	    		
 				Boolean b = getBooleanOfModule(modulenumber, preactions.get(i).getName() + "preaction");
@@ -211,7 +205,6 @@ public class ModuleSettingsActivity extends Activity {
 			}
 			
 			Toast.makeText(getApplicationContext(), "Module" + this.currentModuleNumber + ": " + getNameOfModule(modulenumber) + " loaded", Toast.LENGTH_SHORT).show();
-
 		}
 		else {/*nothing to do here*/}
 	}
@@ -275,12 +268,15 @@ public class ModuleSettingsActivity extends Activity {
 		{	
 			//if the modulecounter is smaller than -1 it gets set to -1
 			if(getModulecounterOutOfPreferences() < -1) resetModulecounterInPreferences();
-	
 			
+			//for creating the very first module after installation
+			if(getFirstStartUpIntOutOfPreferences() == 0) resetModulecounterInPreferences();
+			setTo1FirstStartUpIntInPreferences();
+					
 			String nameForModule = null;
 			if(this.currentModuleNumber == -1) //jumps in here if new modules gets added
 			{
-				//modulecounter gets iterated
+				//modulecounter gets incremented
 				incrementModulecounterInPreferences();     	
 				//the Name for the new Module gets created. It is like MODULE0, MODULE1, MODULE2, ...
 				nameForModule = "MODULE"+getModulecounterOutOfPreferences();
@@ -290,8 +286,7 @@ public class ModuleSettingsActivity extends Activity {
 			{
 				nameForModule = "MODULE"+this.currentModuleNumber;
 			}
-	
-	
+		
 			//saves the variables into the ShardPreferences for the current Module 
 			SharedPreferences pref_modulesettings = getSharedPreferences(nameForModule, 0);
 			SharedPreferences.Editor editor = pref_modulesettings.edit();       
@@ -452,10 +447,8 @@ public class ModuleSettingsActivity extends Activity {
 				Toast.makeText(getApplicationContext(), "Saved as Module" + this.currentModuleNumber + ": " + getNameOfModule(Integer.toString(currentModuleNumber)), Toast.LENGTH_SHORT).show();
 				finish();
 				//goes back to last Activity (ModuleActivity)
-			}
-			 
+			}			 
 		}
-
 	}
 
 	private void setupDynamicElementList(List<Element> elements)
@@ -559,8 +552,6 @@ public class ModuleSettingsActivity extends Activity {
 			newTablerow.addView(buttonPreactions.get(preactionsCounter));	
 			newTablerow.addView(buttonPreactions3.get(actionsCounter));
 		}
-
-		
 
 		if(elementType == "Actions"){
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Action");
@@ -682,8 +673,7 @@ public class ModuleSettingsActivity extends Activity {
 			
 			newTablerow.addView(buttonSignals.get(signalsCounter)); 
 			newTablerow.addView(buttonSignals2.get(signalsCounter));	
-			newTablerow.addView(buttonSignals4.get(signalsCounter));	
-		
+			newTablerow.addView(buttonSignals4.get(signalsCounter));			
 		}
 
 		if(elementType == "Rewards"){
@@ -701,7 +691,7 @@ public class ModuleSettingsActivity extends Activity {
 
 			newTablerow.addView(checkboxRewards.get(rewardsCounter));
 			
-				//creates new Button and sets it also into the Tablerow
+			//creates new Button and sets it also into the Tablerow
 			buttonRewards.add(rewardsCounter, new Button(this));
 			buttonRewards.get(rewardsCounter).setTag(elementName + "Reward");
 			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
@@ -739,8 +729,7 @@ public class ModuleSettingsActivity extends Activity {
 				buttonRewards2.get(rewardsCounter).setVisibility(View.GONE);
 			}
 			newTablerow.addView(buttonRewards.get(rewardsCounter)); 
-			newTablerow.addView(buttonRewards2.get(rewardsCounter));
-			
+			newTablerow.addView(buttonRewards2.get(rewardsCounter));			
 		}
 
 		if(table == null){ //error
@@ -769,9 +758,21 @@ public class ModuleSettingsActivity extends Activity {
 		int seconds = npSeconds.getValue();	
 		return ((minutes*60)+seconds);
 	}
+	
+	public void setTo1FirstStartUpIntInPreferences() {		
+		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0);
+		SharedPreferences.Editor editor = pref_modulecounter.edit();
+		editor.putInt("firstTimeInt", 1);
+		editor.commit();
+	}
+	
+	public int getFirstStartUpIntOutOfPreferences() {
+		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
+		int FirstStartUpInt = pref_modulecounter.getInt("firstTimeInt", 0);
+		return FirstStartUpInt;
+	}
 
 	//returns the counter for the modules
-	//this Method is also present in ModuleActivity.java; This should be solved in a better way
 	public int getModulecounterOutOfPreferences() {
 		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0); 
 		int modulecounter = pref_modulecounter.getInt("modulecounter", 0);
@@ -786,6 +787,7 @@ public class ModuleSettingsActivity extends Activity {
 		editor.putInt("modulecounter", count);
 		editor.commit();
 	}
+
 
 	//decrements the modulecounter
 	public void decrementModulecounterInPreferences() {		
@@ -838,8 +840,6 @@ public class ModuleSettingsActivity extends Activity {
 		return roundsToPlay;
 	}
 	
-
-
 	public Boolean getBooleanOfModule(String i, String elementName)
 	{	
 		String nameOfModulePref = "MODULE" + i;
@@ -937,6 +937,7 @@ public class ModuleSettingsActivity extends Activity {
 		}
 		buttonPreactions.get(i).setText(currentLocation); //refreshes buttontext at once!
 	}
+	
 	void SetLocationButtonTextSignal()
 	{
 		int i = 0;
@@ -946,6 +947,7 @@ public class ModuleSettingsActivity extends Activity {
 		}
 		buttonSignals.get(i).setText(currentLocation); //refreshes buttontext at once!
 	}
+	
 	void SetLocationButtonTextAction()
 	{
 		int i = 0;
@@ -955,6 +957,7 @@ public class ModuleSettingsActivity extends Activity {
 		}
 		buttonActions.get(i).setText(currentLocation); //refreshes buttontext at once!
 	}
+	
 	void SetLocationButtonTextReward()
 	{
 		int i = 0;
