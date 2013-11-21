@@ -374,15 +374,18 @@ public class GameActivity extends Activity {
 			}	
 			break;
 		case 1: //1 = Action
-			if(validActionID.contains(view.getId()) && buttonWorks)
+			if(validActionID.contains(view.getId()) )
 			{
+				if(buttonWorks)
+				{
 				extraMessage = ", Valid action got pressed";
 				buttonWorks = false;
 				stagecounter++;
 				nextStage();
+				}
+				else
+					extraMessage = ", Invalid action got pressed";
 			}	
-			else 
-				extraMessage = ", Invalid action got pressed";
 			break;
 		default:
 			break;
