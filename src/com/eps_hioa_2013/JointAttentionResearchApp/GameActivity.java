@@ -61,7 +61,9 @@ public class GameActivity extends Activity {
 	private Timer nextRoundtimer;
 	private Timer SignalAppearTimer;
 	private Timer timerduration;
+	private Timer rewardAppearTimer;
 	private int moduleCounter;
+	private boolean actionRepeat;
 
 	private Module mymodule;//Module used in all the code
 	private Module mainModule; //The parent module, starting point after new round
@@ -133,21 +135,28 @@ public class GameActivity extends Activity {
 		//Extra modules loading.
 		for(int i = 0; i < mymodule.getPreactions().size(); i++)
 		{
-			Element currentPreaction = mymodule.getPreactions().get(i);			
+			Element currentPreaction = mymodule.getPreactions().get(i);	
+
 			String nextModuleNumber = getElementNextModuleNumber(modulenumber, currentPreaction.getName() + "Preaction3");
 			if(!nextModuleNumber.isEmpty())
 			{
-				
-				currentPreaction.setModuleNumber(moduleCounter);
-				Module currentModule = new Module(nextModuleNumber);
-				extraModules.add(currentModule);
-				loadGameInfo( currentModule, currentModule.getNumberString(), "SubModule " + getNameOfModule(nextModuleNumber));
-				moduleCounter ++;
+				if(nextModuleNumber.equals("Placeholder"))
+				{
+					currentPreaction.setModuleNumber(-2);					
+				}
+				else
+				{
+					currentPreaction.setModuleNumber(moduleCounter);
+					Module currentModule = new Module(nextModuleNumber);
+					extraModules.add(currentModule);
+					loadGameInfo( currentModule, currentModule.getNumberString(), "SubModule " + getNameOfModule(nextModuleNumber));
+					moduleCounter ++;
+				}				
 			}
 		}
-		
-		
-		
+
+
+
 	}
 
 
@@ -162,6 +171,8 @@ public class GameActivity extends Activity {
 				String location = getElementLocation(modulenumber, name + "Preaction");
 				String nextModuleNumber = getElementNextModuleNumber(modulenumber, e.getName() + "Preaction3");
 				String startModule = getNameOfModule(nextModuleNumber); 
+				if(e.getModuleNumber() == -2)
+					startModule = "used as placeholder";
 				mysession.updateStatistics(name + ", " + location + ", " + startModule);
 			}
 			mysession.updateStatistics("");
@@ -218,7 +229,7 @@ public class GameActivity extends Activity {
 			{
 				//yes? -> load stuff needed for preaction.
 				LoadPreactionStage();
-				mysession.updateStatistics(currentTime + ", Preaction stage loaded");	
+				mysession.updateStatistics(currentTime + ", Systemmessage: Preaction stage loaded");	
 			}
 			else
 			{
@@ -234,13 +245,14 @@ public class GameActivity extends Activity {
 				if(!mymodule.getActions().isEmpty())
 				{
 					//show actions
-					mysession.updateStatistics(currentTime + ", Action stage with signal loaded");	
+					if(!actionRepeat)					
+					mysession.updateStatistics(currentTime + ", Systemmessage: Action stage with signal loaded");	
 					LoadActionStage(false);	//false because button isn't active until signal appears
 					LoadSignalStage(true); //True because there is a button, signal will activate button when it appears										
 				}
 				else
 				{
-					mysession.updateStatistics(currentTime + ", Signal only stage got loaded");	
+					mysession.updateStatistics(currentTime + ", Systemmessage: Signal only stage got loaded");	
 					LoadSignalStage(false); //false because no action. time option is for how long signal appears until reward.
 					//no action but signal ? show signal for specified time
 				}
@@ -250,7 +262,7 @@ public class GameActivity extends Activity {
 				if(!mymodule.getActions().isEmpty())
 				{
 					//show actions
-					mysession.updateStatistics(currentTime + ", Action stage without signal loaded");	
+					mysession.updateStatistics(currentTime + ", Systemmessage: Action stage without signal loaded");	
 					LoadActionStage(true); //pressing button will instantly show the reward.
 					buttonWorks = true;
 				}
@@ -268,7 +280,7 @@ public class GameActivity extends Activity {
 			stagecounter++;	
 			if(currentReward != null)
 			{
-				mysession.updateStatistics(currentTime + ", Reward is loaded");	
+				mysession.updateStatistics(currentTime + ", Systemmessage: Reward is loaded");	
 				loadReward(currentReward);	
 			}
 			else
@@ -296,7 +308,7 @@ public class GameActivity extends Activity {
 			mymodule = mainModule;	
 		if(modulenumber != mainModulenumber)
 			modulenumber = mainModulenumber;
-		
+		actionRepeat = false;
 		currentSignal = mymodule.getRandomSignalElement();
 		currentReward = mymodule.getRandomRewardElement();
 		String signal = "";
@@ -309,7 +321,7 @@ public class GameActivity extends Activity {
 		roundcounter++;
 		stagecounter = 0;
 		String currentTime = convertTime(stopWatch.getTime());
-		mysession.updateStatistics(currentTime +  ", Round " + roundcounter + " started" + signal + reward);
+		mysession.updateStatistics(currentTime +  ", Systemmessage: round " + roundcounter + " started" + signal + reward);
 		resetScreen();
 		nextStage();
 	}
@@ -330,37 +342,42 @@ public class GameActivity extends Activity {
 	//Check if an action is required and updates the statistics file for press location and time.
 	public void onclick_touched(View view)
 	{		
-
+		
 		String extraMessage = "";
 		switch(stagecounter)
 		{
 		case 0: //0 = Preaction;
 			if(validPreactionID.contains(view.getId()))
 			{
-				extraMessage = ", Valid preaction got pressed";
+				extraMessage = ", ValidPress";
 				Boolean checker = false;
 				for(int i = 0; i < mymodule.getPreactions().size(); i++)
 				{
 					if(mymodule.getPreactions().get(i).getImageButtonID() == view.getId())
 					{
 
-						if(mymodule.getPreactions().get(i).getModuleNumber() != -1)
+						if(mymodule.getPreactions().get(i).getModuleNumber() >= 0)
 						{
 							checker = true;	
 							mymodule = extraModules.get(mymodule.getPreactions().get(i).getModuleNumber());
 							modulenumber = mymodule.getNumberString();												
 							stagecounter = 0;
-							
+
 							currentSignal = mymodule.getRandomSignalElement();
 							currentReward = mymodule.getRandomRewardElement();
 							String signal = "";
 							String reward = "";
-							if(currentSignal != null)
-								signal = (", signal set: " + currentSignal.getName());
-							if(currentReward != null) 
-								reward = (", reward set: " + currentReward.getName());	
+							String system = "";
+							if(currentSignal != null || currentReward != null)
+							{
+								system = ", Systemmessage:";
+								if(currentSignal != null)
+									signal = (" signal set: " + currentSignal.getName());
+								if(currentReward != null) 
+									reward = (" reward set: " + currentReward.getName());	
+							}
 							String currentTime = convertTime(stopWatch.getTime());
-							mysession.updateStatistics(currentTime +  ", " + signal + reward);
+							mysession.updateStatistics(currentTime + system + signal + reward);
 						}
 
 					}
@@ -378,13 +395,16 @@ public class GameActivity extends Activity {
 			{
 				if(buttonWorks)
 				{
-				extraMessage = ", Valid action got pressed";
-				buttonWorks = false;
-				stagecounter++;
-				nextStage();
+					extraMessage = ", ValidPress";
+					buttonWorks = false;
+					stagecounter++;
+					ImageButton signalField = getImageButton(timedLocation);
+					if(signalField != null)
+						signalField.setImageURI(null);
+					nextStage();
 				}
 				else
-					extraMessage = ", Invalid action got pressed";
+					extraMessage = ", InvalidPress: Signal not on screen";
 			}	
 			break;
 		default:
@@ -427,6 +447,8 @@ public class GameActivity extends Activity {
 						public void run() {
 							if(!timedLocation.isEmpty())
 							{
+								String currentTime = convertTime(stopWatch.getTime());
+								mysession.updateStatistics(currentTime + ", Systemmessage: Signal on screen");
 								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));										
 							}
 							startRemoveTimer();
@@ -450,7 +472,7 @@ public class GameActivity extends Activity {
 							{
 								displayPictureElement((ElementPicture)timedElement, getImageButton(timedLocation));	
 								stagecounter++;
-								nextStage();
+								startRewardAppearTimer();
 							}
 						}	
 					});
@@ -472,6 +494,8 @@ public class GameActivity extends Activity {
 
 						@Override
 						public void run() {
+							String currentTime = convertTime(stopWatch.getTime());
+							mysession.updateStatistics(currentTime + ", Systemmessage: Signal removed from screen");
 							getImageButton(timedLocation).setImageURI(null);
 							stagecounter = 1;
 							nextStage();
@@ -482,9 +506,29 @@ public class GameActivity extends Activity {
 		}
 	}
 
+	private void startRewardAppearTimer() {
+		int time = getElementDuration(modulenumber, currentSignal.getName() + "Signal", false);
+		if(time > 0)
+		{
+			rewardAppearTimer = new Timer();				
+			rewardAppearTimer.schedule(new TimerTask() {
+				public void run() {
+
+					runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							nextStage();
+						}
+					});
+				}
+			}, time*1000);
+		}
+	}
+
 
 	private void LoadActionStage(boolean buttenActive) {
-
+		actionRepeat = true;
 		buttonWorks = buttenActive;			
 
 		for(int i = 0; i < mymodule.getActions().size(); i++)
@@ -502,13 +546,16 @@ public class GameActivity extends Activity {
 	private void LoadPreactionStage() {
 		for(int i = 0; i < mymodule.getPreactions().size(); i++)
 		{
-			Element element = mymodule.getPreactions().get(i);
+			ElementPicture element = (ElementPicture)mymodule.getPreactions().get(i);
 			String location = getElementLocation(modulenumber, element.getName() + "Preaction"); 
 
 			// display
 			displayPictureElement((ElementPicture) element, getImageButton(location));
-			// add valid ID
-			validPreactionID.add(getImageButton(location).getId());	
+			// add valid ID			
+			if(element.getModuleNumber() != -2)
+			{
+				validPreactionID.add(getImageButton(location).getId());	
+			}
 			element.setImageButtonID(getImageButton(location).getId());
 		}
 	}
@@ -516,7 +563,7 @@ public class GameActivity extends Activity {
 	//stops the game
 	private void stopGame(String message) {	
 		String currentTime = convertTime(stopWatch.getTime());
-		mysession.updateStatistics(currentTime + ", Game ended, " + message);
+		mysession.updateStatistics(currentTime + ", Systemmesage: Game ended, " + message);
 		endMessage = message;
 		stopTimers();
 		DialogFragment newFragment = new StopModuleDialog();
@@ -531,6 +578,8 @@ public class GameActivity extends Activity {
 			nextRoundtimer.cancel();
 		if(timerduration != null)
 			timerduration.cancel();
+		if(rewardAppearTimer!= null)
+			rewardAppearTimer.cancel();
 	}
 
 	public class StopModuleDialog extends DialogFragment {		
@@ -669,7 +718,7 @@ public class GameActivity extends Activity {
 		if(myButton == null)
 			stopGame("An picture has no location set");
 		else
-		myButton.setImageURI(Uri.parse(myPicture.getPath()));		
+			myButton.setImageURI(Uri.parse(myPicture.getPath()));		
 	}
 
 
@@ -821,10 +870,18 @@ public class GameActivity extends Activity {
 		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);
 		String moduleNumber = "";
 		String info =  pref_modulesettings.getString(elementName + "startModule", "");
+
 		if(!info.isEmpty())
 		{
-			int loc = info.indexOf(':');
-			moduleNumber = info.substring(0, loc);
+			if(info.equals("use as Placeholder"))
+			{
+				moduleNumber = "Placeholder";
+			}
+			else
+			{
+				int loc = info.indexOf(':');
+				moduleNumber = info.substring(0, loc);
+			}
 		}
 		//Button.pngPreaction3startModule 0: kdl
 		return moduleNumber;
@@ -843,7 +900,7 @@ public class GameActivity extends Activity {
 	}
 
 
-	@Override // TODO you can override this button O.o
+	@Override 
 	public void onBackPressed() {
 		stopTimers();
 		finish();
