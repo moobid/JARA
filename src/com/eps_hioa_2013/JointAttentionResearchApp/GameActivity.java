@@ -142,7 +142,7 @@ public class GameActivity extends Activity {
 			{
 				if(nextModuleNumber.equals("Placeholder"))
 				{
-					currentPreaction.setModuleNumber(-2);					
+					currentPreaction.setModuleNumber(-2);		
 				}
 				else
 				{
@@ -152,6 +152,10 @@ public class GameActivity extends Activity {
 					loadGameInfo( currentModule, currentModule.getNumberString(), "SubModule " + getNameOfModule(nextModuleNumber));
 					moduleCounter ++;
 				}				
+			}
+			else
+			{
+				currentPreaction.setModuleNumber(-1);
 			}
 		}
 
@@ -171,7 +175,7 @@ public class GameActivity extends Activity {
 				String location = getElementLocation(modulenumber, name + "Preaction");
 				String nextModuleNumber = getElementNextModuleNumber(modulenumber, e.getName() + "Preaction3");
 				String startModule = getNameOfModule(nextModuleNumber); 
-				if(e.getModuleNumber() == -2)
+				if(nextModuleNumber.equals("Placeholder"))
 					startModule = "used as placeholder";
 				mysession.updateStatistics(name + ", " + location + ", " + startModule);
 			}
@@ -244,17 +248,18 @@ public class GameActivity extends Activity {
 			{
 				if(!mymodule.getActions().isEmpty())
 				{
-					//show actions
+					//show actions	
 					if(!actionRepeat)					
-					mysession.updateStatistics(currentTime + ", Systemmessage: Action stage with signal loaded");	
+						mysession.updateStatistics(currentTime + ", Systemmessage: Action stage with signal loaded");	
 					LoadActionStage(false);	//false because button isn't active until signal appears
 					LoadSignalStage(true); //True because there is a button, signal will activate button when it appears										
+					
 				}
 				else
 				{
 					mysession.updateStatistics(currentTime + ", Systemmessage: Signal only stage got loaded");	
 					LoadSignalStage(false); //false because no action. time option is for how long signal appears until reward.
-					//no action but signal ? show signal for specified time
+					
 				}
 			}
 			else
@@ -263,7 +268,7 @@ public class GameActivity extends Activity {
 				{
 					//show actions
 					mysession.updateStatistics(currentTime + ", Systemmessage: Action stage without signal loaded");	
-					LoadActionStage(true); //pressing button will instantly show the reward.
+					LoadActionStage(true); //pressing button will instantly show the reward.					
 					buttonWorks = true;
 				}
 				else
@@ -279,9 +284,9 @@ public class GameActivity extends Activity {
 			//Show reward reward will change depending on options.	
 			stagecounter++;	
 			if(currentReward != null)
-			{
-				mysession.updateStatistics(currentTime + ", Systemmessage: Reward is loaded");	
+			{				
 				loadReward(currentReward);	
+				mysession.updateStatistics(currentTime + ", Systemmessage: Reward is loaded");	
 			}
 			else
 				nextStage();
@@ -342,8 +347,9 @@ public class GameActivity extends Activity {
 	//Check if an action is required and updates the statistics file for press location and time.
 	public void onclick_touched(View view)
 	{		
-		
+
 		String extraMessage = "";
+		boolean nextStage = false;
 		switch(stagecounter)
 		{
 		case 0: //0 = Preaction;
@@ -385,8 +391,8 @@ public class GameActivity extends Activity {
 				if(checker == false)
 				{			
 					stagecounter++;
-				}
-				nextStage();
+				}				
+				 nextStage = true;
 
 			}	
 			break;
@@ -398,10 +404,13 @@ public class GameActivity extends Activity {
 					extraMessage = ", ValidPress";
 					buttonWorks = false;
 					stagecounter++;
-					ImageButton signalField = getImageButton(timedLocation);
-					if(signalField != null)
-						signalField.setImageURI(null);
-					nextStage();
+					if(timedLocation != null)
+					{
+						ImageButton signalField = getImageButton(timedLocation);
+						if(signalField != null)
+							signalField.setImageURI(null);
+					}
+					 nextStage = true;
 				}
 				else
 					extraMessage = ", InvalidPress: Signal not on screen";
@@ -414,6 +423,9 @@ public class GameActivity extends Activity {
 		String currentTime = convertTime(stopWatch.getTime());
 		String buttonName = getImageButton(view.getId());
 		mysession.updateStatistics(currentTime + ", " +  buttonName + extraMessage);
+		if(nextStage)
+			nextStage();
+		
 	}
 
 	//Loads the signal(s) starts timer for signal
@@ -544,6 +556,7 @@ public class GameActivity extends Activity {
 	}
 
 	private void LoadPreactionStage() {
+		Boolean nextStage = true;
 		for(int i = 0; i < mymodule.getPreactions().size(); i++)
 		{
 			ElementPicture element = (ElementPicture)mymodule.getPreactions().get(i);
@@ -555,9 +568,16 @@ public class GameActivity extends Activity {
 			if(element.getModuleNumber() != -2)
 			{
 				validPreactionID.add(getImageButton(location).getId());	
+				nextStage = false;
 			}
 			element.setImageButtonID(getImageButton(location).getId());
 		}
+		if(nextStage)
+		{
+			stagecounter++;
+			nextStage();			
+		}
+			
 	}
 
 	//stops the game
@@ -888,6 +908,7 @@ public class GameActivity extends Activity {
 	}
 
 
+	@SuppressLint("DefaultLocale")
 	private String convertTime(long millis)
 	{
 		String time = String.format("%02d:%02d:%02d", 
