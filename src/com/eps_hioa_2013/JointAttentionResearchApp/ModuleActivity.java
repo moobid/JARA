@@ -24,6 +24,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+/*
+ * This gets the stored Modules and displays them in a list
+ * It offers the user to create a new Module or delete all Modules
+ * 
+ * @author Simon Irsch, Leon van Tuijl
+ */
+
 public class ModuleActivity extends ListActivity {
 	private Session mysession;
 	private List<Module> myModules;
@@ -90,11 +97,7 @@ public class ModuleActivity extends ListActivity {
 	            String modulename = ((TextView)view).getText().toString();
 	            	            
 	            for(int i = 0; i <= getModulecounterOutOfPreferences(); i++)
-	    		{
-//	            	String nameOfModulePref = "MODULE"+Integer.toString(i);
-//	            	SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);
-//	            	String modulenames = pref_modulesettings.getString("module_name", ACCESSIBILITY_SERVICE);
-	            	
+	    		{	            	
 	            	Module currentmodule = myModules.get(i);
 		            String name = currentmodule.getName();
 		            
@@ -125,8 +128,8 @@ public class ModuleActivity extends ListActivity {
 	public Session fillSession(Intent intent)
 	{
 		mysession = (Session) intent.getSerializableExtra(MainActivity.EXTRA_SESSION);
-		// Create the text view
 		
+		// Create the text view		
 		TextView textView2 = (TextView) findViewById(R.id.participant_textview);
 		textView2.setText(mysession.getParticipant());
 
@@ -139,7 +142,7 @@ public class ModuleActivity extends ListActivity {
 		return mysession;
 	}
 	
-	//returns an Array with the name of all modules in it; not tested yet
+	//returns an Array with the name of all modules in it
 	public String[] getAllModulenames()
 	{
 
@@ -156,10 +159,10 @@ public class ModuleActivity extends ListActivity {
 	}
 	
 	private List<Module> createModules() {
-		// create container for new modules
+		//create container for new modules
 		List<Module> moduleContainer = new ArrayList<Module>();
 		
-		// loop through preference file for all module names
+		//loop through preference file for all module names
 		for(int i = 0; i <= getModulecounterOutOfPreferences(); i++)
 		{
 			//start values for error checking

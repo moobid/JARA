@@ -9,8 +9,7 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 
 public final class R {
     public static final class array {
-        public static final int fruits=0x7f060000;
-        public static final int locations=0x7f060001;
+        public static final int locations=0x7f060000;
     }
     public static final class attr {
     }
@@ -21,98 +20,98 @@ public final class R {
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f050000;
-        public static final int activity_vertical_margin=0x7f050001;
-        public static final int dp300=0x7f05000b;
-        public static final int size12=0x7f050006;
-        public static final int size16=0x7f050005;
-        public static final int size2=0x7f050002;
-        public static final int size24=0x7f050007;
-        public static final int size32=0x7f050008;
-        public static final int size4=0x7f050003;
-        public static final int size48=0x7f050009;
-        public static final int size64=0x7f05000a;
-        public static final int size8=0x7f050004;
+        public static final int activity_horizontal_margin=0x7f040000;
+        public static final int activity_vertical_margin=0x7f040001;
+        public static final int dp300=0x7f04000b;
+        public static final int size12=0x7f040006;
+        public static final int size16=0x7f040005;
+        public static final int size2=0x7f040002;
+        public static final int size24=0x7f040007;
+        public static final int size32=0x7f040008;
+        public static final int size4=0x7f040003;
+        public static final int size48=0x7f040009;
+        public static final int size64=0x7f04000a;
+        public static final int size8=0x7f040004;
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
         public static final int withe=0x7f020001;
     }
     public static final class id {
-        public static final int Actions=0x7f0a0045;
-        public static final int Actionstext=0x7f0a0044;
-        public static final int Button01=0x7f0a0048;
-        public static final int LinearLayout1=0x7f0a0000;
-        public static final int Preactions=0x7f0a0041;
-        public static final int Preactionstext=0x7f0a0040;
-        public static final int Rewards=0x7f0a0047;
-        public static final int Rewardstext=0x7f0a0046;
-        public static final int Signals=0x7f0a0043;
-        public static final int Signalstext=0x7f0a0042;
-        public static final int TableLayout1=0x7f0a0026;
-        public static final int TableRow01=0x7f0a0027;
-        public static final int TableRow4=0x7f0a002d;
-        public static final int TextView01=0x7f0a0028;
-        public static final int TextView4=0x7f0a002e;
-        public static final int Title=0x7f0a0022;
-        public static final int action_settings=0x7f0a0049;
-        public static final int bottomleft=0x7f0a001a;
-        public static final int bottomleftlay=0x7f0a0019;
-        public static final int bottommid=0x7f0a001d;
-        public static final int bottommidlay=0x7f0a001c;
-        public static final int bottomright=0x7f0a0020;
-        public static final int bottomrightlay=0x7f0a001f;
-        public static final int button1=0x7f0a0034;
-        public static final int button2=0x7f0a0036;
-        public static final int chronometer1=0x7f0a0002;
-        public static final int date_textview=0x7f0a002f;
-        public static final int editText1=0x7f0a003f;
-        public static final int editText2=0x7f0a003e;
-        public static final int imageViewReward=0x7f0a0001;
-        public static final int midleft=0x7f0a0010;
-        public static final int midleftlay=0x7f0a000f;
-        public static final int midmid=0x7f0a0013;
-        public static final int midmidlay=0x7f0a0012;
-        public static final int midright=0x7f0a0016;
-        public static final int midrightlay=0x7f0a0015;
-        public static final int npMinutes=0x7f0a003a;
-        public static final int npRoundsToPlay=0x7f0a003c;
-        public static final int npSeconds=0x7f0a003b;
-        public static final int participant=0x7f0a0024;
-        public static final int participant_textview=0x7f0a002a;
-        public static final int password=0x7f0a0023;
-        public static final int researcher=0x7f0a0025;
-        public static final int researcher_textview=0x7f0a002c;
-        public static final int start_module=0x7f0a0037;
-        public static final int table=0x7f0a0003;
-        public static final int tableRow1=0x7f0a0004;
-        public static final int tableRow2=0x7f0a000e;
-        public static final int tableRow22=0x7f0a0038;
-        public static final int tableRow23=0x7f0a003d;
-        public static final int tableRow3=0x7f0a0018;
-        public static final int tableRow5=0x7f0a0030;
-        public static final int tableRow6=0x7f0a0032;
-        public static final int tableRow7=0x7f0a0033;
-        public static final int tableRow8=0x7f0a0035;
-        public static final int textView1=0x7f0a0039;
-        public static final int textView2=0x7f0a0029;
-        public static final int textView3=0x7f0a002b;
-        public static final int textView5=0x7f0a0031;
-        public static final int topleft=0x7f0a0006;
-        public static final int topleftlay=0x7f0a0005;
-        public static final int topmid=0x7f0a0009;
-        public static final int topmidlay=0x7f0a0008;
-        public static final int topright=0x7f0a000c;
-        public static final int toprightlay=0x7f0a000b;
-        public static final int videoBottomLeft=0x7f0a001b;
-        public static final int videoBottomMid=0x7f0a001e;
-        public static final int videoBottomRight=0x7f0a0021;
-        public static final int videoMidLeft=0x7f0a0011;
-        public static final int videoMidMid=0x7f0a0014;
-        public static final int videoMidRight=0x7f0a0017;
-        public static final int videoTopLeft=0x7f0a0007;
-        public static final int videoTopMid=0x7f0a000a;
-        public static final int videoTopRight=0x7f0a000d;
+        public static final int Actions=0x7f090045;
+        public static final int Actionstext=0x7f090044;
+        public static final int Button01=0x7f090048;
+        public static final int LinearLayout1=0x7f090000;
+        public static final int Preactions=0x7f090041;
+        public static final int Preactionstext=0x7f090040;
+        public static final int Rewards=0x7f090047;
+        public static final int Rewardstext=0x7f090046;
+        public static final int Signals=0x7f090043;
+        public static final int Signalstext=0x7f090042;
+        public static final int TableLayout1=0x7f090026;
+        public static final int TableRow01=0x7f090027;
+        public static final int TableRow4=0x7f09002d;
+        public static final int TextView01=0x7f090028;
+        public static final int TextView4=0x7f09002e;
+        public static final int Title=0x7f090022;
+        public static final int action_settings=0x7f090049;
+        public static final int bottomleft=0x7f09001a;
+        public static final int bottomleftlay=0x7f090019;
+        public static final int bottommid=0x7f09001d;
+        public static final int bottommidlay=0x7f09001c;
+        public static final int bottomright=0x7f090020;
+        public static final int bottomrightlay=0x7f09001f;
+        public static final int button1=0x7f090034;
+        public static final int button2=0x7f090036;
+        public static final int chronometer1=0x7f090002;
+        public static final int date_textview=0x7f09002f;
+        public static final int editText1=0x7f09003f;
+        public static final int editText2=0x7f09003e;
+        public static final int imageViewReward=0x7f090001;
+        public static final int midleft=0x7f090010;
+        public static final int midleftlay=0x7f09000f;
+        public static final int midmid=0x7f090013;
+        public static final int midmidlay=0x7f090012;
+        public static final int midright=0x7f090016;
+        public static final int midrightlay=0x7f090015;
+        public static final int npMinutes=0x7f09003a;
+        public static final int npRoundsToPlay=0x7f09003c;
+        public static final int npSeconds=0x7f09003b;
+        public static final int participant=0x7f090024;
+        public static final int participant_textview=0x7f09002a;
+        public static final int password=0x7f090023;
+        public static final int researcher=0x7f090025;
+        public static final int researcher_textview=0x7f09002c;
+        public static final int start_module=0x7f090037;
+        public static final int table=0x7f090003;
+        public static final int tableRow1=0x7f090004;
+        public static final int tableRow2=0x7f09000e;
+        public static final int tableRow22=0x7f090038;
+        public static final int tableRow23=0x7f09003d;
+        public static final int tableRow3=0x7f090018;
+        public static final int tableRow5=0x7f090030;
+        public static final int tableRow6=0x7f090032;
+        public static final int tableRow7=0x7f090033;
+        public static final int tableRow8=0x7f090035;
+        public static final int textView1=0x7f090039;
+        public static final int textView2=0x7f090029;
+        public static final int textView3=0x7f09002b;
+        public static final int textView5=0x7f090031;
+        public static final int topleft=0x7f090006;
+        public static final int topleftlay=0x7f090005;
+        public static final int topmid=0x7f090009;
+        public static final int topmidlay=0x7f090008;
+        public static final int topright=0x7f09000c;
+        public static final int toprightlay=0x7f09000b;
+        public static final int videoBottomLeft=0x7f09001b;
+        public static final int videoBottomMid=0x7f09001e;
+        public static final int videoBottomRight=0x7f090021;
+        public static final int videoMidLeft=0x7f090011;
+        public static final int videoMidMid=0x7f090014;
+        public static final int videoMidRight=0x7f090017;
+        public static final int videoTopLeft=0x7f090007;
+        public static final int videoTopMid=0x7f09000a;
+        public static final int videoTopRight=0x7f09000d;
     }
     public static final class layout {
         public static final int activity_game=0x7f030000;
@@ -121,34 +120,34 @@ public final class R {
         public static final int activity_module_settings=0x7f030003;
     }
     public static final class menu {
-        public static final int game=0x7f090000;
-        public static final int main=0x7f090001;
-        public static final int module=0x7f090002;
-        public static final int module_settings=0x7f090003;
+        public static final int game=0x7f080000;
+        public static final int main=0x7f080001;
+        public static final int module=0x7f080002;
+        public static final int module_settings=0x7f080003;
     }
     public static final class string {
-        public static final int action_settings=0x7f070001;
-        public static final int app_name=0x7f070000;
-        public static final int button_add_module=0x7f070005;
+        public static final int action_settings=0x7f050001;
+        public static final int app_name=0x7f050000;
+        public static final int button_add_module=0x7f050005;
         /**  Buttons 
          */
-        public static final int button_start=0x7f070004;
-        public static final int date=0x7f070009;
-        public static final int hello_world=0x7f070002;
+        public static final int button_start=0x7f050004;
+        public static final int date=0x7f050009;
+        public static final int hello_world=0x7f050002;
         /**  for settings screen 
          */
-        public static final int module_description=0x7f07000f;
-        public static final int module_description_key=0x7f070010;
-        public static final int participant=0x7f070007;
-        public static final int participant_text=0x7f07000b;
-        public static final int password=0x7f070006;
-        public static final int password_text=0x7f07000a;
-        public static final int researcher=0x7f070008;
-        public static final int researcher_text=0x7f07000c;
-        public static final int select_module=0x7f07000d;
-        public static final int title_activity_game=0x7f070011;
-        public static final int title_activity_module=0x7f070003;
-        public static final int title_activity_module_settings=0x7f07000e;
+        public static final int module_description=0x7f05000f;
+        public static final int module_description_key=0x7f050010;
+        public static final int participant=0x7f050007;
+        public static final int participant_text=0x7f05000b;
+        public static final int password=0x7f050006;
+        public static final int password_text=0x7f05000a;
+        public static final int researcher=0x7f050008;
+        public static final int researcher_text=0x7f05000c;
+        public static final int select_module=0x7f05000d;
+        public static final int title_activity_game=0x7f050011;
+        public static final int title_activity_module=0x7f050003;
+        public static final int title_activity_module_settings=0x7f05000e;
     }
     public static final class style {
         /** 
@@ -172,13 +171,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f080000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f080001;
-    }
-    public static final class xml {
-        public static final int settings=0x7f040000;
+        public static final int AppTheme=0x7f070001;
     }
 }

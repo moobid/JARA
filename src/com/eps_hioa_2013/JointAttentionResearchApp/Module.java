@@ -3,9 +3,15 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Module{
-	//private File Settingsfile; //should be the txt file, where the settings of the module are saved //not used anymore
+/*
+ * Represents a Module. The stored Information of Modules in the SharedPreferences are
+ * getting saved in Objects of this class
+ * 
+ * @author Leon van Tuijl, Simon Irsch
+ */
 
+public class Module{
+	
 	private int number; //number of the module
 	private String numberString;
 	private String name;

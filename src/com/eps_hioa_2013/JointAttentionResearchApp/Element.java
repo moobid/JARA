@@ -3,6 +3,13 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 import java.io.File;
 import java.io.Serializable;
 
+/*
+ * Represents an Element and contains its properties
+ *
+ * 
+ * @author Leon van Tuijl, Simon Irsch
+ */
+
 public class Element implements Serializable {
 
 	private static final long serialVersionUID = 2111016546249060952L;//Generated because of Serializable

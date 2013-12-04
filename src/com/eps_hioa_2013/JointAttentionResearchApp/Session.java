@@ -9,6 +9,13 @@ import java.util.List;
 
 import android.os.Environment;
 
+/*
+ * This class stores Information and passes them through Activities
+ * It creates and updates the statistic file
+ * 
+ * @author Simon Irsch
+ */
+
 //must implement Serializable to be able to get passed from one activity to another
 public class Session implements Serializable {
 	
@@ -41,7 +48,7 @@ public class Session implements Serializable {
 				      +"\nSessionDate: "+this.getcurrentDate().toString()); //will create a new file at the beginning and later(while playing) update this one
 		
 	}
-	//updates (creates on 1. time) the statisticfile. The String newData gets appended to it
+	//updates (creates on 1. time) the statisticfile. The String newData gets appended to this file
 	public void updateStatistics(String newData)
 	{
 		if(isExternalStorageWritable()) //checks if ExternalStorage is available
@@ -64,7 +71,7 @@ public class Session implements Serializable {
 		}
 		else
 		{
-			//todo: show error
+			//error
 		}
 	}
 	

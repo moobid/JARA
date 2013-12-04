@@ -11,7 +11,7 @@
         android:layout_span="2"
         android:text="Joint Attention Research App"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="30dp" />
+        android:textSize="30sp" />
     
      <TextView
          android:layout_width="match_parent"

@@ -3,7 +3,6 @@ package com.eps_hioa_2013.JointAttentionResearchApp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,6 +23,13 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+/*
+ * This class saves, loads and displays the settings of a module
+ * 
+ * 
+ * @author Simon Irsch
+ */
 
 //ModuleSettingsActivity gets called, when you create a new Module or like to edit an existing one
 public class ModuleSettingsActivity extends Activity {
@@ -140,7 +146,7 @@ public class ModuleSettingsActivity extends Activity {
 		for(int i = 0; i < modulenames.size(); i++)
 		{
 			if(i < (modulenames.size() - 2)) //-2 because of the two Elements which got added
-				modulenamesArray[i] = i + ": " + modulenames.get(i); //the i is the Number of the SharedPreferences; hopefully
+				modulenamesArray[i] = i + ": " + modulenames.get(i); //the i is the Number of the SharedPreferences
 			else
 				modulenamesArray[i] = modulenames.get(i); 
 		}
@@ -168,7 +174,7 @@ public class ModuleSettingsActivity extends Activity {
 			
 			nameInTheBeginning = getNameOfModule(modulenumber);
 			
-			EditText editText1 = (EditText) findViewById(R.id.editText1); //descrition gets loaded
+			EditText editText1 = (EditText) findViewById(R.id.editText1); //description gets loaded
 			editText1.setText(getDescriptionOfModule(modulenumber));
 			
 			npRoundsToPlay.setValue(getRoundsToPlayOfModule(modulenumber));
@@ -256,9 +262,10 @@ public class ModuleSettingsActivity extends Activity {
 		
 		int roundsToPlay = npRoundsToPlay.getValue();
 		int timeToPlay = calculateTimeToPlayInSeconds();
+				
+		refreshModulelist();
 		
 		//checking if Settings are ok to start the game
-		refreshModulelist();
 		if((module_name == null) || (module_name.equals("")) || (modulenameTaken(module_name)))
 		{
 			if((module_name == null) || (module_name.equals(""))) Toast.makeText(getApplicationContext(), "Modulename empty", Toast.LENGTH_SHORT).show();
@@ -557,7 +564,7 @@ public class ModuleSettingsActivity extends Activity {
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Action");
 
 
-			table = (TableLayout) findViewById(R.id.Signals); //Changed things around this is called Signals because the view was named Signals.
+			table = (TableLayout) findViewById(R.id.Signals);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
 			table.addView(newTablerow);
@@ -595,7 +602,7 @@ public class ModuleSettingsActivity extends Activity {
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Signal");
 			currentDuration0 = getElementDuration0(Integer.toString(currentModuleNumber), elementName + "Signal2");
 			currentDuration1 = getElementDuration1(Integer.toString(currentModuleNumber), elementName + "Signal4");
-			table = (TableLayout) findViewById(R.id.Actions);//Changed things around this is called Actions because the view was named Actions.
+			table = (TableLayout) findViewById(R.id.Actions);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
 			table.addView(newTablerow);
@@ -603,7 +610,6 @@ public class ModuleSettingsActivity extends Activity {
 			//creates new Checkbox with the name of the element and sets it into the Tablerow
 			checkboxSignals.add(signalsCounter, new CheckBox(this));
 			checkboxSignals.get(signalsCounter).setText(elementName);
-			//	checkboxPreactions.add(preactionsCounter, (checkboxPreactions.get(preactionsCounter)));
 
 			newTablerow.addView(checkboxSignals.get(signalsCounter));
 
@@ -687,7 +693,7 @@ public class ModuleSettingsActivity extends Activity {
 			//creates new Checkbox with the name of the element and sets it into the Tablerow
 			checkboxRewards.add(rewardsCounter, new CheckBox(this));
 			checkboxRewards.get(rewardsCounter).setText(elementName);
-			//	checkboxPreactions.add(preactionsCounter, (checkboxPreactions.get(preactionsCounter)));
+
 
 			newTablerow.addView(checkboxRewards.get(rewardsCounter));
 			
@@ -799,7 +805,6 @@ public class ModuleSettingsActivity extends Activity {
 	}
 
 	//sets the modulecounter to -1. When a new module gets added, it has the number 0
-	//this Method is also present in ModuleActivity.java; This should be solved in a better way
 	public void resetModulecounterInPreferences() {
 		SharedPreferences pref_modulecounter = getSharedPreferences("counter", 0);
 		SharedPreferences.Editor editor = pref_modulecounter.edit();

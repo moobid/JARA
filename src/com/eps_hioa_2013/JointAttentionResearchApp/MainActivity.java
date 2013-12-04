@@ -17,6 +17,13 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/*
+ * Shows the first screen which promts the user to type in his login details
+ * It checks the Elements folder on the device for new Elements and puts them in a List
+ * 
+ * @author Leon van Tuijl, Simon Irsch
+ */
+
 public class MainActivity extends Activity {
 
 	public final static String EXTRA_SESSION = "com.eps_hioa_2013.JointAttentionResearchApp.EXTRA_SESSION";
@@ -31,7 +38,7 @@ public class MainActivity extends Activity {
 	
 	Bundle bundle;
 	
-	//Just activates the first View
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		System.out.println("MainActivity started");
@@ -40,7 +47,6 @@ public class MainActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
-	    //connect the .java to the .xml make sure you set fullscreen first in code else it will crash
 		setContentView(R.layout.activity_main);
 		
 		//hides keyboard until user presses a field
@@ -51,9 +57,7 @@ public class MainActivity extends Activity {
 		
 	}
 	
-	
 
-	//Dont know yet
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -62,7 +66,7 @@ public class MainActivity extends Activity {
 	//creates new Intent and saves the Strings were typed in into a new Session-Object called mysession
 	//then passes mysession over to ModuleActivity
 	public void onclick_login(View view) {
-        // Do something in response to button
+
     	Intent intent = new Intent(this, ModuleActivity.class);
     	
     	EditText editText3 = (EditText) findViewById(R.id.password);
@@ -74,8 +78,6 @@ public class MainActivity extends Activity {
     	EditText editText2 = (EditText) findViewById(R.id.researcher);
     	String string_researcher = editText2.getText().toString();
 
-
-    	//to not get annoyed everytime you start the programm to test it
     	if(((string_password == null) || (string_password.equals("")))
     	|| ((string_participant == null) || (string_participant.equals("")))
     	|| ((string_researcher == null) || (string_researcher.equals(""))))
@@ -95,7 +97,7 @@ public class MainActivity extends Activity {
         	intent.putExtras(bundle);
         	
 
-        	//following two lines: The password gets checked if it is correct        	
+        	//the password gets checked if it is correct        	
         	if(checkpassword(string_password) == true) startActivity(intent);
         	else Toast.makeText(getApplicationContext(), "Invalid password", Toast.LENGTH_SHORT).show();
     	}
@@ -124,7 +126,7 @@ public class MainActivity extends Activity {
 		    paths.add(files[i].getAbsolutePath());		    
 		}
 		
-		//Create elements and put hem into the arraylist
+		//Create elements and put them into the arraylist
 		for (int i = 0; i < paths.size(); ++i)
 		{
 			Element element = createElement(paths.get(i));
