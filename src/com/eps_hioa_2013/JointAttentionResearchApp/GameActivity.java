@@ -1,3 +1,10 @@
+/*
+ * @author Leon van Tuijl && Theo
+ * 
+ * this class handles the game logic and stufzz
+ * 
+ * 
+ */
 package com.eps_hioa_2013.JointAttentionResearchApp;
 
 import java.util.ArrayList;
@@ -253,13 +260,13 @@ public class GameActivity extends Activity {
 						mysession.updateStatistics(currentTime + ", Systemmessage: Action stage with signal loaded");	
 					LoadActionStage(false);	//false because button isn't active until signal appears
 					LoadSignalStage(true); //True because there is a button, signal will activate button when it appears										
-					
+
 				}
 				else
 				{
 					mysession.updateStatistics(currentTime + ", Systemmessage: Signal only stage got loaded");	
 					LoadSignalStage(false); //false because no action. time option is for how long signal appears until reward.
-					
+
 				}
 			}
 			else
@@ -348,14 +355,15 @@ public class GameActivity extends Activity {
 	public void onclick_touched(View view)
 	{		
 
-		String extraMessage = "";
+		String tag = "";
+		String error = "";
 		boolean nextStage = false;
 		switch(stagecounter)
 		{
 		case 0: //0 = Preaction;
 			if(validPreactionID.contains(view.getId()))
 			{
-				extraMessage = ", ValidPress";
+				tag = "ValidPress";
 				Boolean checker = false;
 				for(int i = 0; i < mymodule.getPreactions().size(); i++)
 				{
@@ -381,9 +389,9 @@ public class GameActivity extends Activity {
 									signal = (" signal set: " + currentSignal.getName());
 								if(currentReward != null) 
 									reward = (" reward set: " + currentReward.getName());	
-							}
-							String currentTime = convertTime(stopWatch.getTime());
-							mysession.updateStatistics(currentTime + system + signal + reward);
+								String currentTime = convertTime(stopWatch.getTime());
+								mysession.updateStatistics(currentTime + system + signal + reward); 
+							}							
 						}
 
 					}
@@ -392,7 +400,7 @@ public class GameActivity extends Activity {
 				{			
 					stagecounter++;
 				}				
-				 nextStage = true;
+				nextStage = true;
 
 			}	
 			break;
@@ -401,7 +409,7 @@ public class GameActivity extends Activity {
 			{
 				if(buttonWorks)
 				{
-					extraMessage = ", ValidPress";
+					tag = "ValidPress";
 					buttonWorks = false;
 					stagecounter++;
 					if(timedLocation != null)
@@ -410,22 +418,28 @@ public class GameActivity extends Activity {
 						if(signalField != null)
 							signalField.setImageURI(null);
 					}
-					 nextStage = true;
+					nextStage = true;
 				}
 				else
-					extraMessage = ", InvalidPress: Signal not on screen";
+				{
+					tag = "InvalidPress";
+					error = " Signal not on screen";
+				}					
 			}	
 			break;
 		default:
 			break;
 		}		
 
+		if(tag.isEmpty())
+			tag = "EmptyPress";
+			
 		String currentTime = convertTime(stopWatch.getTime());
 		String buttonName = getImageButton(view.getId());
-		mysession.updateStatistics(currentTime + ", " +  buttonName + extraMessage);
+		mysession.updateStatistics(currentTime + ", " + tag + ", " + buttonName + error);
 		if(nextStage)
 			nextStage();
-		
+
 	}
 
 	//Loads the signal(s) starts timer for signal
@@ -469,7 +483,7 @@ public class GameActivity extends Activity {
 
 					});
 				}
-			},  time*1000);
+			},  time);
 		}
 		else
 		{
@@ -489,7 +503,7 @@ public class GameActivity extends Activity {
 						}	
 					});
 				}
-			},  time*1000);
+			},  time);
 
 		}
 	}
@@ -514,7 +528,7 @@ public class GameActivity extends Activity {
 						}
 					});
 				}
-			}, time*1000);
+			}, time);
 		}
 	}
 
@@ -534,7 +548,11 @@ public class GameActivity extends Activity {
 						}
 					});
 				}
-			}, time*1000);
+			}, time);
+		}
+		else
+		{
+			nextStage();
 		}
 	}
 
@@ -577,7 +595,7 @@ public class GameActivity extends Activity {
 			stagecounter++;
 			nextStage();			
 		}
-			
+
 	}
 
 	//stops the game
@@ -658,7 +676,7 @@ public class GameActivity extends Activity {
 							}
 						});
 					}
-				}, time*1000);
+				}, time);
 			}
 
 		}
@@ -863,13 +881,20 @@ public class GameActivity extends Activity {
 		{ //Get random number between 2 numbers
 			Random r = new Random();
 			int loc = duration.indexOf("-");
-			int a = Integer.parseInt(duration.substring(0, loc));
-			int b = Integer.parseInt(duration.substring(loc));
+			double checkerA = Double.parseDouble(duration.substring(0, loc));
+			double checkerB = Double.parseDouble(duration.substring(loc));
+
+			int a = (int)(checkerA * 10);
+			int b = (int)(checkerB * 10);				
 			time = r.nextInt(a-b) + a;
+
 		}
 		else
-			time = Integer.parseInt(duration);
-		return time;		
+		{
+			double checker =  Double.parseDouble(duration);
+			time = (int)(checker * 10);
+		}
+		return time * 100;		
 	}
 
 	private String getElementDurationString(String i, String elementName, Boolean appearOrRemove)
