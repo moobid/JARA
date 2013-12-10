@@ -1,7 +1,7 @@
 /*
  * @author Leon van Tuijl && Theo
  * 
- * this class handles the game logic and stufzz
+ * This class handles the game logic and the game screen.
  * 
  * 
  */
