@@ -1,5 +1,5 @@
 /*
- * @author Leon van Tuijl && Theo
+ * @author Leon van Tuijl, Theophile Ravillion
  * 
  * This class handles the game logic and the game screen.
  * 
