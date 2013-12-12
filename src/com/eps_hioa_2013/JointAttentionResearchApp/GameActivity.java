@@ -36,6 +36,7 @@ import android.widget.VideoView;
 
 @SuppressLint("ValidFragment")
 public class GameActivity extends Activity {
+	//Imagebuttons
 	private ImageButton topleft;
 	private ImageButton topmid;
 	private ImageButton topright;
@@ -45,6 +46,7 @@ public class GameActivity extends Activity {
 	private ImageButton bottomleft;
 	private ImageButton bottommid;
 	private ImageButton bottomright;
+
 	private int stagecounter = 0; //0 = Preaction; 1 = Action/signal; 2 = reward; 
 	private int roundcounter = 0;
 	private int roundcounterlimit;
@@ -71,6 +73,8 @@ public class GameActivity extends Activity {
 	private Timer rewardAppearTimer;
 	private int moduleCounter;
 	private boolean actionRepeat;
+	private Boolean inSubModule;
+	private Boolean removeSignalNextRound;
 
 	private Module mymodule;//Module used in all the code
 	private Module mainModule; //The parent module, starting point after new round
@@ -321,6 +325,7 @@ public class GameActivity extends Activity {
 		if(modulenumber != mainModulenumber)
 			modulenumber = mainModulenumber;
 		actionRepeat = false;
+		inSubModule = false;
 		currentSignal = mymodule.getRandomSignalElement();
 		currentReward = mymodule.getRandomRewardElement();
 		String signal = "";
@@ -372,6 +377,7 @@ public class GameActivity extends Activity {
 
 						if(mymodule.getPreactions().get(i).getModuleNumber() >= 0)
 						{
+							inSubModule = true;
 							checker = true;	
 							mymodule = extraModules.get(mymodule.getPreactions().get(i).getModuleNumber());
 							modulenumber = mymodule.getNumberString();												
@@ -433,7 +439,7 @@ public class GameActivity extends Activity {
 
 		if(tag.isEmpty())
 			tag = "EmptyPress";
-			
+
 		String currentTime = convertTime(stopWatch.getTime());
 		String buttonName = getImageButton(view.getId());
 		mysession.updateStatistics(currentTime + ", " + tag + ", " + buttonName + error);
@@ -465,7 +471,8 @@ public class GameActivity extends Activity {
 		{		
 			int time = getElementDuration(modulenumber, element.getName() + "Signal", true);
 
-			SignalAppearTimer = new Timer();				
+			SignalAppearTimer = new Timer();	
+			removeSignalNextRound = inSubModule;
 			SignalAppearTimer.schedule(new TimerTask() {
 				public void run() {
 					runOnUiThread(new Runnable() {
@@ -488,6 +495,8 @@ public class GameActivity extends Activity {
 		else
 		{
 			int time = getElementDuration(modulenumber, element.getName() + "Signal", true);
+			if(inSubModule)
+				time = 0;
 			SignalAppearTimer = new Timer();				
 			SignalAppearTimer.schedule(new TimerTask() {
 				public void run() {
@@ -506,6 +515,7 @@ public class GameActivity extends Activity {
 			},  time);
 
 		}
+		inSubModule = false;
 	}
 
 	private void startRemoveTimer() {
@@ -523,8 +533,16 @@ public class GameActivity extends Activity {
 							String currentTime = convertTime(stopWatch.getTime());
 							mysession.updateStatistics(currentTime + ", Systemmessage: Signal removed from screen");
 							getImageButton(timedLocation).setImageURI(null);
-							stagecounter = 1;
-							nextStage();
+							if(removeSignalNextRound)
+							{
+								removeSignalNextRound = false;
+								nextRound();
+							}
+							else
+							{
+								stagecounter = 1;							
+								nextStage();
+							}
 						}
 					});
 				}
