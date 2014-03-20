@@ -74,6 +74,7 @@ public class ModuleSettingsActivity extends Activity {
 	private List<CheckBox> checkboxRewards = new ArrayList<CheckBox>();
 	private List<Button> buttonRewards = new ArrayList<Button>(); //locationbutton
 	private List<Button> buttonRewards2 = new ArrayList<Button>(); //duration0button
+	private List<Button> buttonRewards3 = new ArrayList<Button>(); //timeintervallbutton
 	private List<Element> rewards = new ArrayList<Element>();
 	private int rewardsCounter = 0;
 
@@ -83,12 +84,14 @@ public class ModuleSettingsActivity extends Activity {
 	private String currentElement;
 	private String currentLocation;
 	private String currentDurationForPopUp;
+	private String currentTimeIntervallForPopUp;
 	private String currentStartModule;
 	private String popupMode;
 	private String durationDialogTitle = "Select the duration the Element should appear on the screen";
 	private String[] locationArray = {"topleft", "topmid", "topright", "midleft", "midmid", "midright", "bottomleft", "bottommid", "bottomright"};
 	private String[] durationArray0 = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "2-10", "4-8", "1-5", "3-6", "6-10"};
 	private String[] durationArray1 = {"0", "0.1", "0.2", "0.3", "0.4", "0.6", "0.8", "0.1-0.3", "0.2-0.4", "0.3-0.6", "0.5-1", "0.8-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "2-10", "4-8", "1-5", "3-6", "6-10"};
+	private String[] timeIntervallArray = {"3", "5", "8", "10", "15", "20", "30", "40", "60", "80", "120"};
 	private String[] modulenamesArray;
 	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println("ModuleSettingsActivity started");
@@ -444,6 +447,14 @@ public class ModuleSettingsActivity extends Activity {
 				if(buttontext.equals("duration0")) ;//do nothing
 				else editor.putString(buttonRewards2.get(i).getTag() + "duration0", buttontext);
 			}
+			
+			//saving the timeintervall for the videos
+			for(int i = 0; i < buttonRewards3.size(); i++)
+			{
+				String buttontext = buttonRewards3.get(i).getText().toString();
+				if(buttontext.equals("timeintervall")) ;//do nothing
+				else editor.putString(buttonRewards3.get(i).getTag() + "timeintervall", buttontext);
+			}
 
         
 			
@@ -465,28 +476,28 @@ public class ModuleSettingsActivity extends Activity {
 			if(elements.get(i) instanceof ElementPicture)
 			{
 				//creates CheckBox and Button and shows it in the right place and adds both in the Membervariables
-				addElementToList(elements.get(i).getName(), "Preactions", true, false, false, true);
+				addElementToList(elements.get(i).getName(), "Preactions", true, false, false, true, false);
 				preactions.add(preactionsCounter, elements.get(i)); //adds the Element in the Membervariables
 				preactionsCounter++; //counter how many elements are in this array
-				addElementToList(elements.get(i).getName(), "Actions", true, false, false, false);
+				addElementToList(elements.get(i).getName(), "Actions", true, false, false, false, false);
 				actions.add(actionsCounter, elements.get(i));
 				actionsCounter++;
-				addElementToList(elements.get(i).getName(), "Signals", true, true, true, false);
+				addElementToList(elements.get(i).getName(), "Signals", true, true, true, false, false);
 				signals.add(signalsCounter, elements.get(i));
 				signalsCounter++;
-				addElementToList(elements.get(i).getName(), "Rewards", true, true, false, false);
+				addElementToList(elements.get(i).getName(), "Rewards", true, true, false, false, false);
 				rewards.add(rewardsCounter, elements.get(i));
 				rewardsCounter++;
 			}
 			if(elements.get(i) instanceof ElementVideo)
 			{
-				addElementToList(elements.get(i).getName(), "Rewards", true, false, false, false);
+				addElementToList(elements.get(i).getName(), "Rewards", true, false, false, false, true);
 				rewards.add(rewardsCounter, elements.get(i));
 				rewardsCounter++;
 			}
 			if(elements.get(i) instanceof ElementSound)
 			{
-				addElementToList(elements.get(i).getName(), "Rewards", false, false, false, false);
+				addElementToList(elements.get(i).getName(), "Rewards", false, false, false, false, false);
 				rewards.add(rewardsCounter, elements.get(i));
 				rewardsCounter++;
 			}
@@ -497,12 +508,13 @@ public class ModuleSettingsActivity extends Activity {
 
 	//adds a Checkbox for an Element to the Settingsscreen
 	//WARNING: elementType must be either "Preactions", "Signals", "Actions" or "Rewards"
-	public void addElementToList(String elementName, String elementType, boolean locationNeeded, boolean duration0Needed, boolean duration1Needed, boolean startModuleNeeded)
+	public void addElementToList(String elementName, String elementType, boolean locationNeeded, boolean duration0Needed, boolean duration1Needed, boolean startModuleNeeded, boolean timeIntervallNeeded)
 	{		
 		TableLayout table = null;
 		String currentLocation = "";
 		String currentDuration0 = "";
 		String currentDuration1 = "";
+		String currentTimeintervall = "";
 
 		if(elementType == "Preactions")
 		{
@@ -685,6 +697,7 @@ public class ModuleSettingsActivity extends Activity {
 		if(elementType == "Rewards"){
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Reward");
 			currentDuration0 = getElementDuration0(Integer.toString(currentModuleNumber), elementName + "Reward2");
+			currentTimeintervall = getElementTimeIntervall(Integer.toString(currentModuleNumber), elementName + "Reward3");
 			table = (TableLayout) findViewById(R.id.Rewards);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
@@ -703,6 +716,10 @@ public class ModuleSettingsActivity extends Activity {
 			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
 			buttonRewards2.add(rewardsCounter, new Button(this));
 			buttonRewards2.get(rewardsCounter).setTag( elementName + "Reward2");
+			//creates new Button for choosing the TIMEINTERVALL of the Element and sets it also into the Tablerow 
+			buttonRewards3.add(rewardsCounter, new Button(this));
+			buttonRewards3.get(rewardsCounter).setTag( elementName + "Reward3");
+			
 			if(locationNeeded == true)
 			{
 				buttonRewards.get(rewardsCounter).setText(currentLocation);
@@ -734,8 +751,25 @@ public class ModuleSettingsActivity extends Activity {
 			{				
 				buttonRewards2.get(rewardsCounter).setVisibility(View.GONE);
 			}
+			if(timeIntervallNeeded == true) //TODO: Baustelel
+			{
+				buttonRewards3.get(rewardsCounter).setText(currentTimeintervall);
+				buttonRewards3.get(rewardsCounter).setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+					durationDialogTitle = "Select the timeintervalls the video should be shown";
+					popupMode = "rewardTimeIntervall"; //determines the popupMode; //TODO: wird wohl nicht gebraucht???
+					showElementTimeIntevallDialog(); //shows Popup
+					}
+				});
+			}
+			else
+			{				
+				buttonRewards3.get(rewardsCounter).setVisibility(View.GONE);
+			}
 			newTablerow.addView(buttonRewards.get(rewardsCounter)); 
-			newTablerow.addView(buttonRewards2.get(rewardsCounter));			
+			newTablerow.addView(buttonRewards2.get(rewardsCounter));	
+			newTablerow.addView(buttonRewards3.get(rewardsCounter));
 		}
 
 		if(table == null){ //error
@@ -885,6 +919,14 @@ public class ModuleSettingsActivity extends Activity {
 		return startModule;
 	}
 	
+	public String getElementTimeIntervall(String i, String elementName)
+	{
+		String nameOfModulePref = "MODULE" + i;
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		String startModule = pref_modulesettings.getString(elementName + "timeIntervall", "timeIntervall");
+		return startModule;
+	}
+	
 	//shows the popup when you click on the Edit-button
 	public void showElementLocationDialog() {
 		DialogFragment newFragment = new ElementPositionDialog();
@@ -897,6 +939,11 @@ public class ModuleSettingsActivity extends Activity {
 	}
 	public void showElementDuration1Dialog() {
 		DialogFragment newFragment = new ElementDuration1Dialog();
+		newFragment.show(getFragmentManager(), "dialogsettings");
+	}
+	
+	public void showElementTimeIntevallDialog() {
+		DialogFragment newFragment = new ElementTimeIntervallDialog();
 		newFragment.show(getFragmentManager(), "dialogsettings");
 	}
 	
@@ -983,7 +1030,7 @@ public class ModuleSettingsActivity extends Activity {
 			.setItems(durationArray0, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// The 'which' argument contains the index position
-					// of the selected item					
+					// of the selected item
 					currentDurationForPopUp = durationArray0[which];
 					if(popupMode.equals("signalDuration0")) SetDuration0ButtonTextSignal();
 					
@@ -1038,6 +1085,35 @@ public class ModuleSettingsActivity extends Activity {
 						if((signals.get(i).getName() + "Signal4").equals(currentElement)) break;
 					}
 					buttonSignals4.get(i).setText(currentDurationForPopUp); //refreshes buttontext at once!
+				}
+			});
+			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					// User cancelled the dialog
+				}
+			});
+			return builder.create();
+		}
+	}
+	
+	@SuppressLint("ValidFragment")
+	//Duration of an Element Popup
+	public class ElementTimeIntervallDialog extends DialogFragment { //TODO baustelle
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(durationDialogTitle)
+			.setItems(timeIntervallArray, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					// The 'which' argument contains the index position
+					// of the selected item					
+					currentTimeIntervallForPopUp = timeIntervallArray[which];
+					int i = 0;
+					for(; i < rewardsCounter; i++)
+					{
+						if((rewards.get(i).getName() + "Reward3").equals(currentElement)) break;
+					}
+					buttonRewards3.get(i).setText(currentTimeIntervallForPopUp); //refreshes buttontext at once!
 				}
 			});
 			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
