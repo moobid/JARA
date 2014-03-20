@@ -1,0 +1,233 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/withe"
+    style="@style/AppBaseTheme"
+    android:orientation="horizontal" >
+    
+    <ImageView
+        android:id="@+id/imageViewReward"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="center"
+        android:src="@android:drawable/btn_star"
+        android:visibility="gone" />
+
+
+    <Chronometer
+        android:id="@+id/chronometer1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/topleft"
+                android:background="@drawable/withe"
+                android:cropToPadding="true"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoTopLeft"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            
+            <ImageButton
+                android:id="@+id/topmid"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoTopMid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            
+            <ImageButton
+                android:id="@+id/topright"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoTopRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            
+            <ImageButton
+                android:id="@+id/midleft"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoMidLeft"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="45dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+            
+            <ImageButton
+                android:id="@+id/midmid"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/withe"
+                android:maxHeight="@dimen/activity_vertical_margin"
+                android:maxWidth="@dimen/activity_horizontal_margin"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoMidMid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            
+            <ImageButton
+                android:id="@+id/midright"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoMidRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            
+            <ImageButton
+                android:id="@+id/bottomleft"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoBottomLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            
+            <ImageButton
+                android:id="@+id/bottommid"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoBottomMid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            
+            <ImageButton
+                android:id="@+id/bottomright"
+                android:background="@drawable/withe"
+                android:onClick="onclick_touched"
+                android:scaleType="centerInside" />
+
+            <VideoView
+                android:id="@+id/videoBottomRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
