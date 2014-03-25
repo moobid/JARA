@@ -55,12 +55,14 @@ public class ModuleSettingsActivity extends Activity {
 	//  The donald Element will of course also be in Signals and Actions because its a picture
 	private List<CheckBox> checkboxPreactions = new ArrayList<CheckBox>();
 	private List<Button> buttonPreactions = new ArrayList<Button>();	//locationbutton
+	private List<Button> buttonPreactions5 = new ArrayList<Button>();  //actionAmountbutton
 	private List<Button> buttonPreactions3 = new ArrayList<Button>(); //modulestarterbutton
 	private List<Element> preactions = new ArrayList<Element>();
 	private int preactionsCounter = 0;
 	
 	private List<CheckBox> checkboxActions = new ArrayList<CheckBox>();
 	private List<Button> buttonActions = new ArrayList<Button>(); //locationbutton
+	private List<Button> buttonActions5 = new ArrayList<Button>();  //actionAmountbutton
 	private List<Element> actions = new ArrayList<Element>();
 	private int actionsCounter = 0;
 	
@@ -85,13 +87,19 @@ public class ModuleSettingsActivity extends Activity {
 	private String currentLocation;
 	private String currentDurationForPopUp;
 	private String currentTimeIntervallForPopUp;
+	private String currentActionAmountForPopUp;
 	private String currentStartModule;
 	private String popupMode;
-	private String durationDialogTitle = "Select the duration the Element should appear on the screen";
+	private String locationDialogTitle = "LOCATION: Select the location of the Element on the screen";
+	private String durationDialogTitle = "DURATION: Select the duration the Element should appear on the screen";
+	private String TimeIntervallDialogTitle = "TIMEINTERVALL: Select the timeintervalls the video should be shown";
+	private String actionAmountDialogTitle = "ACTIONAMOUNT: Select amount of times this Action needs to get triggered";
+	private String startModuleDialogTitle = "STARTMODULE: Select Module which to start after pressing on this Preaction";
 	private String[] locationArray = {"topleft", "topmid", "topright", "midleft", "midmid", "midright", "bottomleft", "bottommid", "bottomright"};
 	private String[] durationArray0 = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "2-10", "4-8", "1-5", "3-6", "6-10"};
 	private String[] durationArray1 = {"0", "0.1", "0.2", "0.3", "0.4", "0.6", "0.8", "0.1-0.3", "0.2-0.4", "0.3-0.6", "0.5-1", "0.8-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "2-10", "4-8", "1-5", "3-6", "6-10"};
-	private String[] timeIntervallArray = {"3", "5", "8", "10", "15", "20", "30", "40", "60", "80", "120"};
+	private String[] timeIntervallArray = {"0", "3", "5", "8", "10", "15", "20", "30", "40", "60", "80", "120"};
+	private String[] actionAmountArray = {"1", "2", "3", "4", "5", "8", "12", "1-2", "1-3", "1-5", "2-4", "3-6", "5-8", "2-10", "8-14", "1-20"};
 	private String[] modulenamesArray;
 	protected void onCreate(Bundle savedInstanceState) {
 		System.out.println("ModuleSettingsActivity started");
@@ -392,6 +400,14 @@ public class ModuleSettingsActivity extends Activity {
 				else editor.putString(buttonPreactions.get(i).getTag() + "location", buttontext);
 			}
 			
+			//saving actionamount for preactions	
+			for(int i = 0; i < buttonPreactions5.size(); i++)
+			{
+				String buttontext = buttonPreactions5.get(i).getText().toString();
+				if(buttontext.equals("actionAmount")) ;//do nothing
+				else editor.putString(buttonPreactions5.get(i).getTag() + "actionAmount", buttontext);
+			}
+			
 			//saving modulestarter for preactions	
 			for(int i = 0; i < buttonPreactions3.size(); i++)
 			{
@@ -406,6 +422,14 @@ public class ModuleSettingsActivity extends Activity {
 				String buttontext = buttonActions.get(i).getText().toString();
 				if(buttontext.equals("location")) ;//do nothing
 				else editor.putString(buttonActions.get(i).getTag() + "location", buttontext);
+			}
+			
+			//saving actionamount for actions	
+			for(int i = 0; i < buttonActions5.size(); i++)
+			{
+				String buttontext = buttonActions5.get(i).getText().toString();
+				if(buttontext.equals("actionAmount")) ;//do nothing
+				else editor.putString(buttonActions5.get(i).getTag() + "actionAmount", buttontext);
 			}
 			
 			//saving location for signals			
@@ -452,8 +476,8 @@ public class ModuleSettingsActivity extends Activity {
 			for(int i = 0; i < buttonRewards3.size(); i++)
 			{
 				String buttontext = buttonRewards3.get(i).getText().toString();
-				if(buttontext.equals("timeintervall")) ;//do nothing
-				else editor.putString(buttonRewards3.get(i).getTag() + "timeintervall", buttontext);
+				if(buttontext.equals("timeIntervall")) ;//do nothing
+				else editor.putString(buttonRewards3.get(i).getTag() + "timeIntervall", buttontext);
 			}
 
         
@@ -515,11 +539,13 @@ public class ModuleSettingsActivity extends Activity {
 		String currentDuration0 = "";
 		String currentDuration1 = "";
 		String currentTimeintervall = "";
+		String currentActionAmount = "";
 
 		if(elementType == "Preactions")
 		{
 			currentLocation = getElementLocation(Integer.toString(currentModuleNumber), elementName + "Preaction");
 			currentStartModule = getElementStartModule(Integer.toString(currentModuleNumber), elementName + "Preaction3");
+			currentActionAmount = getElementActionAmount(Integer.toString(currentModuleNumber), elementName + "Preaction5");
 			table = (TableLayout) findViewById(R.id.Preactions);
 			//creates new Tablerow and sets it into the new Tablelayout
 			TableRow newTablerow = new TableRow(this);
@@ -533,10 +559,15 @@ public class ModuleSettingsActivity extends Activity {
 
 			//creates new Button for choosing the LOCATION of the Element and sets it also into the Tablerow 
 			buttonPreactions.add(preactionsCounter, new Button(this));
-			buttonPreactions.get(preactionsCounter).setTag( elementName + "Preaction");				
+			buttonPreactions.get(preactionsCounter).setTag( elementName + "Preaction");	
+			
+			//creates new Button for choosing the ACTIONAMOUNT of the Element and sets it also into the Tablerow 
+			buttonPreactions5.add(preactionsCounter, new Button(this));
+			buttonPreactions5.get(preactionsCounter).setTag( elementName + "Preaction5");	
+			
 			//creates new Button for choosing the Module wich should get started after pressing on the Action
-			buttonPreactions3.add(actionsCounter, new Button(this));
-			buttonPreactions3.get(actionsCounter).setTag( elementName + "Preaction3");
+			buttonPreactions3.add(preactionsCounter, new Button(this));
+			buttonPreactions3.get(preactionsCounter).setTag( elementName + "Preaction3");
 			if(locationNeeded == true) //shows the buttons
 			{
 				buttonPreactions.get(preactionsCounter).setText(currentLocation);
@@ -553,6 +584,15 @@ public class ModuleSettingsActivity extends Activity {
 				buttonPreactions.get(preactionsCounter).setVisibility(View.GONE);
 			}
 			
+			buttonPreactions5.get(preactionsCounter).setText(currentActionAmount);
+			buttonPreactions5.get(preactionsCounter).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+				popupMode = "actionAmountForPreaction"; //determines the popupMode;
+				showElementActionAmountDialog(); //shows Popup					
+				}
+			});
+			
 			if(startModuleNeeded == true) //shows the buttons
 			{
 				buttonPreactions3.get(preactionsCounter).setText(currentStartModule);
@@ -566,15 +606,16 @@ public class ModuleSettingsActivity extends Activity {
 			}
 			else //makes the buttons disappear
 			{				
-				buttonPreactions3.get(actionsCounter).setVisibility(View.GONE);
+				buttonPreactions3.get(preactionsCounter).setVisibility(View.GONE);
 			}
 			newTablerow.addView(buttonPreactions.get(preactionsCounter));	
-			newTablerow.addView(buttonPreactions3.get(actionsCounter));
+			newTablerow.addView(buttonPreactions5.get(preactionsCounter));
+			newTablerow.addView(buttonPreactions3.get(preactionsCounter));
 		}
 
 		if(elementType == "Actions"){
 			currentLocation =  getElementLocation(Integer.toString(currentModuleNumber), elementName + "Action");
-
+			currentActionAmount = getElementActionAmount(Integer.toString(currentModuleNumber), elementName + "Action5");
 
 			table = (TableLayout) findViewById(R.id.Signals);
 			//creates new Tablerow and sets it into the new Tablelayout
@@ -588,10 +629,15 @@ public class ModuleSettingsActivity extends Activity {
 
 			newTablerow.addView(checkboxActions.get(actionsCounter));
 
-				//creates new Button and sets it also into the Tablerow
+			//creates new Button and sets it also into the Tablerow
+			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
 			buttonActions.add(actionsCounter, new Button(this));
 			buttonActions.get(actionsCounter).setTag(elementName + "Action");
-			//creates new Button for choosing the DURATION of the Element and sets it also into the Tablerow 
+			
+			
+			//creates new Button for choosing the ACTIONAMOUNT of the Element and sets it also into the Tablerow 
+			buttonActions5.add(actionsCounter, new Button(this));
+			buttonActions5.get(actionsCounter).setTag(elementName + "Action5");
 			if(locationNeeded == true)
 			{
 				buttonActions.get(actionsCounter).setText(currentLocation);
@@ -607,7 +653,18 @@ public class ModuleSettingsActivity extends Activity {
 			{
 				buttonActions.get(actionsCounter).setVisibility(View.GONE);
 			}
-			newTablerow.addView(buttonActions.get(actionsCounter));					
+			
+			buttonActions5.get(actionsCounter).setText(currentActionAmount);
+			buttonActions5.get(actionsCounter).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
+				popupMode = "actionAmountForAction"; //determines the popupMode;
+				showElementActionAmountDialog(); //shows Popup					
+				}
+			});
+			
+			newTablerow.addView(buttonActions.get(actionsCounter));		
+			newTablerow.addView(buttonActions5.get(actionsCounter));
 		}
 		
 		if(elementType == "Signals"){
@@ -757,8 +814,6 @@ public class ModuleSettingsActivity extends Activity {
 				buttonRewards3.get(rewardsCounter).setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					currentElement = (String) v.getTag(); //gets used in the popup; looks like DonaldPreaction or MickeyPreaction for example
-					durationDialogTitle = "Select the timeintervalls the video should be shown";
-					popupMode = "rewardTimeIntervall"; //determines the popupMode; //TODO: wird wohl nicht gebraucht???
 					showElementTimeIntevallDialog(); //shows Popup
 					}
 				});
@@ -919,6 +974,16 @@ public class ModuleSettingsActivity extends Activity {
 		return startModule;
 	}
 	
+	
+	
+	public String getElementActionAmount(String i, String elementName)
+	{
+		String nameOfModulePref = "MODULE" + i;
+		SharedPreferences pref_modulesettings = getSharedPreferences(nameOfModulePref, 0);  
+		String startModule = pref_modulesettings.getString(elementName + "actionAmount", "actionAmount");
+		return startModule;
+	}
+	
 	public String getElementTimeIntervall(String i, String elementName)
 	{
 		String nameOfModulePref = "MODULE" + i;
@@ -946,6 +1011,11 @@ public class ModuleSettingsActivity extends Activity {
 		DialogFragment newFragment = new ElementTimeIntervallDialog();
 		newFragment.show(getFragmentManager(), "dialogsettings");
 	}
+		
+	public void showElementActionAmountDialog() {
+		DialogFragment newFragment = new ElementActionAmountDialog();
+		newFragment.show(getFragmentManager(), "dialogsettings");
+	}
 	
 	public void showElementStartModuleDialog() {
 		DialogFragment newFragment = new ElementStartModuleDialog();
@@ -958,7 +1028,7 @@ public class ModuleSettingsActivity extends Activity {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle("Select the location the Element on the screen")
+			builder.setTitle(locationDialogTitle)
 			.setItems(locationArray, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// The 'which' argument contains the index position
@@ -1098,11 +1168,11 @@ public class ModuleSettingsActivity extends Activity {
 	
 	@SuppressLint("ValidFragment")
 	//Duration of an Element Popup
-	public class ElementTimeIntervallDialog extends DialogFragment { //TODO baustelle
+	public class ElementTimeIntervallDialog extends DialogFragment {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle(durationDialogTitle)
+			builder.setTitle(TimeIntervallDialogTitle)
 			.setItems(timeIntervallArray, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// The 'which' argument contains the index position
@@ -1124,6 +1194,53 @@ public class ModuleSettingsActivity extends Activity {
 			return builder.create();
 		}
 	}
+	//Baustelle
+	@SuppressLint("ValidFragment")
+	//Duration of an Element Popup
+	public class ElementActionAmountDialog extends DialogFragment {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(actionAmountDialogTitle)
+			.setItems(actionAmountArray, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					// The 'which' argument contains the index position
+					// of the selected item
+					currentActionAmountForPopUp = actionAmountArray[which];
+					if(popupMode.equals("actionAmountForPreaction")) SetActionAmountButtonTextPreaction();
+					
+					if(popupMode.equals("actionAmountForAction")) SetActionAmountButtonTextAction();
+				}
+			});
+			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					// User cancelled the dialog
+				}
+			});
+			return builder.create();
+		}
+	}
+	
+
+	void SetActionAmountButtonTextPreaction()
+	{
+		int i = 0;
+		for(; i < preactionsCounter; i++)
+		{
+			if((preactions.get(i).getName() + "Preaction5").equals(currentElement)) break;
+		}
+		buttonPreactions5.get(i).setText(currentActionAmountForPopUp); //refreshes buttontext at once!
+	}
+
+	void SetActionAmountButtonTextAction()
+	{
+		int i = 0;
+		for(; i < actionsCounter; i++)
+		{
+			if((actions.get(i).getName() + "Action5").equals(currentElement)) break;
+		}
+		buttonActions5.get(i).setText(currentActionAmountForPopUp); //refreshes buttontext at once!
+	}
 	
 	@SuppressLint("ValidFragment")
 	//Duration of an Element Popup	
@@ -1131,7 +1248,7 @@ public class ModuleSettingsActivity extends Activity {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setTitle("Select Module which to start after pressing on this Preaction")
+			builder.setTitle(startModuleDialogTitle)
 			.setItems(modulenamesArray, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// The 'which' argument contains the index position
